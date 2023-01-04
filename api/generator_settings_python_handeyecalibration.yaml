@@ -1,0 +1,92 @@
+template: 'templates/client_template.py.mako'
+clientType: handeyecalibration
+clientTaskName: HandEyeCalibration
+extraConstructorArgs: "robot,\n        "  # String that needs to be formatted to fit client_template.py.mako
+extraClassAttributes: "robot = None"  # String that needs to be formatted to fit client_template.py.mako
+extraConstructorArgsDocstringLines: "robot (str): Name of the robot\n            "
+extraConstructorContent: "self.robot = robot\n        "
+extraClientContent: "    def ReloadModule(self, **kwargs):\n        return self.ExecuteCommand({\n            'command': 'ReloadModule',\n        }, **kwargs)\n"
+generatorSettingsComponents:
+  timeout:
+    default: 3000.0
+    description: Time in seconds after which the command is assumed to have failed.
+    type: number
+    x-doNotAddToPayload: true  # Used only inside the client, not sent to the server
+  ignoredArgsParam:
+    ignoredArgs:
+      description: These arguments may be passed to the method, but are ignored.
+x-specModifications:  # These fields add/overwrite spec content. Only the leaf is overwritten. Parent fields are merged if possible.
+  services:
+    ComputeCalibrationPoses:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                cameracontainername:
+                  paramOrderingIndex: 0
+                primarysensorname:
+                  paramOrderingIndex: 1
+                secondarysensornames:
+                  paramOrderingIndex: 2
+                numsamples:
+                  paramOrderingIndex: 3
+                calibboardvisibility:
+                  paramOrderingIndex: 4
+                  required: true
+                calibboardLinkName:
+                  paramOrderingIndex: 5
+                calibboardGeomName:
+                  paramOrderingIndex: 6
+                gridindex:  # TODO: Check server for this API
+                  paramOrderingIndex: 8
+                timeout:
+                  paramOrderingIndex: 7
+                  $ref: '#/generatorSettingsComponents/timeout'
+                robot:
+                  paramOrderingIndex: 9
+                  fillFromClassMember: robot
+                $merge: '#/generatorSettingsComponents/ignoredArgsParam'
+    SampleCalibrationConfiguration:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                cameracontainername:
+                  paramOrderingIndex: 0
+                  required: true
+                primarysensorname:
+                  paramOrderingIndex: 1
+                  required: true
+                secondarysensornames:
+                  paramOrderingIndex: 2
+                  required: true
+                gridindex:
+                  paramOrderingIndex: 3
+                  required: true
+                calibboardvisibility:
+                  paramOrderingIndex: 4
+                  required: true
+                calibboardLinkName:
+                  paramOrderingIndex: 5
+                calibboardGeomName:
+                  paramOrderingIndex: 6
+                minPatternTiltAngle:
+                  paramOrderingIndex: 7
+                maxPatternTiltAngle:
+                  paramOrderingIndex: 8
+                timeout:
+                  paramOrderingIndex: 9
+                  $merge: '#/generatorSettingsComponents/timeout'
+                robot:
+                  paramOrderingIndex: 10
+                  fillFromClassMember: robot  # Use class attribute of this name if not set explicitly
+                $merge: '#/generatorSettingsComponents/ignoredArgsParam'
+    ReloadModule:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                $merge: '#/generatorSettingsComponents/ignoredArgsParam'

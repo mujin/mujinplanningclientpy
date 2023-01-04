@@ -1,0 +1,127 @@
+# A MujinAPI definition of the Hand-Eye Calibration Task.
+# Used to generate handeyecalibrationcontrollerclient.py
+
+include:
+- components.yaml
+components:
+  cameracontainername: 
+    description: The name of the container that the camera is observing.
+    type: string
+  primarysensorname: 
+    description: Name of the primary sensor to be calibrated (attached to the robot)
+    type: string
+  secondarysensornames: 
+    description: Names of secondary sensors to be calibrated (assumed to be nearby the primary sensor)
+    type: array
+    items:
+      type: string
+  gridindex:
+    type: int
+    description: The index of the voxel 
+  calibboardvisibility:
+    type: boolean
+  calibboardLinkName:
+    type: string
+  calibboardGeomName:
+    type: string
+  minPatternTiltAngle:
+    type: number
+    description: "The minimum tilt of the pattern in degrees. Default: 10 degrees"
+  maxPatternTiltAngle: 
+    type: number
+    description: "The maximum tilt of the pattern in degrees. Default: 30 degrees"
+  robot:
+    description: The name of the robot (modelName).
+    type: string
+info:
+  description: The API of the Planning Server for a Calibration task.
+mujinapi: 0.0.1
+services:  # The API of the calibration task
+  # NEW_FUNCTION:
+  #   description: TEST_DESCRIPTION
+  #   parameters: 
+  #     $merge: '#/components/StandardPlanningServerRequestParameters'
+  #     taskparams:
+  #       properties:
+  #         taskparameters:
+  #           properties:
+  #             # Fill args
+  ComputeCalibrationPoses:
+    description: "Compute a set of calibration poses that satisfy the angle constraints using latin hypercube sampling (or stratified sampling upon failure)"
+    parameters: 
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              cameracontainername:
+                $merge: '#/components/cameracontainername'
+                required: true
+              primarysensorname:
+                $merge: '#/components/primarysensorname'
+                required: true
+              secondarysensornames:
+                $merge: '#/components/secondarysensornames'
+                required: true
+              numsamples:
+                description: Number of samples to take. A reasonable number is often between 5 and 25.
+                type: integer
+                required: true
+              calibboardvisibility:
+                $merge: '#/components/calibboardvisibility'
+                # required: true
+              calibboardLinkName:
+                $merge: '#/components/calibboardLinkName'
+              calibboardGeomName:
+                $merge: '#/components/calibboardGeomName'
+              robot:
+                $merge: '#/components/robot'
+  SampleCalibrationConfiguration:
+    description: Sample a valid calibration pose inside the given voxel and find a corresponding IK solution.
+    parameters: 
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              cameracontainername: 
+                $merge: '#/components/cameracontainername'
+                required: true
+              primarysensorname: 
+                $merge: '#/components/primarysensorname'
+                required: true
+              secondarysensornames: 
+                $merge: '#/components/secondarysensornames'
+                required: true
+              gridindex:
+                $merge: '#/components/gridindex'
+                required: true
+              calibboardvisibility: 
+                $merge: '#/components/calibboardvisibility'
+                required: true
+              calibboardLinkName: 
+                $merge: '#/components/calibboardLinkName'
+              calibboardGeomName: 
+                $merge: '#/components/calibboardGeomName'
+              minPatternTiltAngle: 
+                $merge: '#/components/minPatternTiltAngle'
+              maxPatternTiltAngle: 
+                $merge: '#/components/maxPatternTiltAngle'
+              robot:
+                $merge: '#/components/robot'
+    returns:
+      vConfig:
+        description: The IK solution (joint angles) for the sample.
+        type: array
+        items:
+          type: number
+  # ReloadModule:
+  #   description: Reloads the module without restarting the whole controller. For development.
+  #   parameters: 
+  #     $merge: '#/components/StandardPlanningServerRequestParameters'
+  #     taskparams:
+  #       properties:
+  #         taskparameters:
+  #           properties:
+  #             robot:
+  #               $merge: '#/components/robot'
