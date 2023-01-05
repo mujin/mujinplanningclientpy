@@ -898,18 +898,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
 
-    def ReloadModule(self, timeout=10, **kwargs):
-        """
-
-        Args:
-            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-        """
-        taskparameters = {
-            'command': 'ReloadModule',
-        }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout)
-
     def ShutdownRobotBridge(self, timeout=10, **kwargs):
         """
 

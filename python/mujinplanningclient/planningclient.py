@@ -248,6 +248,16 @@ class PlanningClient(object):
         scenefilename = GetFilenameFromURI(sceneuri, mujinpath)[1]
         self._sceneparams = {'scenetype': 'mujin', 'sceneuri': sceneuri, 'scenefilename': scenefilename, 'scale': [1.0, 1.0, 1.0]}  # TODO: set scenetype according to the scene
     
+    def ReloadModule(self, timeout=10, **kwargs):
+        """Reloads the module. For development.
+
+        Args:
+            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+        """
+        return self.ExecuteCommand({
+                'command': 'ReloadModule',
+        }, **kwargs)
+
     #
     # Tasks related
     #

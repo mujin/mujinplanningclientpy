@@ -60,8 +60,3 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
         if self.robot is not None:
             taskparameters['robot'] = self.robot
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-
-    def ReloadModule(self, **kwargs):
-        return self.ExecuteCommand({
-            'command': 'ReloadModule',
-        }, **kwargs)
