@@ -171,19 +171,29 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
     # ============== Auto-generated code starts here
 
-    def GetJointValues(self, timeout=10, **kwargs):
+    def GetJointValues(self, timeout=10, executetimeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
         """Gets the current robot joint values
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            executetimeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
 
         Returns:
-            dict: Current joint values in a json dictionary with currentjointvalues: [0,0,0,0,0,0]
+            Current joint values in a json dictionary with key currentjointvalues and value [0,0,0,0,0,0]
+
         """
         taskparameters = {
             'command': 'GetJointValues',
+            'unit': unit,
+            'executetimeout': executetimeout,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     def MoveToolLinear(self, goaltype, goals, toolname=None, timeout=10, robotspeed=None, **kwargs):
