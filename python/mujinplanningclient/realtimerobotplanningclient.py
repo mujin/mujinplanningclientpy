@@ -196,32 +196,121 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def MoveToolLinear(self, goaltype, goals, toolname=None, timeout=10, robotspeed=None, **kwargs):
-        """Moves the tool linear
+    def MoveToolLinear(
+        self,
+        goaltype,
+        goals,
+        toolname=None,
+        timeout=10,
+        robotspeed=None,
+        workmaxdeviationangle=None,
+        workspeed=None,
+        workaccel=None,
+        worksteplength=None,
+        plannername=None,
+        workminimumcompletetime=None,
+        workminimumcompleteratio=None,
+        numspeedcandidates=None,
+        workignorefirstcollisionee=None,
+        workignorelastcollisionee=None,
+        workignorefirstcollision=None,
+        unit='mm',
+        robotBridgeConnectionInfo=None,
+        locationCollisionInfos=None,
+        robotaccelmult=None,
+        ionames=None,
+        ignoreGrabbingTarget=None,
+        currentlimitratios=None,
+        instobjectname=None,
+        ikparamname=None,
+        execute=None,
+        moveStraightParams=None,
+        **ignoredArgs
+    ):
+        """Moves the tool linearly in cartesian (3D) space.
 
         Args:
             goaltype (str): Type of the goal, e.g. translationdirection5d
             goals (list[float]): Flat list of goals, e.g. two 5D ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]
-            toolname (str, optional): Name of the manipulator. Default: self.toolname
-            timeout (float, optional):  (Default: 10)
-            robotspeed (float, optional):
-            workmaxdeviationangle (float): How much the tool tip can rotationally deviate from the linear path. In deg.
-            workspeed (float): [anglespeed, transspeed] in deg/s and mm/s
-            workaccel (float): [angleaccel, transaccel] in deg/s^2 and mm/s^2
-            worksteplength (float): Discretization for planning MoveHandStraight, in seconds.
-            plannername (str):
-            numspeedcandidates (int): If speed/accel are not specified, the number of candiates to consider
-            workignorefirstcollisionee (float): time, necessary in case initial is in collision, has to be multiples of step length?
-            workignorelastcollisionee (float): time, necessary in case goal is in collision, has to be multiples of step length?
-            workignorefirstcollision (float):
+            toolname (str, optional): Tool name(s)
+            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            workmaxdeviationangle (float, optional): How much the tool tip can rotationally deviate from the linear path. In deg.
+            workspeed (list[float], optional): [anglespeed, transspeed] in deg/s and mm/s
+            workaccel (list[float], optional): [angleaccel, transaccel] in deg/s^2 and mm/s^2
+            worksteplength (float, optional): Discretization for planning MoveHandStraight, in seconds.
+            plannername (str, optional):
+            workminimumcompletetime (float, optional): (DEPRECATED, UNUSED) Set to trajduration - 0.016s. EMU_MUJIN example requires at least this much
+            workminimumcompleteratio (float, optional): (DEPRECATED, UNUSED) In case the duration of the trajectory is now known, can specify in terms of [0,1]. 1 is complete everything.
+            numspeedcandidates (int, optional): If speed/accel are not specified, the number of candiates to consider
+            workignorefirstcollisionee (float, optional): time, necessary in case initial is in collision, has to be multiples of step length?
+            workignorelastcollisionee (float, optional): time, necessary in case goal is in collision, has to be multiples of step length?
+            workignorefirstcollision (float, optional):
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
+            ignoreGrabbingTarget (bool, optional):
+            currentlimitratios (list[float], optional): The joints' current limt ratios.
+            instobjectname (str, optional): If goaltype is not set and both instobjectname and ikparamname are set, use ikparamname of instobjectname as target position.
+            ikparamname (str, optional): If goaltype is not set and both instobjectname and ikparamname are set, use ikparamname of instobjectname as target position.
+            execute:
+            moveStraightParams (dict, optional): Parameters used for linear movement like grasp approach, grasp depart, etc.
         """
         taskparameters = {
             'command': 'MoveToolLinear',
+            'unit': unit,
             'goaltype': goaltype,
             'goals': goals,
         }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, toolname=toolname, timeout=timeout)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
+        if ignoreGrabbingTarget is not None:
+            taskparameters['ignoreGrabbingTarget'] = ignoreGrabbingTarget
+        if currentlimitratios is not None:
+            taskparameters['currentlimitratios'] = currentlimitratios
+        if instobjectname is not None:
+            taskparameters['instobjectname'] = instobjectname
+        if ikparamname is not None:
+            taskparameters['ikparamname'] = ikparamname
+        if execute is not None:
+            taskparameters['execute'] = execute
+        if moveStraightParams is not None:
+            taskparameters['moveStraightParams'] = moveStraightParams
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
+        if workmaxdeviationangle is not None:
+            taskparameters['workmaxdeviationangle'] = workmaxdeviationangle
+        if workspeed is not None:
+            taskparameters['workspeed'] = workspeed
+        if workaccel is not None:
+            taskparameters['workaccel'] = workaccel
+        if worksteplength is not None:
+            taskparameters['worksteplength'] = worksteplength
+        if plannername is not None:
+            taskparameters['plannername'] = plannername
+        if workminimumcompletetime is not None:
+            taskparameters['workminimumcompletetime'] = workminimumcompletetime
+        if workminimumcompleteratio is not None:
+            taskparameters['workminimumcompleteratio'] = workminimumcompleteratio
+        if numspeedcandidates is not None:
+            taskparameters['numspeedcandidates'] = numspeedcandidates
+        if workignorefirstcollisionee is not None:
+            taskparameters['workignorefirstcollisionee'] = workignorefirstcollisionee
+        if workignorelastcollisionee is not None:
+            taskparameters['workignorelastcollisionee'] = workignorelastcollisionee
+        if workignorefirstcollision is not None:
+            taskparameters['workignorefirstcollision'] = workignorefirstcollision
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     def MoveToHandPosition(self, goaltype, goals, toolname=None, envclearance=None, closegripper=0, robotspeed=None, robotaccelmult=None, timeout=10, **kwargs):
         """Computes the inverse kinematics and moves the manipulator to any one of the goals specified.
