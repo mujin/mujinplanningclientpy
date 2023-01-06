@@ -596,8 +596,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['objectname'] = targetname
             taskparameters['object_uri'] = u'mujin:/%s.mujin.dae' % (targetname)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-    
-    def Grab(self, targetname, toolname=None, timeout=10, **kwargs):
+
+    def Grab(self, targetname, toolname=None, timeout=10, **ignoredArgs):
         """Grabs an object with tool
 
         Args:
@@ -609,10 +609,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'Grab',
             'targetname': targetname,
         }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def Release(self, targetname, timeout=10, **kwargs):
+    def Release(self, targetname, timeout=10, **ignoredArgs):
         """Releases a grabbed object.
 
         Args:
@@ -623,25 +624,24 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'Release',
             'targetname': targetname,
         }
-        taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetGrabbed(self, timeout=10, **kwargs):
+    def GetGrabbed(self, timeout=10, **ignoredArgs):
         """Gets the names of the objects currently grabbed
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
 
         Returns:
-            dict: Names of the grabbed object in a JSON dictionary, e.g. {'names': ['target_0']}
+            Names of the grabbed object in a JSON dictionary, e.g. {'names': ['target_0']}
+
         """
         taskparameters = {
             'command': 'GetGrabbed',
         }
-        taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetTransform(self, targetname, connectedBodyName='', linkName='', geometryName='', geometryPk='', unit='mm', timeout=10, **kwargs):
+    def GetTransform(self, targetname, connectedBodyName=None, linkName=None, geometryName=None, geometryPk=None, unit='mm', timeout=10, **ignoredArgs):
         """Gets the transform of an object
 
         Args:
@@ -654,19 +654,22 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
 
         Returns:
-            dict: Transform of the object in a json dictionary, e.g. {'translation': [100,200,300], 'rotationmat': [[1,0,0],[0,1,0],[0,0,1]], 'quaternion': [1,0,0,0]}
+            Transform of the object in a JSON dictionary, e.g. {'translation': [100,200,300], 'rotationmat': [[1,0,0],[0,1,0],[0,0,1]], 'quaternion': [1,0,0,0]}
 
         """
         taskparameters = {
             'command': 'GetTransform',
             'targetname': targetname,
-            'connectedBodyName': connectedBodyName,
-            'linkName': linkName,
-            'geometryName': geometryName,
-            'geometryPk': geometryPk,
             'unit': unit,
         }
-        taskparameters.update(kwargs)
+        if connectedBodyName is not None:
+            taskparameters['connectedBodyName'] = connectedBodyName
+        if linkName is not None:
+            taskparameters['linkName'] = linkName
+        if geometryName is not None:
+            taskparameters['geometryName'] = geometryName
+        if geometryPk is not None:
+            taskparameters['geometryPk'] = geometryPk
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     def SetTransform(self, targetname, translation, unit='mm', rotationmat=None, quaternion=None, timeout=10, **kwargs):
