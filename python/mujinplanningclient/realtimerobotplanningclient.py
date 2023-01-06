@@ -1770,7 +1770,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotname'] = robotname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ComputeIKFromParameters(self, toolname=None, timeout=10, **kwargs):
+    def ComputeIKFromParameters(self, toolname=None, timeout=10, targetname=None, graspsetname=None, ikparamnames=None, limit=None, useSolutionIndices=None, disabletarget=None, unit='mm', randomBoxInfo=None, freeincvalue=None, freeinc=None, applyapproachoffset=None, inPlaneAngleDeviation=None, outOfPlaneAngleDeviation=None, searchfreeparams=None, returnClosestToCurrent=None, filteroptionslist=None, filteroptions=None, **ignoredArgs):
         """
 
         Args:
@@ -1778,90 +1778,163 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             targetname (str, optional): Name of the target object
             graspsetname (str, optional): Name of the grasp set to use
-            ikparamnames (list, optional): If graspset does not exist, use the ikparamnames to initialize the grasp.
+            ikparamnames (list[str], optional): If graspset does not exist, use the ikparamnames to initialize the grasp.
             limit (float, optional): Number of solutions to return
-            useSolutionIndices (bool, optional): 
-            disabletarget (bool, optional): 
-            unit (str, optional): The unit of the given values. (Default: mm)
-            randomBoxInfo (dict, optional): info structure for maintaining grasp parameters for random box picking. Used when picking up randomized boxes (targetIsRandomBox is True), Keys are: usefaces, dictFacePriorities, boxDirAngle, toolTranslationOffsets
+            useSolutionIndices (bool, optional):
+            disabletarget (bool, optional):
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            randomBoxInfo (dict, optional): Info structure for maintaining grasp parameters for random box picking. Used when picking up randomized boxes (targetIsRandomBox is True). Keys: usefaces, dictFacePriorities, boxDirAngle, toolTranslationOffsets
             freeincvalue (float, optional): The discretization of the free joints of the robot when computing ik.
-            freeinc (float, optional): (deprecated) The discretization of the free joints of the robot when computing ik.
-            applyapproachoffset (bool, optional): 
-            inPlaneAngleDeviation (float, optional): 
-            outOfPlaneAngleDeviation (float, optional): 
-            searchfreeparams (bool, optional): 
-            returnClosestToCurrent (bool, optional): 
-            filteroptionslist (list, optional): A list of filter option strings. Can be: CheckEnvCollisions, IgnoreCustomFilters, IgnoreEndEffectorCollisions, IgnoreEndEffectorEnvCollisions, IgnoreEndEffectorSelfCollisions, IgnoreJointLimits, IgnoreSelfCollisions. Overrides filteroptions.
+            freeinc (float, optional): (DEPRECATED) The discretization of the free joints of the robot when computing ik.
+            applyapproachoffset (bool, optional):
+            inPlaneAngleDeviation (float, optional):
+            outOfPlaneAngleDeviation (float, optional):
+            searchfreeparams (bool, optional):
+            returnClosestToCurrent (bool, optional):
+            filteroptionslist (list[str], optional): A list of filter option strings. Can be: CheckEnvCollisions, IgnoreCustomFilters, IgnoreEndEffectorCollisions, IgnoreEndEffectorEnvCollisions, IgnoreEndEffectorSelfCollisions, IgnoreJointLimits, IgnoreSelfCollisions. Overrides filteroptions.
             filteroptions (int, optional): OpenRAVE IkFilterOptions bitmask. By default this is 1, which means all collisions are checked
 
         Returns:
-            A dictionary of:
-            - solutions: array of IK solutions (each of which is an array of DOF values), sorted by minimum travel distance and truncated to match the limit
+            A dictionary with field 'solutions': array of IK solutions (each of which is an array of DOF values), sorted by minimum travel distance and truncated to match the limit
+            If no solutions found, the field 'errors' will contain reasons for the failure.
+
         """
         taskparameters = {
             'command': 'ComputeIKFromParameters',
+            'unit': unit,
         }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
+        if targetname is not None:
+            taskparameters['targetname'] = targetname
+        if graspsetname is not None:
+            taskparameters['graspsetname'] = graspsetname
+        if ikparamnames is not None:
+            taskparameters['ikparamnames'] = ikparamnames
+        if limit is not None:
+            taskparameters['limit'] = limit
+        if useSolutionIndices is not None:
+            taskparameters['useSolutionIndices'] = useSolutionIndices
+        if disabletarget is not None:
+            taskparameters['disabletarget'] = disabletarget
+        if randomBoxInfo is not None:
+            taskparameters['randomBoxInfo'] = randomBoxInfo
+        if freeincvalue is not None:
+            taskparameters['freeincvalue'] = freeincvalue
+        if freeinc is not None:
+            taskparameters['freeinc'] = freeinc
+        if applyapproachoffset is not None:
+            taskparameters['applyapproachoffset'] = applyapproachoffset
+        if inPlaneAngleDeviation is not None:
+            taskparameters['inPlaneAngleDeviation'] = inPlaneAngleDeviation
+        if outOfPlaneAngleDeviation is not None:
+            taskparameters['outOfPlaneAngleDeviation'] = outOfPlaneAngleDeviation
+        if searchfreeparams is not None:
+            taskparameters['searchfreeparams'] = searchfreeparams
+        if returnClosestToCurrent is not None:
+            taskparameters['returnClosestToCurrent'] = returnClosestToCurrent
+        if filteroptionslist is not None:
+            taskparameters['filteroptionslist'] = filteroptionslist
+        if filteroptions is not None:
+            taskparameters['filteroptions'] = filteroptions
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ShutdownRobotBridge(self, timeout=10, **kwargs):
+    def ShutdownRobotBridge(self, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
         """
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
         """
         taskparameters = {
             'command': 'ShutdownRobotBridge',
+            'unit': unit,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetRobotBridgeState(self, timeout=10, **kwargs):
+    def GetRobotBridgeState(self, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, ionames=None, **ignoredArgs):
         """
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'GetRobotBridgeState',
+            'unit': unit,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ClearRobotBridgeError(self, timeout=10, **kwargs):
+    def ClearRobotBridgeError(self, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
         """
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
         """
         taskparameters = {
             'command': 'ClearRobotBridgeError',
+            'unit': unit,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetRobotBridgePause(self, timeout=10, **kwargs):
+    def SetRobotBridgePause(self, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
         """
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
         """
         taskparameters = {
             'command': 'SetRobotBridgePause',
+            'unit': unit,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetRobotBridgeResume(self, timeout=10, **kwargs):
+    def SetRobotBridgeResume(self, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
         """
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
         """
         taskparameters = {
             'command': 'SetRobotBridgeResume',
+            'unit': unit,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     #
