@@ -1,0 +1,74 @@
+components:
+  Vector3Schema:
+    type: array
+    minItems: 3
+    maxItems: 3
+    additionalItems: False
+    items: [
+      {description: 'x', type: number},
+      {description: 'y', type: number},
+      {description: 'z', type: number},
+    ]
+  StandardPlanningServerRequestParameters:
+    fnname:
+      type: string
+      description: Needs to be "RunCommand"
+    userinfo:
+      type: object
+      description: An object storing user info such as the locale
+      items:
+        username:
+          type: string
+          description: Username used for the controller
+        locale:
+          type: string
+    slaverequestid:
+      type: int
+      required: false
+      description: The id of the requested planning slave
+    stamp:
+      type: number
+      description: The timestamp of when the command was sent, in seconds.
+    respawnopts:
+      type: object
+      properties:
+        allowrespawn:
+          type: boolean
+        forcerespawn:
+          type: boolean
+        respawnMemoryThreshold:
+          type: int
+          description: The memory limit before the planning slave is restarted.
+    taskparams:
+      type: object
+      properties:
+        tasktype:
+          type: string
+        sceneparams:
+          type: object
+          properties:
+            scenetype:
+              type: string
+              description: Should be 'mujin'
+            sceneuri:
+              type: string
+              description: The Scene's URI.
+            scenefilename:
+              type: string
+              description: The Scene's file name.
+            scale:
+              type: array
+              minItems: 3
+              maxItems: 3
+              additionalItems: False
+              items: [
+                  {description: 'x', type: number, default: 1.0},
+                  {description: 'y', type: number, default: 1.0},
+                  {description: 'z', type: number, default: 1.0},
+                ]
+        taskparameters:
+          type: object
+          # properties:  # This is the field that defines the actual command
+  robot:
+    description: The name of the robot (modelName).
+    type: string

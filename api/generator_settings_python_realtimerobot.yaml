@@ -1,0 +1,1524 @@
+template: 'templates/client_template.py.mako'
+clientType: realtimerobot
+templateArgs:  # Strings are added to client_template.py.mako
+  tasktype: realtimerobot
+  clientTaskName: RealtimeRobot
+  extraConstructorArgs: |
+    robotname='',
+    robotspeed=None,
+    robotaccelmult=None,
+    envclearance=10.0,
+    robotBridgeConnectionInfo=None,
+  extraClassAttributes: |
+    _robotname = None  # Optional name of the robot selected
+    _robotspeed = None  # Speed of the robot, e.g. 0.4
+    _robotaccelmult = None  # Current robot accel mult
+    _envclearance = None  # Environment clearance in millimeters, e.g. 20
+    _robotBridgeConnectionInfo = None  # dict holding the connection info for the robot bridge.
+  extraConstructorArgsDocstringLines: |
+    robotname (str, optional): Name of the robot, e.g. VP-5243I
+    robotspeed (float, optional): Speed of the robot, e.g. 0.4
+    robotaccelmult (float, optional): Optional multiplier for the robot acceleration.
+    envclearance (str, optional): Environment clearance in millimeter, e.g. 20
+    robotBridgeConnectionInfo (str, optional): dict holding the connection info for the robot bridge.
+  extraConstructorContent: |
+    self._robotname = robotname
+    self._robotspeed = robotspeed
+    self._robotaccelmult = robotaccelmult
+    self._envclearance = envclearance
+    self._robotBridgeConnectionInfo = robotBridgeConnectionInfo
+  extraClientContent: ""
+  extraClientStaticFunctions: |
+    def GetRobotConnectionInfo(self):
+        """ """
+        return self._robotBridgeConnectionInfo
+
+    def SetRobotConnectionInfo(self, robotBridgeConnectionInfo):
+        """
+
+        Args:
+            robotBridgeConnectionInfo:
+        """
+        self._robotBridgeConnectionInfo = robotBridgeConnectionInfo
+
+    def GetRobotName(self):
+        """ """
+        return self._robotname
+
+    def SetRobotName(self, robotname):
+        """
+
+        Args:
+            robotname (str):
+        """
+        self._robotname = robotname
+
+    def SetRobotSpeed(self, robotspeed):
+        """
+
+        Args:
+            robotspeed:
+        """
+        self._robotspeed = robotspeed
+
+    def SetRobotAccelMult(self, robotaccelmult):
+        """
+
+        Args:
+            robotaccelmult:
+        """
+        self._robotaccelmult = robotaccelmult
+
+    def ExecuteCommand(self, taskparameters, robotname=None, toolname=None, robotspeed=None, robotaccelmult=None, envclearance=None, timeout=10, fireandforget=False, respawnopts=None):
+        """Wrapper to ExecuteCommand with robot info specified in taskparameters.
+
+        Executes a command in the task.
+
+        Args:
+            taskparameters (dict): Specifies the arguments of the task/command being called.
+            robotname (str, optional): Name of the robot
+            robotaccelmult (float, optional):
+            envclearance (float, optional):
+            respawnopts (optional):
+            toolname (str, optional): Name of the manipulator. Default: self.toolname
+            timeout (float, optional):  (Default: 10)
+            fireandforget (bool, optional):  (Default: False)
+            robotspeed (float, optional):
+
+        Returns:
+            dict: Contains:
+                - robottype (str): robot type
+                - currentjointvalues (list[float]): current joint values, vector length = DOF
+                - elapsedtime (float): elapsed time in seconds
+                - numpoints (int): the number of points
+                - error (dict): optional error info
+                - desc (str): error message
+                - type (str): error type
+                - errorcode (str): error code
+        """
+        if robotname is None:
+            robotname = self._robotname
+
+        # caller wants to use a different tool
+        if toolname is not None:
+            # set at the first level
+            taskparameters['toolname'] = toolname
+
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+
+        if 'robotspeed' not in taskparameters:
+            if robotspeed is None:
+                robotspeed = self._robotspeed
+            if robotspeed is not None:
+                taskparameters['robotspeed'] = robotspeed
+
+        if 'robotaccelmult' not in taskparameters:
+            if robotaccelmult is None:
+                robotaccelmult = self._robotaccelmult
+            if robotaccelmult is not None:
+                taskparameters['robotaccelmult'] = robotaccelmult
+
+        if self._robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = self._robotBridgeConnectionInfo
+
+        if 'envclearance' not in taskparameters or taskparameters['envclearance'] is None:
+            if envclearance is None:
+                envclearance = self._envclearance
+            if envclearance is not None:
+                taskparameters['envclearance'] = envclearance
+
+        return super(RealtimeRobotPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, respawnopts=respawnopts)
+
+include:
+- components_realtimerobot.yaml
+x-specModifications:
+  services:
+    SetJogModeVelocities:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                movejointsigns:
+                  paramOrderingIndex: 0
+                robotname:
+                  paramOrderingIndex: 1
+                toolname:
+                  paramOrderingIndex: 2
+                robotspeed:
+                  paramOrderingIndex: 3
+                robotaccelmult:
+                  paramOrderingIndex: 4
+                canJogInCheckMode:
+                  paramOrderingIndex: 5
+                timeout:
+                  paramOrderingIndex: 7
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 1
+                fireandforget:
+                  paramOrderingIndex: 8
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                jogtype:
+                  paramOrderingIndex: 9
+                checkSelfCollisionWhileJogging:
+                  paramOrderingIndex: 10
+                force:
+                  paramOrderingIndex: 11
+                ignoredArgs: {}
+    CalculateTestRangeFromCollision:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 1
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                jointName:
+                  paramOrderingIndex: 2
+                unit:
+                  paramOrderingIndex: 3
+                envclearance:
+                  paramOrderingIndex: 4
+                ignoredArgs: {}
+    StopGripper:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                robotname:
+                  paramOrderingIndex: 0
+                grippername:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                fireandforget:
+                  paramOrderingIndex: 4
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                toolname:
+                  paramOrderingIndex: 5
+                ignoredArgs: {}
+    GetMotorControlParameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 1
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    MoveToHandPosition:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                goaltype:
+                  paramOrderingIndex: 0
+                goals:
+                  paramOrderingIndex: 1
+                toolname:
+                  paramOrderingIndex: 2
+                envclearance:
+                  paramOrderingIndex: 3
+                closegripper:
+                  paramOrderingIndex: 4
+                robotspeed:
+                  paramOrderingIndex: 5
+                robotaccelmult:
+                  paramOrderingIndex: 6
+                timeout:
+                  paramOrderingIndex: 7
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    ClearRobotBridgeError:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    SaveGripper:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                robotname:
+                  paramOrderingIndex: 1
+                filename:
+                  paramOrderingIndex: 2
+                manipname:
+                  paramOrderingIndex: 3
+                ignoredArgs: {}
+    ExecuteRobotProgram:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                robotProgramName:
+                  paramOrderingIndex: 0
+                robotname:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                fireandforget:
+                  paramOrderingIndex: 4
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                ignoredArgs: {}
+    SetLocationTracking:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                fireandforget:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                cycleIndex:
+                  paramOrderingIndex: 3
+                locationReplaceInfos:
+                  paramOrderingIndex: 4
+                removeLocationNames:
+                  paramOrderingIndex: 5
+                minRobotBridgeTimeStampUS:
+                  paramOrderingIndex: 6
+                dynamicObstacleBaseName:
+                  paramOrderingIndex: 7
+                targetUpdateBaseName:
+                  paramOrderingIndex: 8
+                ioSignalsInfo:
+                  paramOrderingIndex: 9
+                unit:
+                  paramOrderingIndex: 10
+                ignoredArgs: {}
+    GetRobotBridgeIOVariables:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                ioname:
+                  paramOrderingIndex: 0
+                ionames:
+                  paramOrderingIndex: 1
+                robotname:
+                  paramOrderingIndex: 2
+                timeout:
+                  paramOrderingIndex: 3
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    SaveScene:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                filename:
+                  paramOrderingIndex: 1
+                preserveexternalrefs:
+                  paramOrderingIndex: 2
+                externalref:
+                  paramOrderingIndex: 3
+                saveclone:
+                  paramOrderingIndex: 4
+                saveReferenceUriAsHint:
+                  paramOrderingIndex: 5
+                ignoredArgs: {}
+    ComputeIkParamPosition:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                name:
+                  paramOrderingIndex: 0
+                robotname:
+                  $merge: '#/components/robotname'
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    MoveJointsToJointConfigurationStates:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                jointConfigurationStates:
+                  mapsTo: goalJointConfigurationStates
+                  paramOrderingIndex: 0
+                robotname:
+                  paramOrderingIndex: 1
+                robotspeed:
+                  paramOrderingIndex: 2
+                robotaccelmult:
+                  paramOrderingIndex: 3
+                execute:
+                  default: 1
+                  paramOrderingIndex: 4
+                startJointConfigurationStates:
+                  paramOrderingIndex: 5
+                envclearance:
+                  paramOrderingIndex: 6
+                timeout:
+                  paramOrderingIndex: 7
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                jointStates:
+                  paramOrderingIndex: 9
+                jointindices:
+                  paramOrderingIndex: 10
+                ignoredArgs: {}
+    GetMotorControlParameterSchema:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 1
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    GetJointValues:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                executetimeout:
+                  paramOrderingIndex: 1
+                unit:
+                  paramOrderingIndex: 2
+                ignoredArgs: {}
+    SetRobotBridgePause:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    ComputeRobotConfigsForGraspVisualization:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                targetname:
+                  paramOrderingIndex: 0
+                graspname:
+                  paramOrderingIndex: 1
+                robotname:
+                  paramOrderingIndex: 2
+                toolname:
+                  paramOrderingIndex: 3
+                unit:
+                  paramOrderingIndex: 4
+                timeout:
+                  paramOrderingIndex: 6
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    SetRobotBridgeIOVariables:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                iovalues:
+                  paramOrderingIndex: 0
+                  forceCast: list
+                robotname:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    IsProfilingRunning:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    GetDynamicObjects:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 1
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 1
+                ignoredArgs: {}
+    GetInstObjectInfoFromURI:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                instobjecturi:
+                  paramOrderingIndex: 0
+                  mapsTo: objecturi
+                unit:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                instobjectpose:
+                  paramOrderingIndex: 3
+                ignoredArgs: {}
+    GetInstObjectAndSensorInfo:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                instobjectnames:
+                  paramOrderingIndex: 0
+                sensornames:
+                  paramOrderingIndex: 1
+                unit:
+                  paramOrderingIndex: 2
+                timeout:
+                  paramOrderingIndex: 3
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoreMissingObjects:
+                  paramOrderingIndex: 4
+                ignoredArgs: {}
+    RunMotorControlTuningStepTest:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                jointName:
+                  paramOrderingIndex: 0
+                amplitude:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    SetTransform:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                targetname:
+                  paramOrderingIndex: 0
+                translation:
+                  paramOrderingIndex: 1
+                unit:
+                  paramOrderingIndex: 2
+                rotationmat:
+                  paramOrderingIndex: 3
+                quaternion:
+                  paramOrderingIndex: 4
+                timeout:
+                  paramOrderingIndex: 5
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    SetRobotBridgeControlMode:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                controlMode:
+                  paramOrderingIndex: 0
+                timeout:
+                  paramOrderingIndex: 1
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 3
+                fireandforget:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                ignoredArgs: {}
+    RemoveObjectsWithPrefix:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                prefix:
+                  paramOrderingIndex: 0
+                removeNamePrefixes:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                fireandforget:
+                  paramOrderingIndex: 4
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                removeLocationNames:
+                  paramOrderingIndex: 5
+                doRemoveOnlyDynamic:
+                  $merge: '#/components/doRemoveOnlyDynamic'
+                  paramOrderingIndex: 6
+                ignoredArgs: {}
+    UpdateObjects:
+      omitFromArguments:
+      - objectname
+      - object_uri
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                envstate:
+                  paramOrderingIndex: 0
+                targetname:
+                  paramOrderingIndex: 1
+                  $merge: '#/components/targetname'
+                  mapsTo: objectname
+                  mapsToParamWithCustomAssignment:
+                    param: object_uri
+                    assignment: u'mujin:/%s.mujin.dae' % (targetname)
+                state:
+                  forceJsonDumps: true
+                  paramOrderingIndex: 2
+                unit:
+                  paramOrderingIndex: 3
+                timeout:
+                  paramOrderingIndex: 4
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    RunMotorControlTuningBangBangResponse:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                jointName:
+                  paramOrderingIndex: 0
+                amplitude:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 60
+                ignoredArgs: {}
+    GetMotorControlParameter:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                jointName:
+                  paramOrderingIndex: 0
+                parameterName:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 3
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    GetAABB:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                targetname:
+                  paramOrderingIndex: 0
+                unit:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                linkname:
+                  paramOrderingIndex: 3
+                ignoredArgs: {}
+    MoveJoints:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                goaljoints:
+                  paramOrderingIndex: 100
+                  forceCast: list
+                  default: None
+                  x-SpecialCase: true
+                jointindices:
+                  paramOrderingIndex: 1
+                  forceCast: list
+                robotname:
+                  paramOrderingIndex: 2
+                startvalues:
+                  paramOrderingIndex: 6
+                  forceCast: list
+                timeout:
+                  paramOrderingIndex: 8
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                robotProgramName:
+                  paramOrderingIndex: 10
+                  forceCast: list
+                execute:
+                  default: 1
+                  paramOrderingIndex: 5
+                envclearance:
+                  paramOrderingIndex: 7
+                robotaccelmult:
+                  paramOrderingIndex: 4
+                robotspeed:
+                  paramOrderingIndex: 3
+                jointvalues:
+                  description: "(DEPRECATED. Use goaljoints) List of joint values to move to."
+                  forceCast: list
+                  x-SpecialCase: true
+                  required: true
+                  type: array
+                  items:
+                    type: number
+                  paramOrderingIndex: 0
+                ignoredArgs: {}
+    SetRobotBridgeExternalIOPublishing:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                enable:
+                  paramOrderingIndex: 0
+                  forceCast: bool
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 2
+                fireandforget:
+                  paramOrderingIndex: 3
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                ignoredArgs: {}
+    StopProfiling:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    CalibrateGripper:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                robotname:
+                  paramOrderingIndex: 0
+                grippername:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                fireandforget:
+                  paramOrderingIndex: 4
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                toolname:
+                  paramOrderingIndex: 5
+                ignoredArgs: {}
+    GetTimeToRunDynamicsIdentificationTest:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 1
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                jointName:
+                  paramOrderingIndex: 2
+                minJointAngle:
+                  paramOrderingIndex: 3
+                maxJointAngle:
+                  paramOrderingIndex: 4
+                ignoredArgs: {}
+    MoveJointsToPositionConfiguration:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                positionConfigurationName:
+                  paramOrderingIndex: 0
+                positionConfigurationCandidateNames:
+                  paramOrderingIndex: 1
+                robotname:
+                  paramOrderingIndex: 2
+                envclearance:
+                  paramOrderingIndex: 7
+                execute:
+                  default: 1
+                  paramOrderingIndex: 5
+                robotaccelmult:
+                  paramOrderingIndex: 4
+                robotspeed:
+                  paramOrderingIndex: 3
+                startvalues:
+                  paramOrderingIndex: 6
+                  forceCast: list
+                timeout:
+                  paramOrderingIndex: 8
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    SetRobotBridgeResume:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    ReloadModule:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    GetTransform:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                targetname:
+                  paramOrderingIndex: 0
+                connectedBodyName:
+                  paramOrderingIndex: 1
+                linkName:
+                  paramOrderingIndex: 2
+                geometryName:
+                  paramOrderingIndex: 3
+                geometryPk:
+                  paramOrderingIndex: 4
+                unit:
+                  paramOrderingIndex: 5
+                timeout:
+                  paramOrderingIndex: 6
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    GetOBB:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                targetname:
+                  paramOrderingIndex: 0
+                unit:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                linkname:
+                  paramOrderingIndex: 3
+                ignoredArgs: {}
+    ResetCacheTemplates:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 1
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 1
+                fireandforget:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                ignoredArgs: {}
+    UnchuckGripper:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                robotname:
+                  paramOrderingIndex: 0
+                grippername:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                targetname:
+                  paramOrderingIndex: 4
+                toolname:
+                  paramOrderingIndex: 5
+                pulloutdist:
+                  paramOrderingIndex: 6
+                deletetarget:
+                  paramOrderingIndex: 7
+                ignoredArgs: {}
+    EnsureSyncWithRobotBridge:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                syncTimeStampUS:
+                  paramOrderingIndex: 0
+                timeout:
+                  paramOrderingIndex: 1
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                fireandforget:
+                  paramOrderingIndex: 3
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  type: boolean
+                ignoredArgs: {}
+    ShutdownRobotBridge:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    GetInnerEmptyRegionOBB:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                targetname:
+                  paramOrderingIndex: 0
+                linkname:
+                  paramOrderingIndex: 1
+                unit:
+                  paramOrderingIndex: 2
+                timeout:
+                  paramOrderingIndex: 3
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    ResetCachedRobotConfigurationState:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                fireandforget:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                ignoredArgs: {}
+    SetRobotBridgeServoOn:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                isservoon:
+                  customParameterName: servoon
+                  paramOrderingIndex: 0
+                robotname:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 3
+                fireandforget:
+                  paramOrderingIndex: 3
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                ignoredArgs: {}
+    RunMotorControlTuningDecayingChirp:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                jointName:
+                  paramOrderingIndex: 0
+                amplitude:
+                  paramOrderingIndex: 1
+                freqMax:
+                  paramOrderingIndex: 2
+                timeout:
+                  paramOrderingIndex: 3
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 120
+                ignoredArgs: {}
+    ResetLocationTracking:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                fireandforget:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                resetAllLocations:
+                  paramOrderingIndex: 3
+                resetLocationName:
+                  paramOrderingIndex: 4
+                resetLocationNames:
+                  paramOrderingIndex: 5
+                checkIdAndResetLocationName:
+                  paramOrderingIndex: 6
+                ignoredArgs: {}
+      returns:
+        returnPayloadField: clearedLocationNames
+    RunMotorControlTuningMaximulLengthSequence:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                jointName:
+                  paramOrderingIndex: 0
+                amplitude:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    Release:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                targetname:
+                  paramOrderingIndex: 0
+                timeout:
+                  paramOrderingIndex: 1
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    Grab:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                targetname:
+                  paramOrderingIndex: 0
+                toolname:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    GetTrajectoryLog:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                startindex:
+                  paramOrderingIndex: 1
+                num:
+                  paramOrderingIndex: 2
+                includejointvalues:
+                  paramOrderingIndex: 3
+                ignoredArgs: {}
+    RunMotorControlTuningGaussianImpulse:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                jointName:
+                  paramOrderingIndex: 0
+                amplitude:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 20
+                ignoredArgs: {}
+    GetGrabbed:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    GetRobotBridgeState:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    UpdateLocationContainerIdType:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                locationName:
+                  paramOrderingIndex: 0
+                containerName:
+                  paramOrderingIndex: 1
+                containerId:
+                  paramOrderingIndex: 2
+                containerType:
+                  paramOrderingIndex: 3
+                trackingCycleIndex:
+                  paramOrderingIndex: 5
+                timeout:
+                  paramOrderingIndex: 6
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                fireandforget:
+                  paramOrderingIndex: 8
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                unit:
+                  paramOrderingIndex: 9
+                ignoredArgs: {}
+    GetState:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                fireandforget:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                ignoredArgs: {}
+    ChuckGripper:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                robotname:
+                  paramOrderingIndex: 0
+                grippername:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                toolname:
+                  paramOrderingIndex: 4
+                ignoredArgs: {}
+    ResetLocationTrackingContainerId:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                locationName:
+                  paramOrderingIndex: 0
+                checkContainerId:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                fireandforget:
+                  paramOrderingIndex: 4
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                ignoredArgs: {}
+    ResetSafetyFault:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 3
+                fireandforget:
+                  paramOrderingIndex: 1
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                ignoredArgs: {}
+    SetRobotBridgeLockMode:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                islockmode:
+                  paramOrderingIndex: 0
+                robotname:
+                  paramOrderingIndex: 1
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 3
+                fireandforget:
+                  paramOrderingIndex: 3
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                ignoredArgs: {}
+    StartProfiling:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                clocktype:
+                  paramOrderingIndex: 0
+                timeout:
+                  paramOrderingIndex: 1
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    ComputeIKFromParameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                toolname:
+                  paramOrderingIndex: 0
+                timeout:
+                  paramOrderingIndex: 1
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+    EndJogMode:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 1
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 1
+                fireandforget:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                ignoredArgs: {}
+    ReplaceBodies:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                bodieslist:
+                  paramOrderingIndex: 0
+                timeout:
+                  paramOrderingIndex: 1
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                replaceInfos:
+                  paramOrderingIndex: 2
+                testLocationName:
+                  paramOrderingIndex: 3
+                testLocationContainerId:
+                  paramOrderingIndex: 4
+                removeNamePrefixes:
+                  paramOrderingIndex: 5
+                removeLocationNames:
+                  paramOrderingIndex: 6
+                doRemoveOnlyDynamic:
+                  $merge: '#/components/doRemoveOnlyDynamic'
+                  paramOrderingIndex: 7
+                unit:
+                  paramOrderingIndex: 8
+                ignoredArgs: {}
+    RunDynamicsIdentificationTest:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  required: true
+                ignoredArgs: {}
+    MoveGripper:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                grippervalues:
+                  paramOrderingIndex: 0
+                robotname:
+                  paramOrderingIndex: 1
+                grippername:
+                  paramOrderingIndex: 2
+                timeout:
+                  paramOrderingIndex: 3
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                fireandforget:
+                  paramOrderingIndex: 5
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                toolname:
+                  paramOrderingIndex: 6
+                ignoredArgs: {}
+    MoveToolLinear:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                goaltype:
+                  paramOrderingIndex: 0
+                goals:
+                  paramOrderingIndex: 1
+                toolname:
+                  paramOrderingIndex: 2
+                timeout:
+                  paramOrderingIndex: 3
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                robotspeed:
+                  paramOrderingIndex: 4
+                workmaxdeviationangle:
+                  paramOrderingIndex: 5
+                workspeed:
+                  paramOrderingIndex: 6
+                workaccel:
+                  paramOrderingIndex: 7
+                worksteplength:
+                  paramOrderingIndex: 8
+                plannername:
+                  paramOrderingIndex: 9
+                workminimumcompletetime:
+                  paramOrderingIndex: 10
+                workminimumcompleteratio:
+                  paramOrderingIndex: 11
+                numspeedcandidates:
+                  paramOrderingIndex: 12
+                workignorefirstcollisionee:
+                  paramOrderingIndex: 13
+                workignorelastcollisionee:
+                  paramOrderingIndex: 14
+                workignorefirstcollision:
+                  paramOrderingIndex: 15
+                ignoredArgs: {}
+    RestoreSceneInitialState:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 1
+                preserverobotdofvalues:
+                  paramOrderingIndex: 3
+                  default: 1
+                ignoredArgs: {}
+    GetLocationTrackingInfos:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                fireandforget:
+                  paramOrderingIndex: 0
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  default: false
+                timeout:
+                  paramOrderingIndex: 2
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
+      returns:
+        returnPayloadField: activeLocationTrackingInfos
+    SetMotorControlParameter:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                jointName:
+                  paramOrderingIndex: 0
+                parameterName:
+                  paramOrderingIndex: 1
+                parameterValue:
+                  paramOrderingIndex: 2
+                timeout:
+                  paramOrderingIndex: 3
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                ignoredArgs: {}
