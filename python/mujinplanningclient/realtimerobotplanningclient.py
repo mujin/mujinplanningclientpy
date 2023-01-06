@@ -2133,7 +2133,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def SetRobotBridgeExternalIOPublishing(self, enable, timeout=2, fireandforget=False, **kwargs):
+    def SetRobotBridgeExternalIOPublishing(self, enable, timeout=2, fireandforget=False, **ignoredArgs):
         """Enables publishing collision data to the robotbridge
 
         Args:
@@ -2143,28 +2143,24 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'SetRobotBridgeExternalIOPublishing',
-            'enable': bool(enable)
+            'enable': bool(enable),
         }
-        taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-    
-    def RestoreSceneInitialState(self, timeout=1, **kwargs):
-        """Restore scene to the state on filesystem
+
+    def RestoreSceneInitialState(self, timeout=1, preserverobotdofvalues=1, **ignoredArgs):
+        """Restores the scene to the state on the filesystem
 
         Args:
-            timeout (float, optional):  (Default: 1)
+            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 1)
+            preserverobotdofvalues (bool, optional): (Default: 1)
         """
         taskparameters = {
             'command': 'RestoreSceneInitialState',
+            'preserverobotdofvalues': preserverobotdofvalues,
         }
-        taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    #
-    # Motor test related.
-    #
-
-    def RunMotorControlTuningStepTest(self, jointName, amplitude, timeout=10, **kwargs):
+    def RunMotorControlTuningStepTest(self, jointName, amplitude, timeout=10, **ignoredArgs):
         """Runs step response test on specified joint and returns result
 
         Args:
@@ -2177,27 +2173,41 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'jointName': jointName,
             'amplitude': amplitude,
         }
-        taskparameters.update(kwargs)
-        log.warn('sending taskparameters=%r', taskparameters)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunMotorControlTuningMaximulLengthSequence(self, jointName, amplitude, timeout=10, **kwargs):
+    def RunMotorControlTuningMaximulLengthSequence(self, jointName, amplitude, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
         """Runs maximum length sequence test on specified joint and returns result
 
         Args:
             jointName (str): The name of the joint.
             amplitude (float): The amplitude.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'RunMotorControlTuningMaximulLengthSequence',
+            'unit': unit,
             'jointName': jointName,
             'amplitude': amplitude,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunMotorControlTuningDecayingChirp(self, jointName, amplitude, freqMax, timeout=120, **kwargs):
+    def RunMotorControlTuningDecayingChirp(self, jointName, amplitude, freqMax, timeout=120, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
         """runs chirp test on specified joint and returns result
 
         Args:
@@ -2205,70 +2215,159 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             amplitude (float): The amplitude.
             freqMax (float): The maximum frequency in Hz
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 120)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'RunMotorControlTuningDecayingChirp',
+            'unit': unit,
             'jointName': jointName,
-            'freqMax': freqMax,
             'amplitude': amplitude,
+            'freqMax': freqMax,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunMotorControlTuningGaussianImpulse(self, jointName, amplitude, timeout=20, **kwargs):
+    def RunMotorControlTuningGaussianImpulse(self, jointName, amplitude, timeout=20, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
         """Runs Gaussian Impulse test on specified joint and returns result
 
         Args:
             jointName (str): The name of the joint.
             amplitude (float): The amplitude.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 20)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'RunMotorControlTuningGaussianImpulse',
+            'unit': unit,
             'jointName': jointName,
             'amplitude': amplitude,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunMotorControlTuningBangBangResponse(self, jointName, amplitude, timeout=60, **kwargs):
+    def RunMotorControlTuningBangBangResponse(self, jointName, amplitude, timeout=60, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
         """Runs bangbang trajectory in acceleration or jerk space and returns result
 
         Args:
             jointName (str): The name of the joint.
             amplitude (float): The amplitude.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 60)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'RunMotorControlTuningBangBangResponse',
+            'unit': unit,
             'jointName': jointName,
             'amplitude': amplitude,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunDynamicsIdentificationTest(self, timeout, **kwargs):
+    def RunDynamicsIdentificationTest(self, timeout, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
         """
 
         Args:
-            timeout (float): Time in seconds after which the command is assumed to have failed.
+            timeout (float): Time in seconds after which the command is assumed to have failed. (Default: 4.0)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'RunDynamicsIdentificationTest',
+            'unit': unit,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetTimeToRunDynamicsIdentificationTest(self, timeout=10, **kwargs):
+    def GetTimeToRunDynamicsIdentificationTest(self, timeout=10, jointName=None, minJointAngle=None, maxJointAngle=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
         """
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            jointName (str, optional): The name of the joint.
+            minJointAngle (float, optional): The joint angle to start the dynamics identification test at.
+            maxJointAngle (float, optional): The joint angle to finish the dynamics identification test at.
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'GetTimeToRunDynamicsIdentificationTest',
+            'unit': unit,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
+        if jointName is not None:
+            taskparameters['jointName'] = jointName
+        if minJointAngle is not None:
+            taskparameters['minJointAngle'] = minJointAngle
+        if maxJointAngle is not None:
+            taskparameters['maxJointAngle'] = maxJointAngle
         return self.ExecuteCommand(taskparameters, timeout=timeout)
     
     def CalculateTestRangeFromCollision(self, timeout=10, **kwargs):
