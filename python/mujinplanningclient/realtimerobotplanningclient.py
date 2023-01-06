@@ -952,18 +952,19 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if doRemoveOnlyDynamic is not None:
             taskparameters['doRemoveOnlyDynamic'] = doRemoveOnlyDynamic
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-    
-    def GetTrajectoryLog(self, timeout=10, **kwargs):
+
+    def GetTrajectoryLog(self, timeout=10, startindex=None, num=None, includejointvalues=False, saverawtrajectories=None, **ignoredArgs):
         """Gets the recent trajectories executed on the binpicking server. The internal server keeps trajectories around for 10 minutes before clearing them.
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            startindex (int): Start of the trajectory to get. If negative, will start counting from the end. For example, -1 is the last element, -2 is the second to last.
-            num (int): Number of trajectories from startindex to return. If 0 will return all the trajectories starting from startindex
+            startindex (int, optional): Start of the trajectory to get. If negative, will start counting from the end. For example, -1 is the last element, -2 is the second to last. Default: 0
+            num (int, optional): Number of trajectories from startindex to return. If 0, will return all the trajectories starting from startindex. Default: 0
             includejointvalues (bool, optional): If True, will include timedjointvalues. If False, will just give back the trajectories.
+            saverawtrajectories (bool, optional): If True, will save the raw trajectories.
 
         Returns:
-            dict: With structure:
+            A dict with structure: 
                 total: 10
                 trajectories: [
                 {
@@ -978,45 +979,96 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
                 
                 Where timedjointvalues is a list of joint values and the trajectory time. For a 3DOF robot sampled at 0.008s, this is
                 [J1, J2, J3, 0, J1, J2, J3, 0.008, J1, J2, J3, 0.016, ...]
+
         """
         taskparameters = {
             'command': 'GetTrajectoryLog',
+            'includejointvalues': includejointvalues,
         }
-        taskparameters.update(kwargs)
+        if saverawtrajectories is not None:
+            taskparameters['saverawtrajectories'] = saverawtrajectories
+        if startindex is not None:
+            taskparameters['startindex'] = startindex
+        if num is not None:
+            taskparameters['num'] = num
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ChuckGripper(self, robotname=None, grippername=None, timeout=10, **kwargs):
+    def ChuckGripper(self, robotname=None, grippername=None, timeout=10, toolname=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
         """Chucks the manipulator
 
         Args:
             robotname (str, optional): Name of the robot
             grippername (str, optional): Name of the gripper.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'ChuckGripper',
-            'grippername': grippername,
         }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout)
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        if grippername is not None:
+            taskparameters['grippername'] = grippername
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def UnchuckGripper(self, robotname=None, grippername=None, timeout=10, **kwargs):
+    def UnchuckGripper(self, robotname=None, grippername=None, timeout=10, targetname=None, toolname=None, pulloutdist=None, deletetarget=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
         """Unchucks the manipulator and releases the target
 
         Args:
             robotname (str, optional): Name of the robot
             grippername (str, optional): Name of the gripper.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            targetname (str): Name of the target object.
+            targetname (str, optional): Name of the target object.
+            toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
+            pulloutdist (float, optional): Distance to move away along the tool direction after releasing.
+            deletetarget (int, optional): If 1, removes the target object from the environment after releasing. (Default: 1)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'UnchuckGripper',
-            'grippername': grippername,
+            'unit': unit,
         }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        if grippername is not None:
+            taskparameters['grippername'] = grippername
+        if targetname is not None:
+            taskparameters['targetname'] = targetname
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
+        if pulloutdist is not None:
+            taskparameters['pulloutdist'] = pulloutdist
+        if deletetarget is not None:
+            taskparameters['deletetarget'] = deletetarget
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def CalibrateGripper(self, robotname=None, grippername=None, timeout=10, fireandforget=False, **kwargs):
+    def CalibrateGripper(self, robotname=None, grippername=None, timeout=10, fireandforget=False, toolname=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
         """Goes through the gripper calibration procedure
 
         Args:
@@ -1024,15 +1076,29 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             grippername (str, optional): Name of the gripper.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'CalibrateGripper',
-            'grippername': grippername,
         }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout, fireandforget=fireandforget)
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        if grippername is not None:
+            taskparameters['grippername'] = grippername
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def StopGripper(self, robotname=None, grippername=None, timeout=10, fireandforget=False, **kwargs):
+    def StopGripper(self, robotname=None, grippername=None, timeout=10, fireandforget=False, toolname=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
         """
 
         Args:
@@ -1040,33 +1106,69 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             grippername (str, optional): Name of the gripper.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'StopGripper',
-            'grippername': grippername,
         }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout, fireandforget=fireandforget)
-    
-    def MoveGripper(self, grippervalues, robotname=None, grippername=None, timeout=10, fireandforget=False, **kwargs):
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        if grippername is not None:
+            taskparameters['grippername'] = grippername
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
+    def MoveGripper(self, grippervalues, robotname=None, grippername=None, timeout=10, fireandforget=False, toolname=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
         """Moves the chuck of the manipulator to a given value.
 
         Args:
-            grippervalues (list): Target value(s) of the chuck.
+            grippervalues (list[float]): Target value(s) of the chuck.
             robotname (str, optional): Name of the robot
             grippername (str, optional): Name of the gripper.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'MoveGripper',
-            'grippername': grippername,
+            'unit': unit,
             'grippervalues': grippervalues,
         }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout, fireandforget=fireandforget)
-    
-    def ExecuteRobotProgram(self, robotProgramName, robotname=None, timeout=10, fireandforget=False, **kwargs):
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        if grippername is not None:
+            taskparameters['grippername'] = grippername
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
+    def ExecuteRobotProgram(self, robotProgramName, robotname=None, timeout=10, fireandforget=False, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
         """Execute a robot specific program by name
 
         Args:
@@ -1074,15 +1176,33 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             robotname (str, optional): Name of the robot
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'ExecuteRobotProgram',
+            'unit': unit,
             'robotProgramName': robotProgramName,
         }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout, fireandforget=fireandforget)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def SaveScene(self, timeout=10, **kwargs):
+    def SaveScene(self, timeout=10, filename=None, preserveexternalrefs=None, externalref=None, saveclone=None, saveReferenceUriAsHint=None, **ignoredArgs):
         """Saves the current scene to file
 
         Args:
@@ -1090,19 +1210,29 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             filename (str, optional): e.g. /tmp/testscene.mujin.dae, if not specified, it will be saved with an auto-generated filename
             preserveexternalrefs (bool, optional): If True, any bodies that are currently being externally referenced from the environment will be saved as external references.
             externalref (str, optional): If '*', then each of the objects will be saved as externally referencing their original filename. Otherwise will force saving specific bodies as external references.
-            saveclone: If 1, will save the scenes for all the cloned environments
+            saveclone: (DEPRECATED) If 1, will save the scenes for all the cloned environments
             saveReferenceUriAsHint (bool, optional): If True, use save the reference uris as referenceUriHint so that webstack does not get confused and deletes content
 
         Returns:
-            dict: The filename the scene is saved to, in a json dictionary, e.g. {'filename': '2013-11-01-17-10-00-UTC.dae'}
+            The filename the scene is saved to, in a json dictionary, e.g. {'filename': '2013-11-01-17-10-00-UTC.dae'}
+
         """
         taskparameters = {
             'command': 'SaveScene',
         }
-        taskparameters.update(kwargs)
+        if filename is not None:
+            taskparameters['filename'] = filename
+        if preserveexternalrefs is not None:
+            taskparameters['preserveexternalrefs'] = preserveexternalrefs
+        if externalref is not None:
+            taskparameters['externalref'] = externalref
+        if saveclone is not None:
+            taskparameters['saveclone'] = saveclone
+        if saveReferenceUriAsHint is not None:
+            taskparameters['saveReferenceUriAsHint'] = saveReferenceUriAsHint
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SaveGripper(self, timeout=10, robotname=None, **kwargs):
+    def SaveGripper(self, timeout=10, robotname=None, filename=None, manipname=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
         """Separate gripper from a robot in a scene and save it.
 
         Args:
@@ -1110,12 +1240,25 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             robotname (str, optional): Name of the robot waiting to extract the hand from.
             filename (str, optional): File name to save on the file system. e.g. /tmp/robotgripper/mujin.dae
             manipname (str, optional): Name of the manipulator.
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
         """
         taskparameters = {
             'command': 'SaveGripper',
+            'unit': unit,
         }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        if filename is not None:
+            taskparameters['filename'] = filename
+        if manipname is not None:
+            taskparameters['manipname'] = manipname
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     def MoveJointsToJointConfigurationStates(self, jointConfigurationStates, robotname=None, robotspeed=None, robotaccelmult=None, execute=1, startJointConfigurationStates=None, envclearance=None, timeout=10, **kwargs):
         """Moves the robot to desired joint angles specified in jointStates
