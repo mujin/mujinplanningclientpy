@@ -115,7 +115,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             robotaccelmult (float, optional):
             envclearance (float, optional):
             respawnopts (optional):
-            toolname (str, optional): Name of the manipulator. Default: self.toolname
+            toolname (str, optional): Name of the manipulator.
             timeout (float, optional):  (Default: 10)
             fireandforget (bool, optional):  (Default: False)
             robotspeed (float, optional):
@@ -1937,49 +1937,82 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    #
-    # jogging related
-    #
-
-    def SetJogModeVelocities(self, movejointsigns, robotname=None, toolname=None, robotspeed=None, robotaccelmult=None, canJogInCheckMode=None, timeout=1, fireandforget=False, **kwargs):
+    def SetJogModeVelocities(self, movejointsigns, robotname=None, toolname=None, robotspeed=None, robotaccelmult=None, canJogInCheckMode=None, timeout=1, fireandforget=False, jogtype=None, checkSelfCollisionWhileJogging=None, force=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotJogParameters=None, simulationtimestep=None, plotDirection=None, **ignoredArgs):
         """
 
         Args:
-            movejointsigns (list): Joint signs used for jogging. If less than the number of joints, will be padded with zeros.
+            movejointsigns (list[float]): Joint signs used for jogging. If less than the number of joints, will be padded with zeros.
             robotname (str, optional): Name of the robot
-            toolname (str, optional): Name of the manipulator. Defaults to self.toolname
-            robotspeed (float, optional): Value in (0,1] setting the percentage of robot speed to move at
+            toolname (str, optional): Name of the manipulator.
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             robotaccelmult (float, optional): Value in (0,1] setting the percentage of robot acceleration to move at
-            canJogInCheckMode: if true, then allow jogging even if in check mode. By default it is false.
+            canJogInCheckMode (bool, optional): If True, then allow jogging even if in check mode. (Default: False)
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 1)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
-            jogtype (str): One of 'joints', 'world', 'robot', 'tool'
+            jogtype (str, optional): One of 'joints', 'world', 'robot', 'tool'. (DEPRECATED: set this as a field in robotJogParameters instead)
             checkSelfCollisionWhileJogging (bool, optional):
             force (bool, optional): If true, forces the velocities to be set.
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            robotJogParameters (dict, optional): A dictionary. Includes field 'jogtype' (One of 'joints', 'world', 'robot', 'tool').
+            simulationtimestep (float, optional): Time step of the simulation.
+            plotDirection (bool, optional): If True, plot the direction.
         """
         taskparameters = {
             'command': 'SetJogModeVelocities',
+            'unit': unit,
             'movejointsigns': movejointsigns,
         }
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotJogParameters is not None:
+            taskparameters['robotJogParameters'] = robotJogParameters
+        if simulationtimestep is not None:
+            taskparameters['simulationtimestep'] = simulationtimestep
+        if plotDirection is not None:
+            taskparameters['plotDirection'] = plotDirection
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
         if canJogInCheckMode is not None:
             taskparameters['canJogInCheckMode'] = canJogInCheckMode
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, toolname=toolname, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout, fireandforget=fireandforget)
+        if jogtype is not None:
+            taskparameters['jogtype'] = jogtype
+        if checkSelfCollisionWhileJogging is not None:
+            taskparameters['checkSelfCollisionWhileJogging'] = checkSelfCollisionWhileJogging
+        if force is not None:
+            taskparameters['force'] = force
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def EndJogMode(self, timeout=1, fireandforget=False, **kwargs):
+    def EndJogMode(self, timeout=1, fireandforget=False, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
         """
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 1)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
         """
         taskparameters = {
             'command': 'EndJogMode',
+            'unit': unit,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def SetRobotBridgeServoOn(self, servoon, robotname=None, timeout=3, fireandforget=False):
+    def SetRobotBridgeServoOn(self, servoon, robotname=None, timeout=3, fireandforget=False, **ignoredArgs):
         """
 
         Args:
@@ -1990,11 +2023,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'SetRobotBridgeServoOn',
-            'isservoon': servoon
+            'isservoon': servoon,
         }
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout, fireandforget=fireandforget)
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def SetRobotBridgeLockMode(self, islockmode, robotname=None, timeout=3, fireandforget=False):
+    def SetRobotBridgeLockMode(self, islockmode, robotname=None, timeout=3, fireandforget=False, **ignoredArgs):
         """
 
         Args:
@@ -2007,9 +2042,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'SetRobotBridgeLockMode',
             'islockmode': islockmode,
         }
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout, fireandforget=fireandforget)
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def ResetSafetyFault(self, timeout=3, fireandforget=False):
+    def ResetSafetyFault(self, timeout=3, fireandforget=False, **ignoredArgs):
         """
 
         Args:
@@ -2021,7 +2058,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def SetRobotBridgeControlMode(self, controlMode, timeout=3, fireandforget=False):
+    def SetRobotBridgeControlMode(self, controlMode, timeout=3, fireandforget=False, **ignoredArgs):
         """
 
         Args:
@@ -2035,7 +2072,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def GetDynamicObjects(self, timeout=1, **kwargs):
+    def GetDynamicObjects(self, timeout=1, **ignoredArgs):
         """Get a list of dynamically added objects in the scene, from vision detection and physics simulation.
 
         Args:
@@ -2044,31 +2081,47 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'GetDynamicObjects',
         }
-        taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ComputeRobotConfigsForGraspVisualization(self, targetname, graspname, robotname=None, toolname=None, unit='mm', timeout=10, **kwargs):
+    def ComputeRobotConfigsForGraspVisualization(self, targetname, graspname, robotname=None, toolname=None, unit='mm', timeout=10, approachoffset=None, departoffsetdir=None, departoffsetintool=None, shadowrobotname=None, shadowrobottoolname=None, **ignoredArgs):
         """Returns robot configs for grasp visualization
 
         Args:
             targetname (str): Target object's name.
             graspname (str): Name of the grasp for which to visualize grasps.
             robotname (str, optional): Name of the robot
-            toolname (str, optional): Name of the manipulator. (Default: 'self.toolname')
+            toolname (str, optional): Name of the manipulator.
             unit (str, optional): The unit of the given values. (Default: 'mm')
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            approachoffset (float, optional):
+            departoffsetdir (list[float], optional): Direction in which to apply the offset when departing from the pick/place operation.
+            departoffsetintool (list[float], optional):
+            shadowrobotname (str, optional):
+            shadowrobottoolname (str, optional):
         """
         taskparameters = {
             'command': 'ComputeRobotConfigsForGraspVisualization',
             'targetname': targetname,
-            'graspname': graspname
+            'graspname': graspname,
+            'unit': unit,
         }
-        if unit is not None:
-            taskparameters['unit'] = unit
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, toolname=toolname, timeout=timeout)
+        if approachoffset is not None:
+            taskparameters['approachoffset'] = approachoffset
+        if departoffsetdir is not None:
+            taskparameters['departoffsetdir'] = departoffsetdir
+        if departoffsetintool is not None:
+            taskparameters['departoffsetintool'] = departoffsetintool
+        if shadowrobotname is not None:
+            taskparameters['shadowrobotname'] = shadowrobotname
+        if shadowrobottoolname is not None:
+            taskparameters['shadowrobottoolname'] = shadowrobottoolname
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ResetCacheTemplates(self, timeout=1, fireandforget=False, **kwargs):
+    def ResetCacheTemplates(self, timeout=1, fireandforget=False, **ignoredArgs):
         """Resets any cached templates
 
         Args:
@@ -2078,7 +2131,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'ResetCacheTemplates',
         }
-        taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
     def SetRobotBridgeExternalIOPublishing(self, enable, timeout=2, fireandforget=False, **kwargs):
