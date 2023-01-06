@@ -672,7 +672,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['geometryPk'] = geometryPk
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetTransform(self, targetname, translation, unit='mm', rotationmat=None, quaternion=None, timeout=10, **kwargs):
+    def SetTransform(self, targetname, translation, unit='mm', rotationmat=None, quaternion=None, timeout=10, **ignoredArgs):
         """Sets the transform of an object. Rotation can be specified by either quaternion or rotation matrix.
 
         Args:
@@ -689,17 +689,16 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'translation': translation,
             'unit': unit,
         }
-        taskparameters.update(kwargs)
         if rotationmat is not None:
             taskparameters['rotationmat'] = rotationmat
         if quaternion is not None:
             taskparameters['quaternion'] = quaternion
         if rotationmat is None and quaternion is None:
             taskparameters['quaternion'] = [1, 0, 0, 0]
-            log.warn('no rotation is specified, using identity quaternion')
+            log.warn('No rotation is specified. Using identity quaternion.')
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetOBB(self, targetname, unit='mm', timeout=10, **kwargs):
+    def GetOBB(self, targetname, unit='mm', timeout=10, linkname=None, **ignoredArgs):
         """Get the oriented bounding box (OBB) of object.
 
         Args:
@@ -709,17 +708,19 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             linkname (str, optional): Name of link to use for OBB. If not specified, uses entire target.
 
         Returns:
-            dict: A dict describing the OBB of the object with keys: extents, boxLocalTranslation, originalBodyTranslation, quaternion, rotationmat, translation
+            A dictionary describing the OBB of the object with keys: extents, boxLocalTranslation, originalBodyTranslation, quaternion, rotationmat, translation
+
         """
         taskparameters = {
             'command': 'GetOBB',
             'targetname': targetname,
             'unit': unit,
         }
-        taskparameters.update(kwargs)
+        if linkname is not None:
+            taskparameters['linkname'] = linkname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-    
-    def GetInnerEmptyRegionOBB(self, targetname, linkname=None, unit='mm', timeout=10, **kwargs):
+
+    def GetInnerEmptyRegionOBB(self, targetname, linkname=None, unit='mm', timeout=10, **ignoredArgs):
         """Get the inner empty oriented bounding box (OBB) of a container.
 
         Args:
@@ -729,7 +730,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
 
         Returns:
-            dict: A dict describing the OBB of the object with keys: extents, boxLocalTranslation, originalBodyTranslation, quaternion, rotationmat, translation
+            A dict describing the OBB of the object with keys: extents, boxLocalTranslation, originalBodyTranslation, quaternion, rotationmat, translation
+
         """
         taskparameters = {
             'command': 'GetInnerEmptyRegionOBB',
@@ -738,17 +740,17 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         if linkname is not None:
             taskparameters['linkname'] = linkname
-        taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-    
-    def GetInstObjectAndSensorInfo(self, instobjectnames=None, sensornames=None, unit='mm', timeout=10, **kwargs):
+
+    def GetInstObjectAndSensorInfo(self, instobjectnames=None, sensornames=None, unit='mm', timeout=10, ignoreMissingObjects=None, **ignoredArgs):
         """Returns information about the inst objects and sensors that are a part of those inst objects.
 
         Args:
-            instobjectnames (list, optional):
-            sensornames (list, optional):
+            instobjectnames (list[str], optional):
+            sensornames (list[str], optional):
             unit (str, optional): The unit of the given values. (Default: 'mm')
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            ignoreMissingObjects (bool, optional): If False, will raise an error if the object is not found in the scene. Default: True.
         """
         taskparameters = {
             'command': 'GetInstObjectAndSensorInfo',
@@ -758,16 +760,18 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['instobjectnames'] = instobjectnames
         if sensornames is not None:
             taskparameters['sensornames'] = sensornames
-        taskparameters.update(kwargs)
+        if ignoreMissingObjects is not None:
+            taskparameters['ignoreMissingObjects'] = ignoreMissingObjects
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-    
-    def GetInstObjectInfoFromURI(self, instobjecturi=None, unit='mm', timeout=10, **kwargs):
+
+    def GetInstObjectInfoFromURI(self, instobjecturi=None, unit='mm', timeout=10, instobjectpose=None, **ignoredArgs):
         """Opens a URI and returns info about the internal/external and geometry info from it.
 
         Args:
             instobjecturi (str, optional):
             unit (str, optional): The unit of the given values. (Default: 'mm')
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            instobjectpose (list[float], optional): Pose to be assigned to the retrieved object. 7-element list
         """
         taskparameters = {
             'command': 'GetInstObjectInfoFromURI',
@@ -775,10 +779,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         if instobjecturi is not None:
             taskparameters['objecturi'] = instobjecturi
-        taskparameters.update(kwargs)
+        if instobjectpose is not None:
+            taskparameters['instobjectpose'] = instobjectpose
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-    
-    def GetAABB(self, targetname, unit='mm', timeout=10, **kwargs):
+
+    def GetAABB(self, targetname, unit='mm', timeout=10, linkname=None, **ignoredArgs):
         """Gets the axis-aligned bounding box (AABB) of an object.
 
         Args:
@@ -788,14 +793,16 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             linkname (str, optional): Name of link to use for the AABB. If not specified, uses entire target.
 
         Returns:
-            dict: AABB of the object, e.g. {'pos': [1000,400,100], 'extents': [100,200,50]}
+            AABB of the object, e.g. {'pos': [1000,400,100], 'extents': [100,200,50]}
+
         """
         taskparameters = {
             'command': 'GetAABB',
             'targetname': targetname,
             'unit': unit,
         }
-        taskparameters.update(kwargs)
+        if linkname is not None:
+            taskparameters['linkname'] = linkname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
     
     def SetLocationTracking(self, timeout=10, fireandforget=False, **kwargs):
