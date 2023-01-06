@@ -1260,122 +1260,454 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['manipname'] = manipname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def MoveJointsToJointConfigurationStates(self, jointConfigurationStates, robotname=None, robotspeed=None, robotaccelmult=None, execute=1, startJointConfigurationStates=None, envclearance=None, timeout=10, **kwargs):
+    def MoveJointsToJointConfigurationStates(
+        self,
+        jointConfigurationStates,
+        robotname=None,
+        robotspeed=None,
+        robotaccelmult=None,
+        execute=1,
+        startJointConfigurationStates=None,
+        envclearance=None,
+        timeout=10,
+        jointStates=None,
+        jointindices=None,
+        unit='mm',
+        robotBridgeConnectionInfo=None,
+        locationCollisionInfos=None,
+        ionames=None,
+        constraintToolDirection=None,
+        departOffsetDir=None,
+        departOffsetAwayFromGravity=None,
+        trajname=None,
+        disablebodies=None,
+        ignoreGrabbingTarget=None,
+        jointthresh=None,
+        jitter=None,
+        executionFilterFactor=None,
+        filtertraj=None,
+        currentlimitratios=None,
+        goalJointThreshold=None,
+        goalWorkspaceThreshold=None,
+        calibrategripper=None,
+        departAccel=None,
+        maxManipAccel=None,
+        maxJitterLinkDist=None,
+        **ignoredArgs
+    ):
         """Moves the robot to desired joint angles specified in jointStates
 
         Args:
             jointConfigurationStates:
             robotname (str, optional): Name of the robot
-            robotspeed (float, optional): Value in (0,1] setting the percentage of robot speed to move at
-            robotaccelmult (float, optional): Value in (0,1] setting the percentage of robot acceleration to move at
-            execute:  (Default: 1)
-            startJointConfigurationStates (optional):
-            envclearance (float, optional): Environment clearance in millimeters
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            execute (int, optional): If 1, execute the motion. (Default: 1)
+            startJointConfigurationStates:
+            envclearance (float, optional): Environment clearance in millimeters.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             jointStates (list, optional): List[{'jointName':str, 'jointValue':float}]
-            jointindices (list, optional): List of corresponding joint indices, default is range(len(jointvalues))
+            jointindices (list[int], optional): List of corresponding joint indices, default is range(len(jointvalues))
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            ionames (list, optional): A list of IO names to read/write
+            constraintToolDirection (list[float], optional):
+            departOffsetDir (list[float], optional): Direction in which to apply the offset when departing from the pick/place operation.
+            departOffsetAwayFromGravity (float, optional): Overridden by departOffsetDir
+            trajname (str, optional):
+            disablebodies (bool, optional):
+            ignoreGrabbingTarget (bool, optional):
+            jointthresh (float, optional):
+            jitter (float, optional):
+            executionFilterFactor (float, optional):
+            filtertraj (bool, optional):
+            currentlimitratios (list[float], optional): The joints' current limt ratios.
+            goalJointThreshold (list[float], optional): Threshold of the sum of abs joint differences between what the robot is able to achieve and where the goal is, in degrees. If not within this threshold, robot tries to reach goal, during some time.
+            goalWorkspaceThreshold (float, optional): Threshold in mm. If the robot manipulator is within this threshold to the goal position, then trajectory is assumed to be successful.
+            calibrategripper (bool, optional):
+            departAccel (float, optional):
+            maxManipAccel (float, optional):
+            maxJitterLinkDist (float, optional): mm.
         """
         taskparameters = {
             'command': 'MoveJointsToJointConfigurationStates',
-            'goalJointConfigurationStates': jointConfigurationStates,
+            'unit': unit,
             'execute': execute,
+            'goalJointConfigurationStates': jointConfigurationStates,
         }
-
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
+        if constraintToolDirection is not None:
+            taskparameters['constraintToolDirection'] = constraintToolDirection
+        if departOffsetDir is not None:
+            taskparameters['departOffsetDir'] = departOffsetDir
+        if departOffsetAwayFromGravity is not None:
+            taskparameters['departOffsetAwayFromGravity'] = departOffsetAwayFromGravity
+        if trajname is not None:
+            taskparameters['trajname'] = trajname
+        if disablebodies is not None:
+            taskparameters['disablebodies'] = disablebodies
+        if ignoreGrabbingTarget is not None:
+            taskparameters['ignoreGrabbingTarget'] = ignoreGrabbingTarget
+        if jointthresh is not None:
+            taskparameters['jointthresh'] = jointthresh
         if envclearance is not None:
             taskparameters['envclearance'] = envclearance
-
+        if jitter is not None:
+            taskparameters['jitter'] = jitter
+        if executionFilterFactor is not None:
+            taskparameters['executionFilterFactor'] = executionFilterFactor
+        if filtertraj is not None:
+            taskparameters['filtertraj'] = filtertraj
+        if currentlimitratios is not None:
+            taskparameters['currentlimitratios'] = currentlimitratios
+        if goalJointThreshold is not None:
+            taskparameters['goalJointThreshold'] = goalJointThreshold
+        if goalWorkspaceThreshold is not None:
+            taskparameters['goalWorkspaceThreshold'] = goalWorkspaceThreshold
+        if calibrategripper is not None:
+            taskparameters['calibrategripper'] = calibrategripper
+        if departAccel is not None:
+            taskparameters['departAccel'] = departAccel
+        if maxManipAccel is not None:
+            taskparameters['maxManipAccel'] = maxManipAccel
+        if maxJitterLinkDist is not None:
+            taskparameters['maxJitterLinkDist'] = maxJitterLinkDist
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if startJointConfigurationStates is not None:
             taskparameters['startJointConfigurationStates'] = startJointConfigurationStates
+        if jointStates is not None:
+            taskparameters['jointStates'] = jointStates
+        if jointindices is not None:
+            taskparameters['jointindices'] = jointindices
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
-
-    def MoveJoints(self, jointvalues, jointindices=None, robotname=None, robotspeed=None, robotaccelmult=None, execute=1, startvalues=None, envclearance=None, timeout=10, **kwargs):
+    def MoveJoints(
+        self,
+        jointvalues,
+        jointindices=None,
+        robotname=None,
+        robotspeed=None,
+        robotaccelmult=None,
+        execute=1,
+        startvalues=None,
+        envclearance=None,
+        timeout=10,
+        robotProgramName=None,
+        goaljoints='None',
+        unit='mm',
+        robotBridgeConnectionInfo=None,
+        locationCollisionInfos=None,
+        ionames=None,
+        constraintToolDirection=None,
+        departOffsetDir=None,
+        departOffsetAwayFromGravity=None,
+        trajname=None,
+        disablebodies=None,
+        ignoreGrabbingTarget=None,
+        jointthresh=None,
+        jitter=None,
+        executionFilterFactor=None,
+        filtertraj=None,
+        currentlimitratios=None,
+        goalJointThreshold=None,
+        goalWorkspaceThreshold=None,
+        calibrategripper=None,
+        departAccel=None,
+        maxManipAccel=None,
+        maxJitterLinkDist=None,
+        forceTorqueBasedEstimatorParameters=None,
+        **ignoredArgs
+    ):
         """Moves the robot to desired joint angles specified in jointvalues
 
         Args:
-            jointvalues: List of joint values
-            jointindices: List of corresponding joint indices, default is range(len(jointvalues))
+            jointvalues (list[float]): (DEPRECATED. Use goaljoints) List of joint values to move to.
+            jointindices (list[int], optional): List of corresponding joint indices, default is range(len(jointvalues))
             robotname (str, optional): Name of the robot
-            robotspeed (float, optional): Value in (0,1] setting the percentage of robot speed to move at
-            robotaccelmult (float, optional): Value in (0,1] setting the percentage of robot acceleration to move at
-            execute:  (Default: 1)
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            execute (int, optional): If 1, execute the motion. (Default: 1)
             startvalues (list[float], optional): The robot joint values to start the motion from.
-            envclearance (float, optional): Environment clearance in millimeters
+            envclearance (float, optional): Environment clearance in millimeters.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            robotProgramName (str, optional):
+            goaljoints (list[float], optional): List of joint values to move to. (Default: 'None')
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            ionames (list, optional): A list of IO names to read/write
+            constraintToolDirection (list[float], optional):
+            departOffsetDir (list[float], optional): Direction in which to apply the offset when departing from the pick/place operation.
+            departOffsetAwayFromGravity (float, optional): Overridden by departOffsetDir
+            trajname (str, optional):
+            disablebodies (bool, optional):
+            ignoreGrabbingTarget (bool, optional):
+            jointthresh (float, optional):
+            jitter (float, optional):
+            executionFilterFactor (float, optional):
+            filtertraj (bool, optional):
+            currentlimitratios (list[float], optional): The joints' current limt ratios.
+            goalJointThreshold (list[float], optional): Threshold of the sum of abs joint differences between what the robot is able to achieve and where the goal is, in degrees. If not within this threshold, robot tries to reach goal, during some time.
+            goalWorkspaceThreshold (float, optional): Threshold in mm. If the robot manipulator is within this threshold to the goal position, then trajectory is assumed to be successful.
+            calibrategripper (bool, optional):
+            departAccel (float, optional):
+            maxManipAccel (float, optional):
+            maxJitterLinkDist (float, optional): mm.
+            forceTorqueBasedEstimatorParameters (dict, optional): A set of parameters for force-torque based estimation.
         """
+        taskparameters = {
+            'command': 'MoveJoints',
+            'unit': unit,
+            'execute': execute,
+        }
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
+        if constraintToolDirection is not None:
+            taskparameters['constraintToolDirection'] = constraintToolDirection
+        if departOffsetDir is not None:
+            taskparameters['departOffsetDir'] = departOffsetDir
+        if departOffsetAwayFromGravity is not None:
+            taskparameters['departOffsetAwayFromGravity'] = departOffsetAwayFromGravity
+        if trajname is not None:
+            taskparameters['trajname'] = trajname
+        if disablebodies is not None:
+            taskparameters['disablebodies'] = disablebodies
+        if ignoreGrabbingTarget is not None:
+            taskparameters['ignoreGrabbingTarget'] = ignoreGrabbingTarget
+        if jointthresh is not None:
+            taskparameters['jointthresh'] = jointthresh
+        if envclearance is not None:
+            taskparameters['envclearance'] = envclearance
+        if jitter is not None:
+            taskparameters['jitter'] = jitter
+        if executionFilterFactor is not None:
+            taskparameters['executionFilterFactor'] = executionFilterFactor
+        if filtertraj is not None:
+            taskparameters['filtertraj'] = filtertraj
+        if currentlimitratios is not None:
+            taskparameters['currentlimitratios'] = currentlimitratios
+        if goalJointThreshold is not None:
+            taskparameters['goalJointThreshold'] = goalJointThreshold
+        if goalWorkspaceThreshold is not None:
+            taskparameters['goalWorkspaceThreshold'] = goalWorkspaceThreshold
+        if calibrategripper is not None:
+            taskparameters['calibrategripper'] = calibrategripper
+        if departAccel is not None:
+            taskparameters['departAccel'] = departAccel
+        if maxManipAccel is not None:
+            taskparameters['maxManipAccel'] = maxManipAccel
+        if maxJitterLinkDist is not None:
+            taskparameters['maxJitterLinkDist'] = maxJitterLinkDist
+        if forceTorqueBasedEstimatorParameters is not None:
+            taskparameters['forceTorqueBasedEstimatorParameters'] = forceTorqueBasedEstimatorParameters
+        taskparameters['goaljoints'] = jointvalues
+        if goaljoints is not None:
+            taskparameters['goaljoints'] = goaljoints
         if jointindices is None:
             jointindices = range(len(jointvalues))
             log.warn(u'No jointindices specified. Moving joints with default jointindices: %s', jointindices)
-
-        taskparameters = {
-            'command': 'MoveJoints',
-            'goaljoints': list(jointvalues),
-            'jointindices': list(jointindices),
-            'execute': execute,
-        }
-        if envclearance is not None:
-            taskparameters['envclearance'] = envclearance
-
+        taskparameters['jointindices'] = list(jointindices)
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if startvalues is not None:
             taskparameters['startvalues'] = list(startvalues)
+        if robotProgramName is not None:
+            taskparameters['robotProgramName'] = list(robotProgramName)
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
-    
-    def MoveJointsToPositionConfiguration(self, positionConfigurationName=None, positionConfigurationCandidateNames=None, robotname=None, robotspeed=None, robotaccelmult=None, execute=1, startvalues=None, envclearance=None, timeout=10, **kwargs):
+    def MoveJointsToPositionConfiguration(
+        self,
+        positionConfigurationName=None,
+        positionConfigurationCandidateNames=None,
+        robotname=None,
+        robotspeed=None,
+        robotaccelmult=None,
+        execute=1,
+        startvalues=None,
+        envclearance=None,
+        timeout=10,
+        unit='mm',
+        robotBridgeConnectionInfo=None,
+        locationCollisionInfos=None,
+        ionames=None,
+        constraintToolDirection=None,
+        departOffsetDir=None,
+        departOffsetAwayFromGravity=None,
+        trajname=None,
+        disablebodies=None,
+        ignoreGrabbingTarget=None,
+        jointthresh=None,
+        jitter=None,
+        executionFilterFactor=None,
+        filtertraj=None,
+        currentlimitratios=None,
+        goalJointThreshold=None,
+        goalWorkspaceThreshold=None,
+        calibrategripper=None,
+        departAccel=None,
+        maxManipAccel=None,
+        maxJitterLinkDist=None,
+        startJointConfigurationStates=None,
+        robotProgramName=None,
+        forceTorqueBasedEstimatorParameters=None,
+        **ignoredArgs
+    ):
         """Moves the robot to desired position configuration specified in positionConfigurationName
-        
+
         Args:
             positionConfigurationName (str, optional): If specified, the name of position configuration to move to. If it does not exist, will raise an error.
-            positionConfigurationCandidateNames (list, optional): If specified, goes to the first position that is defined for the robot. If no positions exist, returns without moving the robot.
+            positionConfigurationCandidateNames (list[str], optional): If specified, goes to the first position that is defined for the robot. If no positions exist, returns without moving the robot.
             robotname (str, optional): Name of the robot
-            robotspeed (float, optional): Value in (0,1] setting the percentage of robot speed to move at
-            robotaccelmult (float, optional): Value in (0,1] setting the percentage of robot acceleration to move at
-            execute:  (Default: 1)
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            execute (int, optional): If 1, execute the motion. (Default: 1)
             startvalues (list[float], optional): The robot joint values to start the motion from.
-            envclearance (float, optional): Environment clearance in millimeters
+            envclearance (float, optional): Environment clearance in millimeters.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            ionames (list, optional): A list of IO names to read/write
+            constraintToolDirection (list[float], optional):
+            departOffsetDir (list[float], optional): Direction in which to apply the offset when departing from the pick/place operation.
+            departOffsetAwayFromGravity (float, optional): Overridden by departOffsetDir
+            trajname (str, optional):
+            disablebodies (bool, optional):
+            ignoreGrabbingTarget (bool, optional):
+            jointthresh (float, optional):
+            jitter (float, optional):
+            executionFilterFactor (float, optional):
+            filtertraj (bool, optional):
+            currentlimitratios (list[float], optional): The joints' current limt ratios.
+            goalJointThreshold (list[float], optional): Threshold of the sum of abs joint differences between what the robot is able to achieve and where the goal is, in degrees. If not within this threshold, robot tries to reach goal, during some time.
+            goalWorkspaceThreshold (float, optional): Threshold in mm. If the robot manipulator is within this threshold to the goal position, then trajectory is assumed to be successful.
+            calibrategripper (bool, optional):
+            departAccel (float, optional):
+            maxManipAccel (float, optional):
+            maxJitterLinkDist (float, optional): mm.
+            startJointConfigurationStates (list[dict], optional): List of dicts for each joint.
+            robotProgramName (str, optional):
+            forceTorqueBasedEstimatorParameters (dict, optional): A set of parameters for force-torque based estimation.
 
         Returns:
-            dictionary of keys: goalPositionName, goalConfiguration
+            Dictionary with keys goalPositionName and values goalConfiguration
+
         """
         taskparameters = {
             'command': 'MoveJointsToPositionConfiguration',
+            'unit': unit,
             'execute': execute,
         }
-        if positionConfigurationName:
-            taskparameters['positionConfigurationName'] = positionConfigurationName
-        if positionConfigurationCandidateNames:
-            taskparameters['positionConfigurationCandidateNames'] = positionConfigurationCandidateNames
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
+        if constraintToolDirection is not None:
+            taskparameters['constraintToolDirection'] = constraintToolDirection
+        if departOffsetDir is not None:
+            taskparameters['departOffsetDir'] = departOffsetDir
+        if departOffsetAwayFromGravity is not None:
+            taskparameters['departOffsetAwayFromGravity'] = departOffsetAwayFromGravity
+        if trajname is not None:
+            taskparameters['trajname'] = trajname
+        if disablebodies is not None:
+            taskparameters['disablebodies'] = disablebodies
+        if ignoreGrabbingTarget is not None:
+            taskparameters['ignoreGrabbingTarget'] = ignoreGrabbingTarget
+        if jointthresh is not None:
+            taskparameters['jointthresh'] = jointthresh
         if envclearance is not None:
             taskparameters['envclearance'] = envclearance
+        if jitter is not None:
+            taskparameters['jitter'] = jitter
+        if executionFilterFactor is not None:
+            taskparameters['executionFilterFactor'] = executionFilterFactor
+        if filtertraj is not None:
+            taskparameters['filtertraj'] = filtertraj
+        if currentlimitratios is not None:
+            taskparameters['currentlimitratios'] = currentlimitratios
+        if goalJointThreshold is not None:
+            taskparameters['goalJointThreshold'] = goalJointThreshold
+        if goalWorkspaceThreshold is not None:
+            taskparameters['goalWorkspaceThreshold'] = goalWorkspaceThreshold
+        if calibrategripper is not None:
+            taskparameters['calibrategripper'] = calibrategripper
+        if departAccel is not None:
+            taskparameters['departAccel'] = departAccel
+        if maxManipAccel is not None:
+            taskparameters['maxManipAccel'] = maxManipAccel
+        if maxJitterLinkDist is not None:
+            taskparameters['maxJitterLinkDist'] = maxJitterLinkDist
+        if startJointConfigurationStates is not None:
+            taskparameters['startJointConfigurationStates'] = startJointConfigurationStates
+        if robotProgramName is not None:
+            taskparameters['robotProgramName'] = robotProgramName
+        if forceTorqueBasedEstimatorParameters is not None:
+            taskparameters['forceTorqueBasedEstimatorParameters'] = forceTorqueBasedEstimatorParameters
+        if positionConfigurationName is not None:
+            taskparameters['positionConfigurationName'] = positionConfigurationName
+        if positionConfigurationCandidateNames is not None:
+            taskparameters['positionConfigurationCandidateNames'] = positionConfigurationCandidateNames
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if startvalues is not None:
             taskparameters['startvalues'] = list(startvalues)
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
-    
-    def GetRobotBridgeIOVariables(self, ioname=None, ionames=None, robotname=None, timeout=10, **kwargs):
-        """Returns the data of the IO in ascii hex as a string
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
+
+    def GetRobotBridgeIOVariables(self, ioname=None, ionames=None, robotname=None, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
+        """Returns the data of the IO in ASCII hex as a string
 
         Args:
             ioname (str, optional): One IO name to read
-            ionames (list[str], optional): A list of the IO names to read
+            ionames (list, optional): A list of the IO names to read
             robotname (str, optional): Name of the robot
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
         """
         taskparameters = {
             'command': 'GetRobotBridgeIOVariables',
+            'unit': unit,
         }
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
         if ioname is not None and len(ioname) > 0:
             taskparameters['ioname'] = ioname
         if ionames is not None and len(ionames) > 0:
             taskparameters['ionames'] = ionames
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout)
-    
-    def SetRobotBridgeIOVariables(self, iovalues, robotname=None, timeout=10, **kwargs):
+    def SetRobotBridgeIOVariables(self, iovalues, robotname=None, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, forceasync=None, **ignoredArgs):
         """Sets a set of IO variables in the robot bridge.
 
         This should not lock self.env since it can happen during the runtime of a task and lock out other functions waiting in the queue.
@@ -1384,34 +1716,59 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             iovalues:
             robotname (str, optional): Name of the robot
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            forceasync (bool, optional):
         """
         taskparameters = {
             'command': 'SetRobotBridgeIOVariables',
-            'iovalues': list(iovalues)
+            'unit': unit,
+            'iovalues': iovalues,
         }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout)
-    
-    def ComputeIkParamPosition(self, name, robotname=None, timeout=10, **kwargs):
-        """Given the name of a Kinbody, computes the manipulator (TCP) position in the Kinbody frame to generate values for an IKParameterization.
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if forceasync is not None:
+            taskparameters['forceasync'] = forceasync
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
+
+    def ComputeIkParamPosition(self, name, robotname=None, timeout=10, unit='mm', jointvalues=None, **ignoredArgs):
+        """Given the name of a Kinbody, computes the manipulator (TCP) position in the kinbody frame to generate values for an IKParameterization.
 
         Args:
-            name (str): Name of the Kinbody.
-            robotname (str, optional): Name of the robot.
+            name (str): Name of the Kinbody (the robot).
+            robotname (str, optional): Name of the robot
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            jointvalues (list, optional): If given, the robot's joints are set to these values before calculating the manipulator (TCP) position. If not set, uses the current values.
-            ikparamnames (list[str]): The ikparameter names, also contains information about the grasp like the preshape
-            targetname (str): The target object name that the ikparamnames belong to
-            freeincvalue (float): The discretization of the free joints of the robot when computing ik.
-            filteroptionslist (list[str]): A list of filter option strings. Can be: CheckEnvCollisions, IgnoreCustomFilters, IgnoreEndEffectorCollisions, IgnoreEndEffectorEnvCollisions, IgnoreEndEffectorSelfCollisions, IgnoreJointLimits, IgnoreSelfCollisions
-            filteroptions (int): OpenRAVE IkFilterOptions bitmask. By default this is 1, which means all collisions are checked
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            jointvalues (list[float], optional): If given, the robot's joints are set to these values before calculating the manipulator (TCP) position. If not set, uses the current values.
+
+        Returns:
+            A dictionary with the structure:
+
+            translation (list[float]): List of x,y,z values of the object in millimeters.
+            quaternion (list[float]): List specifying the quaternion in w,x,y,z format, e.g. [1,0,0,0].
+            direction (list): The global direction of the manipulator (assuming that the direction of the manipulator is the positive Z-axis).
+            angleXZ (float)
+            angleYX (float)
+            angleZY (float)
+            angleX (float)
+            angleY (float)
+            angleZ (float)
         """
         taskparameters = {
             'command': 'ComputeIkParamPosition',
+            'unit': unit,
             'name': name,
         }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout)
+        if jointvalues is not None:
+            taskparameters['jointvalues'] = jointvalues
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     def ComputeIKFromParameters(self, toolname=None, timeout=10, **kwargs):
         """
