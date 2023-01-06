@@ -376,7 +376,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             filtertraj (bool, optional):
             executionFilterFactor (float, optional):
             departOffsetDir (list[float], optional): Direction in which to apply the offset when departing from the pick/place operation.
-            departOffsetAwayFromGravity (float, optional): Overridden by departOffsetDir
+            departOffsetAwayFromGravity (float, optional): The distance to depart vertically upwards after picking/placing. Overridden by departOffsetDir.
             departAccel (float, optional):
             moveStraightParams (dict, optional): Parameters used for linear movement like grasp approach, grasp depart, etc.
         """
@@ -446,8 +446,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         state=None,
         unit='mm',
         timeout=10,
-        object_uri=None,
+        locationName=None,
+        locationContainerId=None,
+        imageStartTimeStampMS=None,
         callerid=None,
+        object_uri=None,
         detectionResultState=None,
         targetUpdateNamePrefix=None,
         cameranames=None,
@@ -460,12 +463,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         points=None,
         pointsize=None,
         pointcloudid=None,
-        locationName=None,
         containerName=None,
-        locationContainerId=None,
         isFromStateSlaveNotify=None,
-        imageStartTimeStampMS=None,
         imageEndTimeStampMS=None,
+        pointCloudSensorTimeStampMS=None,
         belowBoxOverlap=0,
         ignoreOverlapPointsFromWall=0,
         ignoreOverlapPointsFromNearbyTargets=0,
@@ -489,8 +490,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             state (dict, optional):
             unit (str, optional): The unit of the given values. (Default: 'mm')
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            object_uri (str, optional): Same as objectname, but in a Mujin URI format, e.g.: mujin:/OBJECTNAME.mujin.dae
+            locationName (str, optional): Name of the location to update.
+            locationContainerId:
+            imageStartTimeStampMS (int, optional):
             callerid (str, optional): The name of the caller (only used internally)
+            object_uri (str, optional): Same as objectname, but in a Mujin URI format, e.g.: mujin:/OBJECTNAME.mujin.dae
             detectionResultState (dict, optional): Information about the detected objects (received from detectors)
             targetUpdateNamePrefix (str, optional):
             cameranames (list[str], optional):
@@ -503,12 +507,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             points (list[float], optional): The point cloud passed in along with the detection results. Used in selective cases to count point overlap of random box.
             pointsize (float, optional): Size of points in the point cloud.
             pointcloudid (str, optional):
-            locationName (str, optional): Name of the location to update.
             containerName (str, optional): Name of the container to update. Requires locationName to be set. If containerName is empty, will use the container in locationName.
-            locationContainerId (str, optional):
             isFromStateSlaveNotify (bool, optional):
-            imageStartTimeStampMS (int, optional):
             imageEndTimeStampMS (int, optional):
+            pointCloudSensorTimeStampMS (int, optional):
             belowBoxOverlap (float, optional): mm, Threshold on how much to ignore the relative heights of two neighboring targets to determine if the candidate is *below* the current pickup target. Positive value the pickup target is allowed to be under the other non-pickup targets by this amount, and still be pickable. When two targets are deemed to be overlapping on the face orthogonal to overlapUpAxis based on neighOverlapThresh, then check the heights of the targets to make sure that one target is really above the other. Sometimes detection error can cause two targets on the same height to be overlapped a little, but that doesn't mean that one target is on top of the other. (Default: 0)
             ignoreOverlapPointsFromWall (float, optional): mm, distance from the container inner walls within which pointcloud points do not count towards overlapping points (Default: 0)
             ignoreOverlapPointsFromNearbyTargets (float, optional): mm, amount of target extents reduction when counting the number of overlapping pointcloud points. This is so that pointcloud near the edges of the target (can come from noises from nearby targets, for example) can be ignored. (Default: 0)
@@ -532,10 +534,16 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'envstate': envstate,
             'unit': unit,
         }
-        if object_uri is not None:
-            taskparameters['object_uri'] = object_uri
+        if locationName is not None:
+            taskparameters['locationName'] = locationName
+        if locationContainerId is not None:
+            taskparameters['locationContainerId'] = locationContainerId
+        if imageStartTimeStampMS is not None:
+            taskparameters['imageStartTimeStampMS'] = imageStartTimeStampMS
         if callerid is not None:
             taskparameters['callerid'] = callerid
+        if object_uri is not None:
+            taskparameters['object_uri'] = object_uri
         if detectionResultState is not None:
             taskparameters['detectionResultState'] = detectionResultState
         if targetUpdateNamePrefix is not None:
@@ -560,18 +568,14 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['pointsize'] = pointsize
         if pointcloudid is not None:
             taskparameters['pointcloudid'] = pointcloudid
-        if locationName is not None:
-            taskparameters['locationName'] = locationName
         if containerName is not None:
             taskparameters['containerName'] = containerName
-        if locationContainerId is not None:
-            taskparameters['locationContainerId'] = locationContainerId
         if isFromStateSlaveNotify is not None:
             taskparameters['isFromStateSlaveNotify'] = isFromStateSlaveNotify
-        if imageStartTimeStampMS is not None:
-            taskparameters['imageStartTimeStampMS'] = imageStartTimeStampMS
         if imageEndTimeStampMS is not None:
             taskparameters['imageEndTimeStampMS'] = imageEndTimeStampMS
+        if pointCloudSensorTimeStampMS is not None:
+            taskparameters['pointCloudSensorTimeStampMS'] = pointCloudSensorTimeStampMS
         if castPointCloudShadowFromCamera is not None:
             taskparameters['castPointCloudShadowFromCamera'] = castPointCloudShadowFromCamera
         if pointsProjectedDirection is not None:
@@ -925,7 +929,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def RemoveObjectsWithPrefix(self, prefix=None, removeNamePrefixes=None, timeout=10, fireandforget=False, removeLocationNames=None, doRemoveOnlyDynamic=None, **ignoredArgs):
+    def RemoveObjectsWithPrefix(self, prefix=None, removeNamePrefixes=None, timeout=10, fireandforget=False, removeLocationNames=None, doRemoveOnlyDynamic=None, locationName=None, locationContainerId=None, imageStartTimeStampMS=None, callerid=None, **ignoredArgs):
         """Removes objects with prefix.
 
         Args:
@@ -935,6 +939,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
             removeLocationNames (list[str], optional):
             doRemoveOnlyDynamic (bool, optional): If True, removes objects that were added through dynamic means such as UpdateObjects/UpdateEnvironmentState. Default: False
+            locationName (str, optional): Name of the location to update.
+            locationContainerId:
+            imageStartTimeStampMS (int, optional):
+            callerid (str, optional): The name of the caller (only used internally)
 
         Returns:
             With key 'removedBodyNames' for the removed object names
@@ -943,6 +951,14 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'RemoveObjectsWithPrefix',
         }
+        if locationName is not None:
+            taskparameters['locationName'] = locationName
+        if locationContainerId is not None:
+            taskparameters['locationContainerId'] = locationContainerId
+        if imageStartTimeStampMS is not None:
+            taskparameters['imageStartTimeStampMS'] = imageStartTimeStampMS
+        if callerid is not None:
+            taskparameters['callerid'] = callerid
         if prefix is not None:
             taskparameters['prefix'] = prefix
         if removeNamePrefixes is not None:
@@ -1278,6 +1294,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         ionames=None,
         constraintToolDirection=None,
         departOffsetDir=None,
+        departMinimumCompleteRatio=None,
         departOffsetAwayFromGravity=None,
         trajname=None,
         disablebodies=None,
@@ -1293,6 +1310,9 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         departAccel=None,
         maxManipAccel=None,
         maxJitterLinkDist=None,
+        pathPlannerParameters=None,
+        moveStraightParams=None,
+        forceTorqueBasedEstimatorParameters=None,
         **ignoredArgs
     ):
         """Moves the robot to desired joint angles specified in jointStates
@@ -1314,7 +1334,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             ionames (list, optional): A list of IO names to read/write
             constraintToolDirection (list[float], optional):
             departOffsetDir (list[float], optional): Direction in which to apply the offset when departing from the pick/place operation.
-            departOffsetAwayFromGravity (float, optional): Overridden by departOffsetDir
+            departMinimumCompleteRatio (float, optional): The ratio of the linear depart motion that needs to be possible for a pick/place to be executed. Pick/place candidate locations that do not allow sufficient space for the depart motion are discarded. Generally between 0.0 and 1.0.
+            departOffsetAwayFromGravity (float, optional): The distance to depart vertically upwards after picking/placing. Overridden by departOffsetDir.
             trajname (str, optional):
             disablebodies (bool, optional):
             ignoreGrabbingTarget (bool, optional):
@@ -1329,6 +1350,9 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             departAccel (float, optional):
             maxManipAccel (float, optional):
             maxJitterLinkDist (float, optional): mm.
+            pathPlannerParameters:
+            moveStraightParams (dict, optional): A set of parameters defining how the robot behaves during linear motions.
+            forceTorqueBasedEstimatorParameters (dict, optional): A set of parameters for force-torque based estimation.
         """
         taskparameters = {
             'command': 'MoveJointsToJointConfigurationStates',
@@ -1350,6 +1374,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['constraintToolDirection'] = constraintToolDirection
         if departOffsetDir is not None:
             taskparameters['departOffsetDir'] = departOffsetDir
+        if departMinimumCompleteRatio is not None:
+            taskparameters['departMinimumCompleteRatio'] = departMinimumCompleteRatio
         if departOffsetAwayFromGravity is not None:
             taskparameters['departOffsetAwayFromGravity'] = departOffsetAwayFromGravity
         if trajname is not None:
@@ -1382,6 +1408,12 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['maxManipAccel'] = maxManipAccel
         if maxJitterLinkDist is not None:
             taskparameters['maxJitterLinkDist'] = maxJitterLinkDist
+        if pathPlannerParameters is not None:
+            taskparameters['pathPlannerParameters'] = pathPlannerParameters
+        if moveStraightParams is not None:
+            taskparameters['moveStraightParams'] = moveStraightParams
+        if forceTorqueBasedEstimatorParameters is not None:
+            taskparameters['forceTorqueBasedEstimatorParameters'] = forceTorqueBasedEstimatorParameters
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if startJointConfigurationStates is not None:
@@ -1411,6 +1443,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         ionames=None,
         constraintToolDirection=None,
         departOffsetDir=None,
+        departMinimumCompleteRatio=None,
         departOffsetAwayFromGravity=None,
         trajname=None,
         disablebodies=None,
@@ -1426,6 +1459,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         departAccel=None,
         maxManipAccel=None,
         maxJitterLinkDist=None,
+        pathPlannerParameters=None,
+        moveStraightParams=None,
         forceTorqueBasedEstimatorParameters=None,
         **ignoredArgs
     ):
@@ -1449,7 +1484,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             ionames (list, optional): A list of IO names to read/write
             constraintToolDirection (list[float], optional):
             departOffsetDir (list[float], optional): Direction in which to apply the offset when departing from the pick/place operation.
-            departOffsetAwayFromGravity (float, optional): Overridden by departOffsetDir
+            departMinimumCompleteRatio (float, optional): The ratio of the linear depart motion that needs to be possible for a pick/place to be executed. Pick/place candidate locations that do not allow sufficient space for the depart motion are discarded. Generally between 0.0 and 1.0.
+            departOffsetAwayFromGravity (float, optional): The distance to depart vertically upwards after picking/placing. Overridden by departOffsetDir.
             trajname (str, optional):
             disablebodies (bool, optional):
             ignoreGrabbingTarget (bool, optional):
@@ -1464,6 +1500,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             departAccel (float, optional):
             maxManipAccel (float, optional):
             maxJitterLinkDist (float, optional): mm.
+            pathPlannerParameters:
+            moveStraightParams (dict, optional): A set of parameters defining how the robot behaves during linear motions.
             forceTorqueBasedEstimatorParameters (dict, optional): A set of parameters for force-torque based estimation.
         """
         taskparameters = {
@@ -1485,6 +1523,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['constraintToolDirection'] = constraintToolDirection
         if departOffsetDir is not None:
             taskparameters['departOffsetDir'] = departOffsetDir
+        if departMinimumCompleteRatio is not None:
+            taskparameters['departMinimumCompleteRatio'] = departMinimumCompleteRatio
         if departOffsetAwayFromGravity is not None:
             taskparameters['departOffsetAwayFromGravity'] = departOffsetAwayFromGravity
         if trajname is not None:
@@ -1517,6 +1557,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['maxManipAccel'] = maxManipAccel
         if maxJitterLinkDist is not None:
             taskparameters['maxJitterLinkDist'] = maxJitterLinkDist
+        if pathPlannerParameters is not None:
+            taskparameters['pathPlannerParameters'] = pathPlannerParameters
+        if moveStraightParams is not None:
+            taskparameters['moveStraightParams'] = moveStraightParams
         if forceTorqueBasedEstimatorParameters is not None:
             taskparameters['forceTorqueBasedEstimatorParameters'] = forceTorqueBasedEstimatorParameters
         taskparameters['goaljoints'] = jointvalues
@@ -1551,6 +1595,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         ionames=None,
         constraintToolDirection=None,
         departOffsetDir=None,
+        departMinimumCompleteRatio=None,
         departOffsetAwayFromGravity=None,
         trajname=None,
         disablebodies=None,
@@ -1566,9 +1611,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         departAccel=None,
         maxManipAccel=None,
         maxJitterLinkDist=None,
+        pathPlannerParameters=None,
+        moveStraightParams=None,
+        forceTorqueBasedEstimatorParameters=None,
         startJointConfigurationStates=None,
         robotProgramName=None,
-        forceTorqueBasedEstimatorParameters=None,
         **ignoredArgs
     ):
         """Moves the robot to desired position configuration specified in positionConfigurationName
@@ -1589,7 +1636,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             ionames (list, optional): A list of IO names to read/write
             constraintToolDirection (list[float], optional):
             departOffsetDir (list[float], optional): Direction in which to apply the offset when departing from the pick/place operation.
-            departOffsetAwayFromGravity (float, optional): Overridden by departOffsetDir
+            departMinimumCompleteRatio (float, optional): The ratio of the linear depart motion that needs to be possible for a pick/place to be executed. Pick/place candidate locations that do not allow sufficient space for the depart motion are discarded. Generally between 0.0 and 1.0.
+            departOffsetAwayFromGravity (float, optional): The distance to depart vertically upwards after picking/placing. Overridden by departOffsetDir.
             trajname (str, optional):
             disablebodies (bool, optional):
             ignoreGrabbingTarget (bool, optional):
@@ -1604,9 +1652,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             departAccel (float, optional):
             maxManipAccel (float, optional):
             maxJitterLinkDist (float, optional): mm.
+            pathPlannerParameters:
+            moveStraightParams (dict, optional): A set of parameters defining how the robot behaves during linear motions.
+            forceTorqueBasedEstimatorParameters (dict, optional): A set of parameters for force-torque based estimation.
             startJointConfigurationStates (list[dict], optional): List of dicts for each joint.
             robotProgramName (str, optional):
-            forceTorqueBasedEstimatorParameters (dict, optional): A set of parameters for force-torque based estimation.
 
         Returns:
             Dictionary with keys goalPositionName and values goalConfiguration
@@ -1631,6 +1681,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['constraintToolDirection'] = constraintToolDirection
         if departOffsetDir is not None:
             taskparameters['departOffsetDir'] = departOffsetDir
+        if departMinimumCompleteRatio is not None:
+            taskparameters['departMinimumCompleteRatio'] = departMinimumCompleteRatio
         if departOffsetAwayFromGravity is not None:
             taskparameters['departOffsetAwayFromGravity'] = departOffsetAwayFromGravity
         if trajname is not None:
@@ -1663,12 +1715,16 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['maxManipAccel'] = maxManipAccel
         if maxJitterLinkDist is not None:
             taskparameters['maxJitterLinkDist'] = maxJitterLinkDist
+        if pathPlannerParameters is not None:
+            taskparameters['pathPlannerParameters'] = pathPlannerParameters
+        if moveStraightParams is not None:
+            taskparameters['moveStraightParams'] = moveStraightParams
+        if forceTorqueBasedEstimatorParameters is not None:
+            taskparameters['forceTorqueBasedEstimatorParameters'] = forceTorqueBasedEstimatorParameters
         if startJointConfigurationStates is not None:
             taskparameters['startJointConfigurationStates'] = startJointConfigurationStates
         if robotProgramName is not None:
             taskparameters['robotProgramName'] = robotProgramName
-        if forceTorqueBasedEstimatorParameters is not None:
-            taskparameters['forceTorqueBasedEstimatorParameters'] = forceTorqueBasedEstimatorParameters
         if positionConfigurationName is not None:
             taskparameters['positionConfigurationName'] = positionConfigurationName
         if positionConfigurationCandidateNames is not None:
