@@ -80,7 +80,7 @@ templateArgs:  # Strings are added to client_template.py.mako
             robotaccelmult (float, optional):
             envclearance (float, optional):
             respawnopts (optional):
-            toolname (str, optional): Name of the manipulator. Default: self.toolname
+            toolname (str, optional): Name of the manipulator.
             timeout (float, optional):  (Default: 10)
             fireandforget (bool, optional):  (Default: False)
             robotspeed (float, optional):
@@ -507,7 +507,6 @@ x-specModifications:
                   paramOrderingIndex: 0
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                ignoredArgs: {}
     GetDynamicObjects:
       $merge: '#/components/StandardPlanningServerRequestParameters'
       parameters:
@@ -795,7 +794,6 @@ x-specModifications:
                   paramOrderingIndex: 0
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                ignoredArgs: {}
     CalibrateGripper:
       $merge: '#/components/StandardPlanningServerRequestParameters'
       parameters:
@@ -1242,6 +1240,7 @@ x-specModifications:
                 timeout:
                   paramOrderingIndex: 0
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10.0
                 fireandforget:
                   paramOrderingIndex: 2
                   $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
@@ -1333,7 +1332,6 @@ x-specModifications:
                   paramOrderingIndex: 1
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                ignoredArgs: {}
     ComputeIKFromParameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
       parameters:
