@@ -1724,7 +1724,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'SetRobotBridgeIOVariables',
             'unit': unit,
-            'iovalues': iovalues,
+            'iovalues': list(iovalues),
         }
         if robotBridgeConnectionInfo is not None:
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
