@@ -312,27 +312,132 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['workignorefirstcollision'] = workignorefirstcollision
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def MoveToHandPosition(self, goaltype, goals, toolname=None, envclearance=None, closegripper=0, robotspeed=None, robotaccelmult=None, timeout=10, **kwargs):
+    def MoveToHandPosition(
+        self,
+        goaltype,
+        goals,
+        toolname=None,
+        envclearance=None,
+        closegripper=0,
+        robotspeed=None,
+        robotaccelmult=None,
+        timeout=10,
+        unit='mm',
+        robotBridgeConnectionInfo=None,
+        locationCollisionInfos=None,
+        ionames=None,
+        minimumgoalpaths=None,
+        chuckgripper=None,
+        currentlimitratios=None,
+        instobjectname=None,
+        ikparamname=None,
+        ikparamoffset=None,
+        pathPlannerParameters=None,
+        smootherParameters=None,
+        ignoreGrabbingTarget=None,
+        jitter=None,
+        maxJitterLinkDist=None,
+        execute=None,
+        filtertraj=None,
+        executionFilterFactor=None,
+        departOffsetDir=None,
+        departOffsetAwayFromGravity=None,
+        departAccel=None,
+        moveStraightParams=None,
+        **ignoredArgs
+    ):
         """Computes the inverse kinematics and moves the manipulator to any one of the goals specified.
 
         Args:
             goaltype (str): Type of the goal, e.g. translationdirection5d
             goals (list[float]): Flat list of goals, e.g. two 5d ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]
-            toolname (str, optional): Name of the manipulator. Default: self.toolname
-            envclearance (float): Clearance in millimeter. Default: self.envclearances
-            closegripper: Whether to close gripper once the goal is reached. Default: 0
-            robotspeed (float, optional):
-            robotaccelmult (float, optional):
-            timeout (float, optional):  (Default: 10)
+            toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
+            envclearance (float, optional): Environment clearance in millimeters.
+            closegripper (bool, optional): (DEPRECATED) Whether to close gripper once the goal is reached. (Default: 0)
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            ionames (list, optional): A list of IO names to read/write
+            minimumgoalpaths (int, optional): Number of solutions the planner must provide before it is allowed to finish.
+            chuckgripper (bool, optional):
+            currentlimitratios (list[float], optional): The joints' current limt ratios.
+            instobjectname (str, optional): If goaltype is not set and both instobjectname and ikparamname are set, use ikparamname of instobjectname as target position.
+            ikparamname (str, optional): If goaltype is not set and both instobjectname and ikparamname are set, use ikparamname of instobjectname as target position.
+            ikparamoffset (list[float], optional):
+            pathPlannerParameters:
+            smootherParameters:
+            ignoreGrabbingTarget (bool, optional):
+            jitter (float, optional):
+            maxJitterLinkDist:
+            execute:
+            filtertraj (bool, optional):
+            executionFilterFactor (float, optional):
+            departOffsetDir (list[float], optional): Direction in which to apply the offset when departing from the pick/place operation.
+            departOffsetAwayFromGravity (float, optional): Overridden by departOffsetDir
+            departAccel (float, optional):
+            moveStraightParams (dict, optional): Parameters used for linear movement like grasp approach, grasp depart, etc.
         """
         taskparameters = {
             'command': 'MoveToHandPosition',
+            'unit': unit,
             'goaltype': goaltype,
             'goals': goals,
             'closegripper': closegripper,
         }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, robotaccelmult=robotaccelmult, envclearance=envclearance, toolname=toolname, timeout=timeout)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
+        if minimumgoalpaths is not None:
+            taskparameters['minimumgoalpaths'] = minimumgoalpaths
+        if chuckgripper is not None:
+            taskparameters['chuckgripper'] = chuckgripper
+        if currentlimitratios is not None:
+            taskparameters['currentlimitratios'] = currentlimitratios
+        if instobjectname is not None:
+            taskparameters['instobjectname'] = instobjectname
+        if ikparamname is not None:
+            taskparameters['ikparamname'] = ikparamname
+        if ikparamoffset is not None:
+            taskparameters['ikparamoffset'] = ikparamoffset
+        if pathPlannerParameters is not None:
+            taskparameters['pathPlannerParameters'] = pathPlannerParameters
+        if smootherParameters is not None:
+            taskparameters['smootherParameters'] = smootherParameters
+        if ignoreGrabbingTarget is not None:
+            taskparameters['ignoreGrabbingTarget'] = ignoreGrabbingTarget
+        if jitter is not None:
+            taskparameters['jitter'] = jitter
+        if maxJitterLinkDist is not None:
+            taskparameters['maxJitterLinkDist'] = maxJitterLinkDist
+        if execute is not None:
+            taskparameters['execute'] = execute
+        if filtertraj is not None:
+            taskparameters['filtertraj'] = filtertraj
+        if executionFilterFactor is not None:
+            taskparameters['executionFilterFactor'] = executionFilterFactor
+        if departOffsetDir is not None:
+            taskparameters['departOffsetDir'] = departOffsetDir
+        if departOffsetAwayFromGravity is not None:
+            taskparameters['departOffsetAwayFromGravity'] = departOffsetAwayFromGravity
+        if departAccel is not None:
+            taskparameters['departAccel'] = departAccel
+        if moveStraightParams is not None:
+            taskparameters['moveStraightParams'] = moveStraightParams
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
+        if envclearance is not None:
+            taskparameters['envclearance'] = envclearance
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     def UpdateObjects(self, envstate, targetname=None, state=None, unit="mm", timeout=10, **kwargs):
         """Updates objects in the scene with the envstate
