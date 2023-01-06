@@ -804,8 +804,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if linkname is not None:
             taskparameters['linkname'] = linkname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-    
-    def SetLocationTracking(self, timeout=10, fireandforget=False, **kwargs):
+
+    def SetLocationTracking(self, timeout=10, fireandforget=False, cycleIndex=None, locationReplaceInfos=None, removeLocationNames=None, minRobotBridgeTimeStampUS=None, dynamicObstacleBaseName=None, targetUpdateBaseName=None, ioSignalsInfo=None, unit='mm', **ignoredArgs):
         """Resets the tracking of specific containers
 
         Args:
@@ -813,16 +813,34 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
             cycleIndex: The cycle index to track the locations for
             locationReplaceInfos: A dict that should have the keys: name, containerDynamicProperties, rejectContainerIds, uri, pose, cycleIndex
-            removeLocationNames (list, optional):
-            doRemoveOnlyDynamic (bool, optional):
+            removeLocationNames (list[str], optional):
+            minRobotBridgeTimeStampUS (int, optional): The minimum expected time stamp.
+            dynamicObstacleBaseName (str, optional):
+            targetUpdateBaseName (str, optional):
+            ioSignalsInfo (dict, optional): Struct for dictating if any IO signals should be written on receiving detection results
+            unit (str, optional): The unit of the given values. (Default: 'mm')
         """
         taskparameters = {
             'command': 'SetLocationTracking',
+            'unit': unit,
         }
-        taskparameters.update(kwargs)
+        if cycleIndex is not None:
+            taskparameters['cycleIndex'] = cycleIndex
+        if locationReplaceInfos is not None:
+            taskparameters['locationReplaceInfos'] = locationReplaceInfos
+        if removeLocationNames is not None:
+            taskparameters['removeLocationNames'] = removeLocationNames
+        if minRobotBridgeTimeStampUS is not None:
+            taskparameters['minRobotBridgeTimeStampUS'] = minRobotBridgeTimeStampUS
+        if dynamicObstacleBaseName is not None:
+            taskparameters['dynamicObstacleBaseName'] = dynamicObstacleBaseName
+        if targetUpdateBaseName is not None:
+            taskparameters['targetUpdateBaseName'] = targetUpdateBaseName
+        if ioSignalsInfo is not None:
+            taskparameters['ioSignalsInfo'] = ioSignalsInfo
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-    
-    def ResetLocationTracking(self, timeout=10, fireandforget=False, **kwargs):
+
+    def ResetLocationTracking(self, timeout=10, fireandforget=False, resetAllLocations=None, resetLocationName=None, resetLocationNames=None, checkIdAndResetLocationName=None, **ignoredArgs):
         """Resets tracking updates for locations
 
         Args:
@@ -835,14 +853,22 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
         Returns:
             clearedLocationNames
+
         """
         taskparameters = {
             'command': 'ResetLocationTracking',
         }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)['clearedLocationNames']
-    
-    def GetLocationTrackingInfos(self, timeout=10, fireandforget=False, **kwargs):
+        if resetAllLocations is not None:
+            taskparameters['resetAllLocations'] = resetAllLocations
+        if resetLocationName is not None:
+            taskparameters['resetLocationName'] = resetLocationName
+        if resetLocationNames is not None:
+            taskparameters['resetLocationNames'] = resetLocationNames
+        if checkIdAndResetLocationName is not None:
+            taskparameters['checkIdAndResetLocationName'] = checkIdAndResetLocationName
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget).get('clearedLocationNames', None)
+
+    def GetLocationTrackingInfos(self, fireandforget=False, timeout=10, **ignoredArgs):
         """Gets the active tracked locations
 
         Args:
@@ -850,15 +876,15 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
 
         Returns:
-            dict: activeLocationTrackingInfos
+            activeLocationTrackingInfos
+
         """
         taskparameters = {
             'command': 'GetLocationTrackingInfos',
         }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)['activeLocationTrackingInfos']
-    
-    def UpdateLocationContainerIdType(self, locationName, containerName, containerId, containerType, trackingCycleIndex=None, timeout=10, fireandforget=False, **kwargs):
+        return self.ExecuteCommand(taskparameters, fireandforget=fireandforget, timeout=timeout).get('activeLocationTrackingInfos', None)
+
+    def UpdateLocationContainerIdType(self, locationName, containerName, containerId, containerType, trackingCycleIndex=None, timeout=10, fireandforget=False, unit='mm', **ignoredArgs):
         """Resets the tracking of specific containers
 
         Args:
@@ -866,7 +892,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             containerName (str): Name of the container
             containerId (str): ID of the container
             containerType (str): Type of the container
-            trackingCycleIndex (optional): If specified, then the cycle with same cycleIndex will update location tracking in the same call.
+            trackingCycleIndex: If specified, then the cycle with same cycleIndex will update location tracking in the same call.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
             unit (str, optional): The unit of the given values. (Default: 'mm')
@@ -877,13 +903,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'containerName': containerName,
             'containerId': containerId,
             'containerType': containerType,
+            'unit': unit,
         }
         if trackingCycleIndex is not None:
             taskparameters['trackingCycleIndex'] = trackingCycleIndex
-        taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-    
-    def ResetLocationTrackingContainerId(self, locationName, checkContainerId, timeout=10, fireandforget=False, **kwargs):
+
+    def ResetLocationTrackingContainerId(self, locationName, checkContainerId, timeout=10, fireandforget=False, **ignoredArgs):
         """Resets the containerId of self._activeLocationTrackingInfos if it matches checkContainerId.
 
         Args:
@@ -897,10 +923,9 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'locationName': locationName,
             'checkContainerId': checkContainerId,
         }
-        taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-    
-    def RemoveObjectsWithPrefix(self, prefix=None, removeNamePrefixes=None, timeout=10, fireandforget=False, removeLocationNames=None, **kwargs):
+
+    def RemoveObjectsWithPrefix(self, prefix=None, removeNamePrefixes=None, timeout=10, fireandforget=False, removeLocationNames=None, doRemoveOnlyDynamic=None, **ignoredArgs):
         """Removes objects with prefix.
 
         Args:
@@ -909,22 +934,23 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
             removeLocationNames (list[str], optional):
-            doRemoveOnlyDynamic (bool): If True, then remove objects that were added through dynamic means like UpdateObjects/UpdateEnvironmentState
+            doRemoveOnlyDynamic (bool, optional): If True, removes objects that were added through dynamic means such as UpdateObjects/UpdateEnvironmentState. Default: False
 
         Returns:
-            dict: With key 'removedBodyNames' for the removed object names
+            With key 'removedBodyNames' for the removed object names
+
         """
         taskparameters = {
             'command': 'RemoveObjectsWithPrefix',
         }
-        taskparameters.update(kwargs)
         if prefix is not None:
-            log.warn('prefix is deprecated')
             taskparameters['prefix'] = prefix
         if removeNamePrefixes is not None:
             taskparameters['removeNamePrefixes'] = removeNamePrefixes
         if removeLocationNames is not None:
             taskparameters['removeLocationNames'] = removeLocationNames
+        if doRemoveOnlyDynamic is not None:
+            taskparameters['doRemoveOnlyDynamic'] = doRemoveOnlyDynamic
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
     
     def GetTrajectoryLog(self, timeout=10, **kwargs):
