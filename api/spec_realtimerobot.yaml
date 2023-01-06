@@ -165,12 +165,10 @@ services:
         properties:
           taskparameters:
             properties:
+              $merge: '#/components/CanAcceptUpdateOnLocationParams'
               object_uri:
                 description: 'Same as objectname, but in a Mujin URI format, e.g.: mujin:/OBJECTNAME.mujin.dae'
                 $merge: '#/components/targetname'
-              callerid:
-                description: The name of the caller (only used internally)
-                type: string
               detectionResultState:
                 description: Information about the detected objects (received from detectors)
                 type: object
@@ -203,19 +201,16 @@ services:
                 type: number
               pointcloudid:
                 type: string
-              locationName:
-                description: Name of the location to update.
-                type: string
               containerName:
                 description: Name of the container to update. Requires locationName to be set. If containerName is empty, will use the container in locationName.
-                type: string
-              locationContainerId:
                 type: string
               isFromStateSlaveNotify:
                 type: boolean
               imageStartTimeStampMS:
                 type: integer
               imageEndTimeStampMS:
+                type: integer
+              pointCloudSensorTimeStampMS:
                 type: integer
               belowBoxOverlap:
                 $merge: '#/mujinbinpickingmanager.schema.binpickingparametersschema/targetOverlapConstraintInfoSchema/properties/belowBoxOverlap'
@@ -561,6 +556,7 @@ services:
         properties:
           taskparameters:
             properties:
+              $merge: '#/components/CanAcceptUpdateOnLocationParams'
               prefix:
                 description: (DEPRECATED)
                 type: string
@@ -971,12 +967,9 @@ services:
                 description: Tool name
                 type: string
     returns:
-      description: 'A dictionary of:
+      description: "A dictionary with field 'solutions': array of IK solutions (each of which is an array of DOF values), sorted by minimum travel distance and truncated to match the limit
 
-
-        - solutions: array of IK solutions (each of which is an array of DOF values), sorted by minimum travel distance and truncated to match the limit
-
-        '
+        If no solutions found, the field 'errors' will contain reasons for the failure."
   ShutdownRobotBridge:
     $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
@@ -1052,7 +1045,7 @@ services:
                 $merge: '#/components/robotname'
               toolname:
                 $merge: '#/components/toolname'
-                description: Name of the manipulator. Defaults to self.toolname
+                description: Name of the manipulator.
                 type: string
               robotspeed:
                 $merge: '#/components/robotspeed'
@@ -1167,7 +1160,6 @@ services:
                 type: string
               toolname:
                 $merge: '#/components/toolname'
-                default: self.toolname
                 description: Name of the manipulator.
                 type: string
               unit:
@@ -1377,6 +1369,7 @@ services:
               - '#/components/Internal_MoveCommandDecoratorParameters'
               - '#/components/Internal_SetRobotClientParameters'
               jointName:
+                $merge: '#/components/jointName'
                 required: true
                 type: string
               parameterName:
@@ -1421,7 +1414,7 @@ services:
         properties:
           taskparameters:
             properties:
-              bodieslist:
+              bodieslist:  # This field is for back compatibility only
                 required: true
               replaceInfos:
                 description: 'list of dicts with keys: name, uri, containerDynamicProperties'
@@ -1460,6 +1453,7 @@ services:
                 description: us (microseconds, linux time) of the timestamp
                 required: true
   ResetCachedRobotConfigurationState:
+    # TODO(felixvd): This is a dummy function in realtimerobottask. Huh??
     description: Resets cached robot configuration (position of the robot) in the planning slave received from slave notification. Need to perform every time robot moved not from the task slaves.
     $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:

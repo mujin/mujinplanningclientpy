@@ -195,12 +195,15 @@ components:
         type: number
     departOffsetDir:
       # TODO(felixvd): Link to the schema in binpickingparametersschema? Is this the same parameter?
-      description: "Direction in which to apply the offset when departing from the pick/place operation."
+      description: Direction in which to apply the offset when departing from the pick/place operation.
       type: array
       items:
         type: number
+    departMinimumCompleteRatio: 
+      description: The ratio of the linear depart motion that needs to be possible for a pick/place to be executed. Pick/place candidate locations that do not allow sufficient space for the depart motion are discarded. Generally between 0.0 and 1.0.
+      type: number
     departOffsetAwayFromGravity:
-      description: Overridden by departOffsetDir
+      description: The distance to depart vertically upwards after picking/placing. Overridden by departOffsetDir.
       type: number
     trajname:
       type: string
@@ -243,6 +246,74 @@ components:
       type: number
     maxJitterLinkDist:
       $merge: '#/components/jittererParameters/maxJitterLinkDist'
+    pathPlannerParameters:
+      $merge: '#/components/pathPlannerParameters'
+    moveStraightParams:  
+      $merge: '#/components/moveStraightParams'
+    forceTorqueBasedEstimatorParameters:
+      $merge: '#/components/forceTorqueBasedEstimatorParameters'
+  moveStraightParams:
+    description: A set of parameters defining how the robot behaves during linear motions.
+    type: object
+    properties:
+      trajSampleTimeStep:
+        type: number
+        # default:controller_timestep, # s
+      workVerifyStepLength:
+        type: number
+        # default: 10, # mm
+      workmaxdeviationangle:
+        type: number
+        # default:30, # deg
+      workignorefirstcollision:
+        type: number
+        # default:0.01, # s
+      workignorefirstcollisionee:
+        type: number
+        # default:5, # s
+      workignorelastcollisionee:
+        type: number
+        # default:5, # s
+      ikMidpointMaxDistMult:
+        type: number
+        # default:1.0,
+      ikMidpointMaxTransDist:
+        type: number
+        # default:1.0, # mm, default translational deviation of trajectory
+      ikMidpointMaxRotDist:
+        type: number
+        # default:1.0, # deg
+      maxAdaptiveSteps:
+        type: integer
+        # default: 150,
+      workVerifyMaxAdaptiveSteps:
+        type: integer
+        # default: 10,
+      useworkspaceplanner:
+        type: int
+        # default:1,
+      moveStraightMode:
+        type: string
+        # default:'6d',
+      maxRevoluteDifference:
+        description: deg
+        type: number
+        # default: 90.0, # deg
+      closeConfigurationThresh:
+        type: number
+        # default: 0.25, # degrees
+      closeIkThresh:
+        type: number
+        # default: 1.0, # mm
+      translationDiffThresh:
+        type: number
+        # default: 0.1, # mm
+      jerkLimited:
+        type: boolean
+        # default: False,
+      dynamicsConstraintsType:
+        type: string
+        enum: ['IgnoreTorque', 'NominalTorque', 'InstantaneousTorque']
   jittererParameters:
     maxJitter:
       description: Maximum amount of jitter applied to a joint during one iteration.
@@ -262,9 +333,42 @@ components:
       type: number
     useWorkspaceJitterer:
       type: boolean
-  forceTorqueBasedEstimatorParameters:   #TODO
+  forceTorqueBasedEstimatorParameters:
     description: A set of parameters for force-torque based estimation.
     type: object
+    properties:
+      use:
+        description: If False, forceTorqueBasedEstimatorParameters are not used.
+        type: boolean
+      handCenterOfMass:
+        description: The location of the center of mass
+        type: array
+        items:
+          type: number
+      objectCenterOfMass:
+        description: The location of the center of mass
+        type: array
+        items:
+          type: number
+      robotForceTorqueCalibrationPositionNames:
+        description: Names of robot positions that are suitable for calibrating the force sensor.
+        type: array
+        items:
+          type: string
+      robotForceTorqueCalibrationPositionName:
+        description: Name of a robot position that is suitable for calibrating the force sensor.
+        type: string
+  CanAcceptUpdateOnLocationParams:
+    locationName:
+      description: Name of the location to update.
+      type: string
+    locationContainerId:
+      type: 
+    imageStartTimeStampMS:
+      type: integer
+    callerid:
+      description: The name of the caller (only used internally)
+      type: string
   robot:
     description: The name of the robot (modelName).
     type: string
