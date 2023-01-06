@@ -2369,20 +2369,42 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if maxJointAngle is not None:
             taskparameters['maxJointAngle'] = maxJointAngle
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-    
-    def CalculateTestRangeFromCollision(self, timeout=10, **kwargs):
+
+    def CalculateTestRangeFromCollision(self, timeout=10, jointName=None, unit='mm', envclearance=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
         """
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            jointName (str, optional): The name of the joint.
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            envclearance (float, optional): Environment clearance in millimeters.
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'CalculateTestRangeFromCollision',
+            'unit': unit,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
+        if jointName is not None:
+            taskparameters['jointName'] = jointName
+        if envclearance is not None:
+            taskparameters['envclearance'] = envclearance
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetMotorControlParameterSchema(self, timeout=10, **kwargs):
+    def GetMotorControlParameterSchema(self, timeout=10, **ignoredArgs):
         """Gets motor control parameter schema
 
         Args:
@@ -2391,26 +2413,41 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'GetMotorControlParameterSchema',
         }
-        taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetMotorControlParameter(self, jointName, parameterName, timeout=10, **kwargs):
+    def GetMotorControlParameter(self, jointName, parameterName, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
         """Gets motor control parameters as a name-value dict, e.g.: {'J1':{'KP':1}, 'J2':{'KV':2}}
 
         Args:
-            jointName (str): The name of the joint.
+            jointName (str):
             parameterName (str):
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'GetMotorControlParameter',
+            'unit': unit,
             'jointName': jointName,
             'parameterName': parameterName,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetMotorControlParameters(self, timeout=10, **kwargs):
+    def GetMotorControlParameters(self, timeout=10, **ignoredArgs):
         """Gets cached motor control parameters as name-value dict
 
         Args:
@@ -2419,10 +2456,9 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'GetMotorControlParameters',
         }
-        taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetMotorControlParameter(self, jointName, parameterName, parameterValue, timeout=10, **kwargs):
+    def SetMotorControlParameter(self, jointName, parameterName, parameterValue, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
         """Sets motor control parameter
 
         Args:
@@ -2430,16 +2466,32 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             parameterName (str): The name of the parameter to set.
             parameterValue: The value to assign to the parameter.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            ionames (list, optional): A list of IO names to read/write
         """
         taskparameters = {
             'command': 'SetMotorControlParameter',
+            'unit': unit,
             'jointName': jointName,
             'parameterName': parameterName,
             'parameterValue': parameterValue,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if ionames is not None:
+            taskparameters['ionames'] = ionames
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-    
+
     def IsProfilingRunning(self, timeout=10):
         """Queries if profiling is running on planning
 
@@ -2474,44 +2526,62 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'StopProfiling',
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-    
-    def ReplaceBodies(self, bodieslist, timeout=10, replaceInfos=None, **kwargs):
+
+    def ReplaceBodies(self, bodieslist, timeout=10, replaceInfos=None, testLocationName=None, testLocationContainerId=None, removeNamePrefixes=None, removeLocationNames=None, doRemoveOnlyDynamic=None, unit='mm', **ignoredArgs):
         """Replaces bodies in the environment with new uris
 
         Args:
             bodieslist:
-            timeout (float, optional):  (Default: 10)
-            replaceInfos (list[dict]): list of dicts with keys: name, uri, containerDynamicProperties
-            testLocationName (str): If specified, will test if the container in this location matches testLocationContainerId, and only execute the replace if it matches and testLocationContainerId is not empty.
-            testLocationContainerId (str): containerId used for testing logic with testLocationName
-            removeNamePrefixes:
-            removeLocationNames:
-            doRemoveOnlyDynamic:
+            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            replaceInfos (list, optional): list of dicts with keys: name, uri, containerDynamicProperties
+            testLocationName (str, optional): If specified, will test if the container in this location matches testLocationContainerId, and only execute the replace if it matches and testLocationContainerId is not empty.
+            testLocationContainerId (str, optional): containerId used for testing logic with testLocationName
+            removeNamePrefixes (list[str], optional): Names of prefixes to match with when removing items
+            removeLocationNames (list[str], optional):
+            doRemoveOnlyDynamic (bool, optional): If True, removes objects that were added through dynamic means such as UpdateObjects/UpdateEnvironmentState. Default: False
+            unit (str, optional): The unit of the given values. (Default: 'mm')
         """
         taskparameters = {
             'command': 'ReplaceBodies',
-            'bodieslist': bodieslist, # for back compatibility for now
+            'bodieslist': bodieslist,
+            'unit': unit,
         }
         taskparameters['replaceInfos'] = bodieslist
         if replaceInfos is not None:
             taskparameters['replaceInfos'] = replaceInfos
-        taskparameters.update(kwargs)
+        if testLocationName is not None:
+            taskparameters['testLocationName'] = testLocationName
+        if testLocationContainerId is not None:
+            taskparameters['testLocationContainerId'] = testLocationContainerId
+        if removeNamePrefixes is not None:
+            taskparameters['removeNamePrefixes'] = removeNamePrefixes
+        if removeLocationNames is not None:
+            taskparameters['removeLocationNames'] = removeLocationNames
+        if doRemoveOnlyDynamic is not None:
+            taskparameters['doRemoveOnlyDynamic'] = doRemoveOnlyDynamic
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-    
-    def GetState(self, timeout=10, fireandforget=False, **kwargs):
+
+    def GetState(self, timeout=10.0, fireandforget=False, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
         """
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10.0)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
         """
         taskparameters = {
             'command': 'GetState',
+            'unit': unit,
         }
-        taskparameters.update(kwargs)
+        if robotBridgeConnectionInfo is not None:
+            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if locationCollisionInfos is not None:
+            taskparameters['locationCollisionInfos'] = locationCollisionInfos
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-    
-    def EnsureSyncWithRobotBridge(self, syncTimeStampUS, timeout=10, fireandforget=False, **kwargs):
+
+    def EnsureSyncWithRobotBridge(self, syncTimeStampUS, timeout=10, fireandforget=False, **ignoredArgs):
         """Ensures that planning has synchronized with robotbridge data that is newer than syncTimeStampUS
 
         Args:
@@ -2523,10 +2593,9 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'EnsureSyncWithRobotBridge',
             'syncTimeStampUS': syncTimeStampUS,
         }
-        taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-    
-    def ResetCachedRobotConfigurationState(self, timeout=10, fireandforget=False, **kwargs):
+
+    def ResetCachedRobotConfigurationState(self, timeout=10, fireandforget=False, **ignoredArgs):
         """Resets cached robot configuration (position of the robot) in the planning slave received from slave notification. Need to perform every time robot moved not from the task slaves.
 
         Args:
@@ -2536,5 +2605,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'ResetCachedRobotConfigurationState',
         }
-        taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
+
+
+# THIS FILE IS AUTOMATICALLY GENERATED. DO NOT EDIT.
