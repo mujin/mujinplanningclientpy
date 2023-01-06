@@ -171,7 +171,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
     # ============== Auto-generated code starts here
 
-    def GetJointValues(self, timeout=10, executetimeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
+    def GetJointValues(self, timeout=10, executetimeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None):
         """Gets the current robot joint values
 
         Args:
@@ -225,7 +225,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         ikparamname=None,
         execute=None,
         moveStraightParams=None,
-        **ignoredArgs
     ):
         """Moves the tool linearly in cartesian (3D) space.
 
@@ -344,7 +343,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         departOffsetAwayFromGravity=None,
         departAccel=None,
         moveStraightParams=None,
-        **ignoredArgs
     ):
         """Computes the inverse kinematics and moves the manipulator to any one of the goals specified.
 
@@ -376,7 +374,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             filtertraj (bool, optional):
             executionFilterFactor (float, optional):
             departOffsetDir (list[float], optional): Direction in which to apply the offset when departing from the pick/place operation.
-            departOffsetAwayFromGravity (float, optional): The distance to depart vertically upwards after picking/placing. Overridden by departOffsetDir.
+            departOffsetAwayFromGravity (float, optional): Overridden by departOffsetDir
             departAccel (float, optional):
             moveStraightParams (dict, optional): Parameters used for linear movement like grasp approach, grasp depart, etc.
         """
@@ -446,11 +444,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         state=None,
         unit='mm',
         timeout=10,
-        locationName=None,
-        locationContainerId=None,
-        imageStartTimeStampMS=None,
-        callerid=None,
         object_uri=None,
+        callerid=None,
         detectionResultState=None,
         targetUpdateNamePrefix=None,
         cameranames=None,
@@ -463,10 +458,12 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         points=None,
         pointsize=None,
         pointcloudid=None,
+        locationName=None,
         containerName=None,
+        locationContainerId=None,
         isFromStateSlaveNotify=None,
+        imageStartTimeStampMS=None,
         imageEndTimeStampMS=None,
-        pointCloudSensorTimeStampMS=None,
         belowBoxOverlap=0,
         ignoreOverlapPointsFromWall=0,
         ignoreOverlapPointsFromNearbyTargets=0,
@@ -480,7 +477,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         cropContainerMarginsXYZXYZ=None,
         ioSignalsInfo=None,
         addPointOffsetInfo=None,
-        **ignoredArgs
     ):
         """Updates objects in the scene with the envstate
 
@@ -490,11 +486,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             state (dict, optional):
             unit (str, optional): The unit of the given values. (Default: 'mm')
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            locationName (str, optional): Name of the location to update.
-            locationContainerId:
-            imageStartTimeStampMS (int, optional):
-            callerid (str, optional): The name of the caller (only used internally)
             object_uri (str, optional): Same as objectname, but in a Mujin URI format, e.g.: mujin:/OBJECTNAME.mujin.dae
+            callerid (str, optional): The name of the caller (only used internally)
             detectionResultState (dict, optional): Information about the detected objects (received from detectors)
             targetUpdateNamePrefix (str, optional):
             cameranames (list[str], optional):
@@ -507,10 +500,12 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             points (list[float], optional): The point cloud passed in along with the detection results. Used in selective cases to count point overlap of random box.
             pointsize (float, optional): Size of points in the point cloud.
             pointcloudid (str, optional):
+            locationName (str, optional): Name of the location to update.
             containerName (str, optional): Name of the container to update. Requires locationName to be set. If containerName is empty, will use the container in locationName.
+            locationContainerId (str, optional):
             isFromStateSlaveNotify (bool, optional):
+            imageStartTimeStampMS (int, optional):
             imageEndTimeStampMS (int, optional):
-            pointCloudSensorTimeStampMS (int, optional):
             belowBoxOverlap (float, optional): mm, Threshold on how much to ignore the relative heights of two neighboring targets to determine if the candidate is *below* the current pickup target. Positive value the pickup target is allowed to be under the other non-pickup targets by this amount, and still be pickable. When two targets are deemed to be overlapping on the face orthogonal to overlapUpAxis based on neighOverlapThresh, then check the heights of the targets to make sure that one target is really above the other. Sometimes detection error can cause two targets on the same height to be overlapped a little, but that doesn't mean that one target is on top of the other. (Default: 0)
             ignoreOverlapPointsFromWall (float, optional): mm, distance from the container inner walls within which pointcloud points do not count towards overlapping points (Default: 0)
             ignoreOverlapPointsFromNearbyTargets (float, optional): mm, amount of target extents reduction when counting the number of overlapping pointcloud points. This is so that pointcloud near the edges of the target (can come from noises from nearby targets, for example) can be ignored. (Default: 0)
@@ -534,16 +529,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'envstate': envstate,
             'unit': unit,
         }
-        if locationName is not None:
-            taskparameters['locationName'] = locationName
-        if locationContainerId is not None:
-            taskparameters['locationContainerId'] = locationContainerId
-        if imageStartTimeStampMS is not None:
-            taskparameters['imageStartTimeStampMS'] = imageStartTimeStampMS
-        if callerid is not None:
-            taskparameters['callerid'] = callerid
         if object_uri is not None:
             taskparameters['object_uri'] = object_uri
+        if callerid is not None:
+            taskparameters['callerid'] = callerid
         if detectionResultState is not None:
             taskparameters['detectionResultState'] = detectionResultState
         if targetUpdateNamePrefix is not None:
@@ -568,14 +557,18 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['pointsize'] = pointsize
         if pointcloudid is not None:
             taskparameters['pointcloudid'] = pointcloudid
+        if locationName is not None:
+            taskparameters['locationName'] = locationName
         if containerName is not None:
             taskparameters['containerName'] = containerName
+        if locationContainerId is not None:
+            taskparameters['locationContainerId'] = locationContainerId
         if isFromStateSlaveNotify is not None:
             taskparameters['isFromStateSlaveNotify'] = isFromStateSlaveNotify
+        if imageStartTimeStampMS is not None:
+            taskparameters['imageStartTimeStampMS'] = imageStartTimeStampMS
         if imageEndTimeStampMS is not None:
             taskparameters['imageEndTimeStampMS'] = imageEndTimeStampMS
-        if pointCloudSensorTimeStampMS is not None:
-            taskparameters['pointCloudSensorTimeStampMS'] = pointCloudSensorTimeStampMS
         if castPointCloudShadowFromCamera is not None:
             taskparameters['castPointCloudShadowFromCamera'] = castPointCloudShadowFromCamera
         if pointsProjectedDirection is not None:
@@ -601,7 +594,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['object_uri'] = u'mujin:/%s.mujin.dae' % (targetname)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def Grab(self, targetname, toolname=None, timeout=10, **ignoredArgs):
+    def Grab(self, targetname, toolname=None, timeout=10):
         """Grabs an object with tool
 
         Args:
@@ -617,7 +610,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['toolname'] = toolname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def Release(self, targetname, timeout=10, **ignoredArgs):
+    def Release(self, targetname, timeout=10):
         """Releases a grabbed object.
 
         Args:
@@ -630,7 +623,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetGrabbed(self, timeout=10, **ignoredArgs):
+    def GetGrabbed(self, timeout=10):
         """Gets the names of the objects currently grabbed
 
         Args:
@@ -645,7 +638,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetTransform(self, targetname, connectedBodyName=None, linkName=None, geometryName=None, geometryPk=None, unit='mm', timeout=10, **ignoredArgs):
+    def GetTransform(self, targetname, connectedBodyName=None, linkName=None, geometryName=None, geometryPk=None, unit='mm', timeout=10):
         """Gets the transform of an object
 
         Args:
@@ -676,7 +669,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['geometryPk'] = geometryPk
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetTransform(self, targetname, translation, unit='mm', rotationmat=None, quaternion=None, timeout=10, **ignoredArgs):
+    def SetTransform(self, targetname, translation, unit='mm', rotationmat=None, quaternion=None, timeout=10):
         """Sets the transform of an object. Rotation can be specified by either quaternion or rotation matrix.
 
         Args:
@@ -702,7 +695,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             log.warn('No rotation is specified. Using identity quaternion.')
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetOBB(self, targetname, unit='mm', timeout=10, linkname=None, **ignoredArgs):
+    def GetOBB(self, targetname, unit='mm', timeout=10, linkname=None):
         """Get the oriented bounding box (OBB) of object.
 
         Args:
@@ -724,7 +717,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['linkname'] = linkname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetInnerEmptyRegionOBB(self, targetname, linkname=None, unit='mm', timeout=10, **ignoredArgs):
+    def GetInnerEmptyRegionOBB(self, targetname, linkname=None, unit='mm', timeout=10):
         """Get the inner empty oriented bounding box (OBB) of a container.
 
         Args:
@@ -746,7 +739,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['linkname'] = linkname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetInstObjectAndSensorInfo(self, instobjectnames=None, sensornames=None, unit='mm', timeout=10, ignoreMissingObjects=None, **ignoredArgs):
+    def GetInstObjectAndSensorInfo(self, instobjectnames=None, sensornames=None, unit='mm', timeout=10, ignoreMissingObjects=None):
         """Returns information about the inst objects and sensors that are a part of those inst objects.
 
         Args:
@@ -768,7 +761,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ignoreMissingObjects'] = ignoreMissingObjects
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetInstObjectInfoFromURI(self, instobjecturi=None, unit='mm', timeout=10, instobjectpose=None, **ignoredArgs):
+    def GetInstObjectInfoFromURI(self, instobjecturi=None, unit='mm', timeout=10, instobjectpose=None):
         """Opens a URI and returns info about the internal/external and geometry info from it.
 
         Args:
@@ -787,7 +780,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['instobjectpose'] = instobjectpose
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetAABB(self, targetname, unit='mm', timeout=10, linkname=None, **ignoredArgs):
+    def GetAABB(self, targetname, unit='mm', timeout=10, linkname=None):
         """Gets the axis-aligned bounding box (AABB) of an object.
 
         Args:
@@ -809,7 +802,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['linkname'] = linkname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetLocationTracking(self, timeout=10, fireandforget=False, cycleIndex=None, locationReplaceInfos=None, removeLocationNames=None, minRobotBridgeTimeStampUS=None, dynamicObstacleBaseName=None, targetUpdateBaseName=None, ioSignalsInfo=None, unit='mm', **ignoredArgs):
+    def SetLocationTracking(self, timeout=10, fireandforget=False, cycleIndex=None, locationReplaceInfos=None, removeLocationNames=None, minRobotBridgeTimeStampUS=None, dynamicObstacleBaseName=None, targetUpdateBaseName=None, ioSignalsInfo=None, unit='mm'):
         """Resets the tracking of specific containers
 
         Args:
@@ -844,7 +837,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ioSignalsInfo'] = ioSignalsInfo
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def ResetLocationTracking(self, timeout=10, fireandforget=False, resetAllLocations=None, resetLocationName=None, resetLocationNames=None, checkIdAndResetLocationName=None, **ignoredArgs):
+    def ResetLocationTracking(self, timeout=10, fireandforget=False, resetAllLocations=None, resetLocationName=None, resetLocationNames=None, checkIdAndResetLocationName=None):
         """Resets tracking updates for locations
 
         Args:
@@ -872,7 +865,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['checkIdAndResetLocationName'] = checkIdAndResetLocationName
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget).get('clearedLocationNames', None)
 
-    def GetLocationTrackingInfos(self, fireandforget=False, timeout=10, **ignoredArgs):
+    def GetLocationTrackingInfos(self, fireandforget=False, timeout=10):
         """Gets the active tracked locations
 
         Args:
@@ -888,7 +881,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, fireandforget=fireandforget, timeout=timeout).get('activeLocationTrackingInfos', None)
 
-    def UpdateLocationContainerIdType(self, locationName, containerName, containerId, containerType, trackingCycleIndex=None, timeout=10, fireandforget=False, unit='mm', **ignoredArgs):
+    def UpdateLocationContainerIdType(self, locationName, containerName, containerId, containerType, trackingCycleIndex=None, timeout=10, fireandforget=False, unit='mm'):
         """Resets the tracking of specific containers
 
         Args:
@@ -913,7 +906,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['trackingCycleIndex'] = trackingCycleIndex
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def ResetLocationTrackingContainerId(self, locationName, checkContainerId, timeout=10, fireandforget=False, **ignoredArgs):
+    def ResetLocationTrackingContainerId(self, locationName, checkContainerId, timeout=10, fireandforget=False):
         """Resets the containerId of self._activeLocationTrackingInfos if it matches checkContainerId.
 
         Args:
@@ -929,7 +922,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def RemoveObjectsWithPrefix(self, prefix=None, removeNamePrefixes=None, timeout=10, fireandforget=False, removeLocationNames=None, doRemoveOnlyDynamic=None, locationName=None, locationContainerId=None, imageStartTimeStampMS=None, callerid=None, **ignoredArgs):
+    def RemoveObjectsWithPrefix(self, prefix=None, removeNamePrefixes=None, timeout=10, fireandforget=False, removeLocationNames=None, doRemoveOnlyDynamic=None):
         """Removes objects with prefix.
 
         Args:
@@ -939,10 +932,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
             removeLocationNames (list[str], optional):
             doRemoveOnlyDynamic (bool, optional): If True, removes objects that were added through dynamic means such as UpdateObjects/UpdateEnvironmentState. Default: False
-            locationName (str, optional): Name of the location to update.
-            locationContainerId:
-            imageStartTimeStampMS (int, optional):
-            callerid (str, optional): The name of the caller (only used internally)
 
         Returns:
             With key 'removedBodyNames' for the removed object names
@@ -951,14 +940,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'RemoveObjectsWithPrefix',
         }
-        if locationName is not None:
-            taskparameters['locationName'] = locationName
-        if locationContainerId is not None:
-            taskparameters['locationContainerId'] = locationContainerId
-        if imageStartTimeStampMS is not None:
-            taskparameters['imageStartTimeStampMS'] = imageStartTimeStampMS
-        if callerid is not None:
-            taskparameters['callerid'] = callerid
         if prefix is not None:
             taskparameters['prefix'] = prefix
         if removeNamePrefixes is not None:
@@ -969,7 +950,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['doRemoveOnlyDynamic'] = doRemoveOnlyDynamic
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def GetTrajectoryLog(self, timeout=10, startindex=None, num=None, includejointvalues=False, saverawtrajectories=None, **ignoredArgs):
+    def GetTrajectoryLog(self, timeout=10, startindex=None, num=None, includejointvalues=False, saverawtrajectories=None):
         """Gets the recent trajectories executed on the binpicking server. The internal server keeps trajectories around for 10 minutes before clearing them.
 
         Args:
@@ -1009,7 +990,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['num'] = num
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ChuckGripper(self, robotname=None, grippername=None, timeout=10, toolname=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
+    def ChuckGripper(self, robotname=None, grippername=None, timeout=10, toolname=None, robotspeed=None, robotaccelmult=None, ionames=None):
         """Chucks the manipulator
 
         Args:
@@ -1038,7 +1019,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['toolname'] = toolname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def UnchuckGripper(self, robotname=None, grippername=None, timeout=10, targetname=None, toolname=None, pulloutdist=None, deletetarget=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
+    def UnchuckGripper(self, robotname=None, grippername=None, timeout=10, targetname=None, toolname=None, pulloutdist=None, deletetarget=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None):
         """Unchucks the manipulator and releases the target
 
         Args:
@@ -1084,7 +1065,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['deletetarget'] = deletetarget
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def CalibrateGripper(self, robotname=None, grippername=None, timeout=10, fireandforget=False, toolname=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
+    def CalibrateGripper(self, robotname=None, grippername=None, timeout=10, fireandforget=False, toolname=None, robotspeed=None, robotaccelmult=None, ionames=None):
         """Goes through the gripper calibration procedure
 
         Args:
@@ -1114,7 +1095,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['toolname'] = toolname
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def StopGripper(self, robotname=None, grippername=None, timeout=10, fireandforget=False, toolname=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
+    def StopGripper(self, robotname=None, grippername=None, timeout=10, fireandforget=False, toolname=None, robotspeed=None, robotaccelmult=None, ionames=None):
         """
 
         Args:
@@ -1144,7 +1125,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['toolname'] = toolname
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def MoveGripper(self, grippervalues, robotname=None, grippername=None, timeout=10, fireandforget=False, toolname=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
+    def MoveGripper(self, grippervalues, robotname=None, grippername=None, timeout=10, fireandforget=False, toolname=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None):
         """Moves the chuck of the manipulator to a given value.
 
         Args:
@@ -1184,7 +1165,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['toolname'] = toolname
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def ExecuteRobotProgram(self, robotProgramName, robotname=None, timeout=10, fireandforget=False, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
+    def ExecuteRobotProgram(self, robotProgramName, robotname=None, timeout=10, fireandforget=False, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None):
         """Execute a robot specific program by name
 
         Args:
@@ -1218,7 +1199,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotname'] = robotname
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def SaveScene(self, timeout=10, filename=None, preserveexternalrefs=None, externalref=None, saveclone=None, saveReferenceUriAsHint=None, **ignoredArgs):
+    def SaveScene(self, timeout=10, filename=None, preserveexternalrefs=None, externalref=None, saveclone=None, saveReferenceUriAsHint=None):
         """Saves the current scene to file
 
         Args:
@@ -1248,7 +1229,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['saveReferenceUriAsHint'] = saveReferenceUriAsHint
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SaveGripper(self, timeout=10, robotname=None, filename=None, manipname=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
+    def SaveGripper(self, timeout=10, robotname=None, filename=None, manipname=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None):
         """Separate gripper from a robot in a scene and save it.
 
         Args:
@@ -1294,7 +1275,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         ionames=None,
         constraintToolDirection=None,
         departOffsetDir=None,
-        departMinimumCompleteRatio=None,
         departOffsetAwayFromGravity=None,
         trajname=None,
         disablebodies=None,
@@ -1310,10 +1290,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         departAccel=None,
         maxManipAccel=None,
         maxJitterLinkDist=None,
-        pathPlannerParameters=None,
-        moveStraightParams=None,
-        forceTorqueBasedEstimatorParameters=None,
-        **ignoredArgs
     ):
         """Moves the robot to desired joint angles specified in jointStates
 
@@ -1334,8 +1310,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             ionames (list, optional): A list of IO names to read/write
             constraintToolDirection (list[float], optional):
             departOffsetDir (list[float], optional): Direction in which to apply the offset when departing from the pick/place operation.
-            departMinimumCompleteRatio (float, optional): The ratio of the linear depart motion that needs to be possible for a pick/place to be executed. Pick/place candidate locations that do not allow sufficient space for the depart motion are discarded. Generally between 0.0 and 1.0.
-            departOffsetAwayFromGravity (float, optional): The distance to depart vertically upwards after picking/placing. Overridden by departOffsetDir.
+            departOffsetAwayFromGravity (float, optional): Overridden by departOffsetDir
             trajname (str, optional):
             disablebodies (bool, optional):
             ignoreGrabbingTarget (bool, optional):
@@ -1350,9 +1325,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             departAccel (float, optional):
             maxManipAccel (float, optional):
             maxJitterLinkDist (float, optional): mm.
-            pathPlannerParameters:
-            moveStraightParams (dict, optional): A set of parameters defining how the robot behaves during linear motions.
-            forceTorqueBasedEstimatorParameters (dict, optional): A set of parameters for force-torque based estimation.
         """
         taskparameters = {
             'command': 'MoveJointsToJointConfigurationStates',
@@ -1374,8 +1346,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['constraintToolDirection'] = constraintToolDirection
         if departOffsetDir is not None:
             taskparameters['departOffsetDir'] = departOffsetDir
-        if departMinimumCompleteRatio is not None:
-            taskparameters['departMinimumCompleteRatio'] = departMinimumCompleteRatio
         if departOffsetAwayFromGravity is not None:
             taskparameters['departOffsetAwayFromGravity'] = departOffsetAwayFromGravity
         if trajname is not None:
@@ -1408,12 +1378,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['maxManipAccel'] = maxManipAccel
         if maxJitterLinkDist is not None:
             taskparameters['maxJitterLinkDist'] = maxJitterLinkDist
-        if pathPlannerParameters is not None:
-            taskparameters['pathPlannerParameters'] = pathPlannerParameters
-        if moveStraightParams is not None:
-            taskparameters['moveStraightParams'] = moveStraightParams
-        if forceTorqueBasedEstimatorParameters is not None:
-            taskparameters['forceTorqueBasedEstimatorParameters'] = forceTorqueBasedEstimatorParameters
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if startJointConfigurationStates is not None:
@@ -1443,7 +1407,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         ionames=None,
         constraintToolDirection=None,
         departOffsetDir=None,
-        departMinimumCompleteRatio=None,
         departOffsetAwayFromGravity=None,
         trajname=None,
         disablebodies=None,
@@ -1459,10 +1422,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         departAccel=None,
         maxManipAccel=None,
         maxJitterLinkDist=None,
-        pathPlannerParameters=None,
-        moveStraightParams=None,
         forceTorqueBasedEstimatorParameters=None,
-        **ignoredArgs
     ):
         """Moves the robot to desired joint angles specified in jointvalues
 
@@ -1484,8 +1444,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             ionames (list, optional): A list of IO names to read/write
             constraintToolDirection (list[float], optional):
             departOffsetDir (list[float], optional): Direction in which to apply the offset when departing from the pick/place operation.
-            departMinimumCompleteRatio (float, optional): The ratio of the linear depart motion that needs to be possible for a pick/place to be executed. Pick/place candidate locations that do not allow sufficient space for the depart motion are discarded. Generally between 0.0 and 1.0.
-            departOffsetAwayFromGravity (float, optional): The distance to depart vertically upwards after picking/placing. Overridden by departOffsetDir.
+            departOffsetAwayFromGravity (float, optional): Overridden by departOffsetDir
             trajname (str, optional):
             disablebodies (bool, optional):
             ignoreGrabbingTarget (bool, optional):
@@ -1500,8 +1459,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             departAccel (float, optional):
             maxManipAccel (float, optional):
             maxJitterLinkDist (float, optional): mm.
-            pathPlannerParameters:
-            moveStraightParams (dict, optional): A set of parameters defining how the robot behaves during linear motions.
             forceTorqueBasedEstimatorParameters (dict, optional): A set of parameters for force-torque based estimation.
         """
         taskparameters = {
@@ -1523,8 +1480,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['constraintToolDirection'] = constraintToolDirection
         if departOffsetDir is not None:
             taskparameters['departOffsetDir'] = departOffsetDir
-        if departMinimumCompleteRatio is not None:
-            taskparameters['departMinimumCompleteRatio'] = departMinimumCompleteRatio
         if departOffsetAwayFromGravity is not None:
             taskparameters['departOffsetAwayFromGravity'] = departOffsetAwayFromGravity
         if trajname is not None:
@@ -1557,10 +1512,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['maxManipAccel'] = maxManipAccel
         if maxJitterLinkDist is not None:
             taskparameters['maxJitterLinkDist'] = maxJitterLinkDist
-        if pathPlannerParameters is not None:
-            taskparameters['pathPlannerParameters'] = pathPlannerParameters
-        if moveStraightParams is not None:
-            taskparameters['moveStraightParams'] = moveStraightParams
         if forceTorqueBasedEstimatorParameters is not None:
             taskparameters['forceTorqueBasedEstimatorParameters'] = forceTorqueBasedEstimatorParameters
         taskparameters['goaljoints'] = jointvalues
@@ -1595,7 +1546,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         ionames=None,
         constraintToolDirection=None,
         departOffsetDir=None,
-        departMinimumCompleteRatio=None,
         departOffsetAwayFromGravity=None,
         trajname=None,
         disablebodies=None,
@@ -1611,12 +1561,9 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         departAccel=None,
         maxManipAccel=None,
         maxJitterLinkDist=None,
-        pathPlannerParameters=None,
-        moveStraightParams=None,
-        forceTorqueBasedEstimatorParameters=None,
         startJointConfigurationStates=None,
         robotProgramName=None,
-        **ignoredArgs
+        forceTorqueBasedEstimatorParameters=None,
     ):
         """Moves the robot to desired position configuration specified in positionConfigurationName
 
@@ -1636,8 +1583,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             ionames (list, optional): A list of IO names to read/write
             constraintToolDirection (list[float], optional):
             departOffsetDir (list[float], optional): Direction in which to apply the offset when departing from the pick/place operation.
-            departMinimumCompleteRatio (float, optional): The ratio of the linear depart motion that needs to be possible for a pick/place to be executed. Pick/place candidate locations that do not allow sufficient space for the depart motion are discarded. Generally between 0.0 and 1.0.
-            departOffsetAwayFromGravity (float, optional): The distance to depart vertically upwards after picking/placing. Overridden by departOffsetDir.
+            departOffsetAwayFromGravity (float, optional): Overridden by departOffsetDir
             trajname (str, optional):
             disablebodies (bool, optional):
             ignoreGrabbingTarget (bool, optional):
@@ -1652,11 +1598,9 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             departAccel (float, optional):
             maxManipAccel (float, optional):
             maxJitterLinkDist (float, optional): mm.
-            pathPlannerParameters:
-            moveStraightParams (dict, optional): A set of parameters defining how the robot behaves during linear motions.
-            forceTorqueBasedEstimatorParameters (dict, optional): A set of parameters for force-torque based estimation.
             startJointConfigurationStates (list[dict], optional): List of dicts for each joint.
             robotProgramName (str, optional):
+            forceTorqueBasedEstimatorParameters (dict, optional): A set of parameters for force-torque based estimation.
 
         Returns:
             Dictionary with keys goalPositionName and values goalConfiguration
@@ -1681,8 +1625,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['constraintToolDirection'] = constraintToolDirection
         if departOffsetDir is not None:
             taskparameters['departOffsetDir'] = departOffsetDir
-        if departMinimumCompleteRatio is not None:
-            taskparameters['departMinimumCompleteRatio'] = departMinimumCompleteRatio
         if departOffsetAwayFromGravity is not None:
             taskparameters['departOffsetAwayFromGravity'] = departOffsetAwayFromGravity
         if trajname is not None:
@@ -1715,16 +1657,12 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['maxManipAccel'] = maxManipAccel
         if maxJitterLinkDist is not None:
             taskparameters['maxJitterLinkDist'] = maxJitterLinkDist
-        if pathPlannerParameters is not None:
-            taskparameters['pathPlannerParameters'] = pathPlannerParameters
-        if moveStraightParams is not None:
-            taskparameters['moveStraightParams'] = moveStraightParams
-        if forceTorqueBasedEstimatorParameters is not None:
-            taskparameters['forceTorqueBasedEstimatorParameters'] = forceTorqueBasedEstimatorParameters
         if startJointConfigurationStates is not None:
             taskparameters['startJointConfigurationStates'] = startJointConfigurationStates
         if robotProgramName is not None:
             taskparameters['robotProgramName'] = robotProgramName
+        if forceTorqueBasedEstimatorParameters is not None:
+            taskparameters['forceTorqueBasedEstimatorParameters'] = forceTorqueBasedEstimatorParameters
         if positionConfigurationName is not None:
             taskparameters['positionConfigurationName'] = positionConfigurationName
         if positionConfigurationCandidateNames is not None:
@@ -1735,7 +1673,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['startvalues'] = list(startvalues)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetRobotBridgeIOVariables(self, ioname=None, ionames=None, robotname=None, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
+    def GetRobotBridgeIOVariables(self, ioname=None, ionames=None, robotname=None, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None):
         """Returns the data of the IO in ASCII hex as a string
 
         Args:
@@ -1763,7 +1701,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotname'] = robotname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetRobotBridgeIOVariables(self, iovalues, robotname=None, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, forceasync=None, **ignoredArgs):
+    def SetRobotBridgeIOVariables(self, iovalues, robotname=None, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, forceasync=None):
         """Sets a set of IO variables in the robot bridge.
 
         This should not lock self.env since it can happen during the runtime of a task and lock out other functions waiting in the queue.
@@ -1792,7 +1730,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotname'] = robotname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ComputeIkParamPosition(self, name, robotname=None, timeout=10, unit='mm', jointvalues=None, **ignoredArgs):
+    def ComputeIkParamPosition(self, name, robotname=None, timeout=10, unit='mm', jointvalues=None):
         """Given the name of a Kinbody, computes the manipulator (TCP) position in the kinbody frame to generate values for an IKParameterization.
 
         Args:
@@ -1826,7 +1764,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotname'] = robotname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ComputeIKFromParameters(self, toolname=None, timeout=10, targetname=None, graspsetname=None, ikparamnames=None, limit=None, useSolutionIndices=None, disabletarget=None, unit='mm', randomBoxInfo=None, freeincvalue=None, freeinc=None, applyapproachoffset=None, inPlaneAngleDeviation=None, outOfPlaneAngleDeviation=None, searchfreeparams=None, returnClosestToCurrent=None, filteroptionslist=None, filteroptions=None, **ignoredArgs):
+    def ComputeIKFromParameters(self, toolname=None, timeout=10, targetname=None, graspsetname=None, ikparamnames=None, limit=None, useSolutionIndices=None, disabletarget=None, unit='mm', randomBoxInfo=None, freeincvalue=None, freeinc=None, applyapproachoffset=None, inPlaneAngleDeviation=None, outOfPlaneAngleDeviation=None, searchfreeparams=None, returnClosestToCurrent=None, filteroptionslist=None, filteroptions=None):
         """
 
         Args:
@@ -1895,7 +1833,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['toolname'] = toolname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ShutdownRobotBridge(self, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
+    def ShutdownRobotBridge(self, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None):
         """
 
         Args:
@@ -1914,7 +1852,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetRobotBridgeState(self, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, ionames=None, **ignoredArgs):
+    def GetRobotBridgeState(self, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, ionames=None):
         """
 
         Args:
@@ -1936,7 +1874,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ClearRobotBridgeError(self, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
+    def ClearRobotBridgeError(self, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None):
         """
 
         Args:
@@ -1955,7 +1893,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetRobotBridgePause(self, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
+    def SetRobotBridgePause(self, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None):
         """
 
         Args:
@@ -1974,7 +1912,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetRobotBridgeResume(self, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
+    def SetRobotBridgeResume(self, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None):
         """
 
         Args:
@@ -1993,7 +1931,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetJogModeVelocities(self, movejointsigns, robotname=None, toolname=None, robotspeed=None, robotaccelmult=None, canJogInCheckMode=None, timeout=1, fireandforget=False, jogtype=None, checkSelfCollisionWhileJogging=None, force=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotJogParameters=None, simulationtimestep=None, plotDirection=None, **ignoredArgs):
+    def SetJogModeVelocities(self, movejointsigns, robotname=None, toolname=None, robotspeed=None, robotaccelmult=None, canJogInCheckMode=None, timeout=1, fireandforget=False, jogtype=None, checkSelfCollisionWhileJogging=None, force=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotJogParameters=None, simulationtimestep=None, plotDirection=None):
         """
 
         Args:
@@ -2048,7 +1986,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['force'] = force
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def EndJogMode(self, timeout=1, fireandforget=False, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
+    def EndJogMode(self, timeout=1, fireandforget=False, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None):
         """
 
         Args:
@@ -2068,7 +2006,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def SetRobotBridgeServoOn(self, servoon, robotname=None, timeout=3, fireandforget=False, **ignoredArgs):
+    def SetRobotBridgeServoOn(self, servoon, robotname=None, timeout=3, fireandforget=False):
         """
 
         Args:
@@ -2085,7 +2023,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotname'] = robotname
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def SetRobotBridgeLockMode(self, islockmode, robotname=None, timeout=3, fireandforget=False, **ignoredArgs):
+    def SetRobotBridgeLockMode(self, islockmode, robotname=None, timeout=3, fireandforget=False):
         """
 
         Args:
@@ -2102,7 +2040,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotname'] = robotname
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def ResetSafetyFault(self, timeout=3, fireandforget=False, **ignoredArgs):
+    def ResetSafetyFault(self, timeout=3, fireandforget=False):
         """
 
         Args:
@@ -2114,7 +2052,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def SetRobotBridgeControlMode(self, controlMode, timeout=3, fireandforget=False, **ignoredArgs):
+    def SetRobotBridgeControlMode(self, controlMode, timeout=3, fireandforget=False):
         """
 
         Args:
@@ -2128,7 +2066,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def GetDynamicObjects(self, timeout=1, **ignoredArgs):
+    def GetDynamicObjects(self, timeout=1):
         """Get a list of dynamically added objects in the scene, from vision detection and physics simulation.
 
         Args:
@@ -2139,7 +2077,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ComputeRobotConfigsForGraspVisualization(self, targetname, graspname, robotname=None, toolname=None, unit='mm', timeout=10, approachoffset=None, departoffsetdir=None, departoffsetintool=None, shadowrobotname=None, shadowrobottoolname=None, **ignoredArgs):
+    def ComputeRobotConfigsForGraspVisualization(self, targetname, graspname, robotname=None, toolname=None, unit='mm', timeout=10, approachoffset=None, departoffsetdir=None, departoffsetintool=None, shadowrobotname=None, shadowrobottoolname=None):
         """Returns robot configs for grasp visualization
 
         Args:
@@ -2177,7 +2115,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['toolname'] = toolname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ResetCacheTemplates(self, timeout=1, fireandforget=False, **ignoredArgs):
+    def ResetCacheTemplates(self, timeout=1, fireandforget=False):
         """Resets any cached templates
 
         Args:
@@ -2189,7 +2127,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def SetRobotBridgeExternalIOPublishing(self, enable, timeout=2, fireandforget=False, **ignoredArgs):
+    def SetRobotBridgeExternalIOPublishing(self, enable, timeout=2, fireandforget=False):
         """Enables publishing collision data to the robotbridge
 
         Args:
@@ -2203,7 +2141,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def RestoreSceneInitialState(self, timeout=1, preserverobotdofvalues=1, **ignoredArgs):
+    def RestoreSceneInitialState(self, timeout=1, preserverobotdofvalues=1):
         """Restores the scene to the state on the filesystem
 
         Args:
@@ -2216,7 +2154,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunMotorControlTuningStepTest(self, jointName, amplitude, timeout=10, **ignoredArgs):
+    def RunMotorControlTuningStepTest(self, jointName, amplitude, timeout=10):
         """Runs step response test on specified joint and returns result
 
         Args:
@@ -2231,7 +2169,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunMotorControlTuningMaximulLengthSequence(self, jointName, amplitude, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
+    def RunMotorControlTuningMaximulLengthSequence(self, jointName, amplitude, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None):
         """Runs maximum length sequence test on specified joint and returns result
 
         Args:
@@ -2263,7 +2201,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunMotorControlTuningDecayingChirp(self, jointName, amplitude, freqMax, timeout=120, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
+    def RunMotorControlTuningDecayingChirp(self, jointName, amplitude, freqMax, timeout=120, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None):
         """runs chirp test on specified joint and returns result
 
         Args:
@@ -2297,7 +2235,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunMotorControlTuningGaussianImpulse(self, jointName, amplitude, timeout=20, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
+    def RunMotorControlTuningGaussianImpulse(self, jointName, amplitude, timeout=20, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None):
         """Runs Gaussian Impulse test on specified joint and returns result
 
         Args:
@@ -2329,7 +2267,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunMotorControlTuningBangBangResponse(self, jointName, amplitude, timeout=60, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
+    def RunMotorControlTuningBangBangResponse(self, jointName, amplitude, timeout=60, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None):
         """Runs bangbang trajectory in acceleration or jerk space and returns result
 
         Args:
@@ -2361,7 +2299,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunDynamicsIdentificationTest(self, timeout, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
+    def RunDynamicsIdentificationTest(self, timeout, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None):
         """
 
         Args:
@@ -2389,7 +2327,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetTimeToRunDynamicsIdentificationTest(self, timeout=10, jointName=None, minJointAngle=None, maxJointAngle=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
+    def GetTimeToRunDynamicsIdentificationTest(self, timeout=10, jointName=None, minJointAngle=None, maxJointAngle=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None):
         """
 
         Args:
@@ -2426,7 +2364,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['maxJointAngle'] = maxJointAngle
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def CalculateTestRangeFromCollision(self, timeout=10, jointName=None, unit='mm', envclearance=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
+    def CalculateTestRangeFromCollision(self, timeout=10, jointName=None, unit='mm', envclearance=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None):
         """
 
         Args:
@@ -2460,7 +2398,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['envclearance'] = envclearance
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetMotorControlParameterSchema(self, timeout=10, **ignoredArgs):
+    def GetMotorControlParameterSchema(self, timeout=10):
         """Gets motor control parameter schema
 
         Args:
@@ -2471,7 +2409,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetMotorControlParameter(self, jointName, parameterName, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
+    def GetMotorControlParameter(self, jointName, parameterName, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None):
         """Gets motor control parameters as a name-value dict, e.g.: {'J1':{'KP':1}, 'J2':{'KV':2}}
 
         Args:
@@ -2503,7 +2441,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetMotorControlParameters(self, timeout=10, **ignoredArgs):
+    def GetMotorControlParameters(self, timeout=10):
         """Gets cached motor control parameters as name-value dict
 
         Args:
@@ -2514,7 +2452,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetMotorControlParameter(self, jointName, parameterName, parameterValue, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None, **ignoredArgs):
+    def SetMotorControlParameter(self, jointName, parameterName, parameterValue, timeout=10, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, robotaccelmult=None, ionames=None):
         """Sets motor control parameter
 
         Args:
@@ -2583,7 +2521,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ReplaceBodies(self, bodieslist, timeout=10, replaceInfos=None, testLocationName=None, testLocationContainerId=None, removeNamePrefixes=None, removeLocationNames=None, doRemoveOnlyDynamic=None, unit='mm', **ignoredArgs):
+    def ReplaceBodies(self, bodieslist, timeout=10, replaceInfos=None, testLocationName=None, testLocationContainerId=None, removeNamePrefixes=None, removeLocationNames=None, doRemoveOnlyDynamic=None, unit='mm'):
         """Replaces bodies in the environment with new uris
 
         Args:
@@ -2617,7 +2555,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['doRemoveOnlyDynamic'] = doRemoveOnlyDynamic
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetState(self, timeout=10.0, fireandforget=False, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, **ignoredArgs):
+    def GetState(self, timeout=10.0, fireandforget=False, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None):
         """
 
         Args:
@@ -2637,7 +2575,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def EnsureSyncWithRobotBridge(self, syncTimeStampUS, timeout=10, fireandforget=False, **ignoredArgs):
+    def EnsureSyncWithRobotBridge(self, syncTimeStampUS, timeout=10, fireandforget=False):
         """Ensures that planning has synchronized with robotbridge data that is newer than syncTimeStampUS
 
         Args:
@@ -2651,7 +2589,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def ResetCachedRobotConfigurationState(self, timeout=10, fireandforget=False, **ignoredArgs):
+    def ResetCachedRobotConfigurationState(self, timeout=10, fireandforget=False):
         """Resets cached robot configuration (position of the robot) in the planning slave received from slave notification. Need to perform every time robot moved not from the task slaves.
 
         Args:
