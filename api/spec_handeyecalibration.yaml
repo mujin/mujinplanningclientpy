@@ -31,8 +31,7 @@ components:
     type: number
     description: "The maximum tilt of the pattern in degrees. Default: 30 degrees"
   robot:
-    description: The name of the robot (modelName).
-    type: string
+    $merge: '#/components/robot'
 info:
   description: The API of the Planning Server for a Calibration task.
 mujinapi: 0.0.1

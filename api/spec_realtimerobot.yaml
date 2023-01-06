@@ -1,0 +1,1469 @@
+include:
+- components_realtimerobot.yaml
+- mujinrepo:mujinbinpickingmanager.schema.binpickingparametersschema
+- mujinrepo:mujinbinpickingmanager.schema.containerschema
+info: null
+description: The RealtimeRobot API of the Mujin Planning Server.
+mujinapi: 0.0.1
+services:
+  GetJointValues:
+    description: Gets the current robot joint values
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_SetRobotClientParameters'
+              executetimeout:
+                $merge: '#/components/executetimeout'
+                default: 10
+              unit:
+                $merge: '#/components/unit'
+    returns:
+      description: Current joint values in a json dictionary with key currentjointvalues and value [0,0,0,0,0,0]
+      type: object
+  MoveToolLinear:
+    description: Moves the tool linearly in cartesian (3D) space.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              ignoreGrabbingTarget:
+                $merge: '#/components/moveJointsParameters/ignoreGrabbingTarget'
+              currentlimitratios:
+                $merge: '#/components/moveJointsParameters/currentlimitratios'
+              instobjectname:
+                $merge: '#/components/Internal_MoveToParams/instobjectname'
+              ikparamname:
+                $merge: '#/components/Internal_MoveToParams/ikparamname'
+              execute:
+                $merge: '#/components/moveJointsParameters/execute'
+              moveStraightParams:
+                $merge: '#/mujinbinpickingmanager.schema.binpickingparametersschema/moveStraightParamsSchema'
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              goaltype:
+                $merge: '#/components/goaltype'
+                required: true
+              goals:
+                $merge: '#/components/goals'
+                required: true
+              toolname:
+                description: Tool name(s)
+                $merge: '#/components/toolname'
+                type: string
+              robotspeed:
+                $merge: '#/components/robotspeed'
+              workmaxdeviationangle:
+                description: How much the tool tip can rotationally deviate from the linear path. In deg.
+                type: number
+              workspeed:
+                $merge: '#/components/workspeed'
+              workaccel:
+                $merge: '#/components/workaccel'
+              worksteplength:
+                description: Discretization for planning MoveHandStraight, in seconds.
+                type: number
+              plannername:
+                type: string
+              workminimumcompletetime:
+                description: (DEPRECATED, UNUSED) Set to trajduration - 0.016s. EMU_MUJIN example requires at least this much
+                type: number
+              workminimumcompleteratio:
+                description: (DEPRECATED, UNUSED) In case the duration of the trajectory is now known, can specify in terms of [0,1]. 1 is complete everything.
+                type: number
+              numspeedcandidates:
+                description: If speed/accel are not specified, the number of candiates to consider
+                type: integer
+              workignorefirstcollisionee:
+                description: time, necessary in case initial is in collision, has to be multiples of step length?
+                type: number
+              workignorelastcollisionee:
+                description: time, necessary in case goal is in collision, has to be multiples of step length?
+                type: number
+              workignorefirstcollision:
+                type: number
+  MoveToHandPosition:
+    description: Computes the inverse kinematics and moves the manipulator to any one of the goals specified.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              minimumgoalpaths:
+                $merge: '#/components/minimumgoalpaths'
+              chuckgripper:
+                type: boolean
+              currentlimitratios:
+                $merge: '#/components/moveJointsParameters/currentlimitratios'
+              instobjectname:
+                $merge: '#/components/Internal_MoveToParams/instobjectname'
+              ikparamname:
+                $merge: '#/components/Internal_MoveToParams/ikparamname'
+              ikparamoffset:
+                $merge: '#/components/Internal_MoveToParams/ikparamoffset'
+              pathPlannerParameters:
+                $merge: '#/components/pathPlannerParameters'
+              smootherParameters:
+                $merge: '#/components/smootherParameters'
+              ignoreGrabbingTarget:
+                $merge: '#/components/moveJointsParameters/ignoreGrabbingTarget'
+              jitter:
+                $merge: '#/components/moveJointsParameters/jitter'
+              unit:
+                $merge: '#/components/moveJointsParameters/unit'
+              maxJitterLinkDist:
+                $merge: '#/components/moveJointsParameters/maxJitterLinkDist'
+              execute:
+                $merge: '#/components/moveJointsParameters/execute'
+              filtertraj:
+                $merge: '#/components/moveJointsParameters/filtertraj'
+              executionFilterFactor:
+                $merge: '#/components/moveJointsParameters/executionFilterFactor'
+              departOffsetDir:
+                $merge: '#/components/moveJointsParameters/departOffsetDir'
+              departOffsetAwayFromGravity:
+                $merge: '#/components/moveJointsParameters/departOffsetAwayFromGravity'
+              departAccel:
+                $merge: '#/components/moveJointsParameters/departAccel'
+              moveStraightParams:
+                $merge: '#/mujinbinpickingmanager.schema.binpickingparametersschema/moveStraightParamsSchema'
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              goaltype:
+                $merge: '#/components/goaltype'
+                required: true
+              goals:
+                $merge: '#/components/goals'
+                description: 'Flat list of goals, e.g. two 5d ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]'
+                required: true
+                type: array
+              toolname:
+                $merge: '#/components/toolname'
+              envclearance:
+                $merge: '#/components/envclearance'
+              closegripper:
+                default: 0
+                description: (DEPRECATED) Whether to close gripper once the goal is reached.
+                type: boolean
+              robotspeed:
+                $merge: '#/components/robotspeed'
+              robotaccelmult:
+                $merge: '#/components/robotaccelmult'
+  UpdateObjects:
+    description: Updates objects in the scene with the envstate
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              object_uri:
+                description: 'Same as objectname, but in a Mujin URI format, e.g.: mujin:/OBJECTNAME.mujin.dae'
+                $merge: '#/components/targetname'
+              callerid:
+                description: The name of the caller (only used internally)
+                type: string
+              detectionResultState:
+                description: Information about the detected objects (received from detectors)
+                type: object
+              targetUpdateNamePrefix:
+                type: string
+              cameranames:
+                type: array
+                items:
+                  type: string
+              countOverlappingPoints:
+                type: boolean
+              overlapUpAxis:
+                $merge: '#/components/Vector3Schema'
+              zthresholdmult:
+                type: number
+              addUnpickableRegionAcrossShortEdgeDist:
+                type: boolean
+              sizeRoundUp:
+                description: 'If False, then round down. (Default: True)'
+                type: boolean
+              sizePrecisionXYZ:
+                $merge: '#/mujinbinpickingmanager.schema.binpickingparametersschema/binpickingParametersSchema/properties/randomBoxInfo/properties/sizePrecisionXYZ'
+              points:
+                description: The point cloud passed in along with the detection results. Used in selective cases to count point overlap of random box.
+                type: array
+                items:
+                  type: number
+              pointsize:
+                description: Size of points in the point cloud.
+                type: number
+              pointcloudid:
+                type: string
+              locationName:
+                description: Name of the location to update.
+                type: string
+              containerName:
+                description: Name of the container to update. Requires locationName to be set. If containerName is empty, will use the container in locationName.
+                type: string
+              locationContainerId:
+                type: string
+              isFromStateSlaveNotify:
+                type: boolean
+              imageStartTimeStampMS:
+                type: integer
+              imageEndTimeStampMS:
+                type: integer
+              belowBoxOverlap:
+                $merge: '#/mujinbinpickingmanager.schema.binpickingparametersschema/targetOverlapConstraintInfoSchema/properties/belowBoxOverlap'
+              ignoreOverlapPointsFromWall:
+                $merge: '#/mujinbinpickingmanager.schema.binpickingparametersschema/targetOverlapConstraintInfoSchema/properties/ignoreOverlapPointsFromWall'
+              ignoreOverlapPointsFromNearbyTargets:
+                $merge: '#/mujinbinpickingmanager.schema.binpickingparametersschema/targetOverlapConstraintInfoSchema/properties/ignoreOverlapPointsFromNearbyTargets'
+              castPointCloudShadowFromCamera:
+                description: If True, bottom parts of pointcloud obstacle are generated by casting shadow from camera. otherwise, vertical down (-z).
+                type: boolean
+              pointsProjectedDirection:
+                description: The negative direction in which the points were projected when creating the obstacles. If specified, then take into account when computing the overlap. When container up is +Z, then pointsProjectedDirection will be (0,0,1).
+                $merge: '#/components/Vector3Schema'
+              randomBoxOrigin:
+                $merge: '#/mujinbinpickingmanager.schema.binpickingparametersschema/binpickingParametersSchema/properties/randomBoxInfo/properties/randomBoxOrigin'
+              rollStepDegree:
+                $merge: '#/mujinbinpickingmanager.schema.binpickingparametersschema/binpickingParametersSchema/properties/randomBoxInfo/properties/rollStepDegree'
+              clampToContainer:
+                description: If True, crop to container dimensions.
+                type: boolean
+              medianFilterHalfSize:
+                description: If clampcontainer is True, this is used for filtering.
+                type: number
+              useEmptyRegionForCropping:
+                description: If clampcontainer is True, this is used for filtering.
+                type: boolean
+              cropContainerMarginsXYZXYZ:
+                $merge: '#/mujinbinpickingmanager.schema.containerschema/cropContainerMarginsXYZXYZ'
+              ioSignalsInfo:
+                $merge: '#/components/ioSignalsInfo'
+              addPointOffsetInfo:
+                $merge: '#/mujinbinpickingmanager.schema.containerschema/addPointOffsetInfoSchema'
+              envstate:
+                description: 'A list of dictionaries for each instance object in world frame. Quaternion is specified in w,x,y,z order. e.g. [{''name'': ''target_0'', ''translation_'': [1,2,3], ''quat_'': [1,0,0,0], ''object_uri'':''mujin:/asdfas.mujin.dae''}, {''name'': ''target_1'', ''translation_'': [2,2,3], ''quat_'': [1,0,0,0]}]'
+                required: true
+              state:
+                type: object
+              unit:
+                $merge: '#/components/unit'
+                default: mm
+  Grab:
+    description: Grabs an object with tool
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              targetname:
+                $merge: '#/components/targetname'
+                required: true
+              toolname:
+                $merge: '#/components/toolname'
+  Release:
+    description: Releases a grabbed object.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              targetname:
+                $merge: '#/components/targetname'
+                required: true
+  GetGrabbed:
+    description: Gets the names of the objects currently grabbed
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+    returns:
+      description: 'Names of the grabbed object in a JSON dictionary, e.g. {''names'': [''target_0'']}'
+      type: object
+  GetTransform:
+    description: Gets the transform of an object
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              targetname:
+                description: OpenRave Kinbody name
+                required: true
+                type: string
+              connectedBodyName:
+                description: OpenRave connected body name
+                type: string
+              linkName:
+                description: OpenRave link name
+                type: string
+              geometryName:
+                description: OpenRave geometry id name
+                type: string
+              geometryPk:
+                description: OpenRave geometry primary key (pk)
+                type: string
+              unit:
+                $merge: '#/components/unit'
+                default: mm
+    returns:
+      description: 'Transform of the object in a JSON dictionary, e.g. {''translation'': [100,200,300], ''rotationmat'': [[1,0,0],[0,1,0],[0,0,1]], ''quaternion'': [1,0,0,0]}'
+      type: object
+  SetTransform:
+    description: Sets the transform of an object. Rotation can be specified by either quaternion or rotation matrix.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              targetname:
+                $merge: '#/components/targetname'
+                required: true
+              translation:
+                $merge: '#/components/translation'
+                required: true
+              unit:
+                $merge: '#/components/unit'
+                default: mm
+              rotationmat:
+                $merge: '#/components/rotationmat'
+              quaternion:
+                $merge: '#/components/quaternion'
+  GetOBB:
+    description: Get the oriented bounding box (OBB) of object.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              targetname:
+                $merge: '#/components/targetname'
+                description: Name of the object
+                required: true
+              unit:
+                $merge: '#/components/unit'
+                default: mm
+              linkname:
+                $merge: '#/components/linknameOBB'
+    returns:
+      description: 'A dictionary describing the OBB of the object with keys: extents, boxLocalTranslation, originalBodyTranslation, quaternion, rotationmat, translation'
+      type: object
+  GetInnerEmptyRegionOBB:
+    description: Get the inner empty oriented bounding box (OBB) of a container.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              targetname:
+                $merge: '#/components/targetname'
+                description: Name of the object
+                required: true
+              linkname:
+                $merge: '#/components/linknameOBB'
+              unit:
+                $merge: '#/components/unit'
+                default: mm
+    returns:
+      description: 'A dict describing the OBB of the object with keys: extents, boxLocalTranslation, originalBodyTranslation, quaternion, rotationmat, translation'
+      type: object
+  GetInstObjectAndSensorInfo:
+    description: Returns information about the inst objects and sensors that are a part of those inst objects.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              instobjectnames:
+                type: array
+                items:
+                  type: string
+              sensornames:
+                type: array
+                items:
+                  type: string
+              unit:
+                $merge: '#/components/unit'
+                default: mm
+              ignoreMissingObjects:
+                description: 'If False, will raise an error if the object is not found in the scene. Default: True.'
+                type: boolean
+  GetInstObjectInfoFromURI:
+    description: Opens a URI and returns info about the internal/external and geometry info from it.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              instobjecturi:
+                type: string
+              unit:
+                $merge: '#/components/unit'
+                default: mm
+              instobjectpose:
+                description: Pose to be assigned to the retrieved object. 7-element list
+                type: array
+                items:
+                  type: number
+  GetAABB:
+    description: Gets the axis-aligned bounding box (AABB) of an object.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              targetname:
+                $merge: '#/components/targetname'
+                description: Name of the object
+                required: true
+              unit:
+                $merge: '#/components/unit'
+                default: mm
+              linkname:
+                $merge: '#/components/linknameAABB'
+    returns:
+      description: 'AABB of the object, e.g. {''pos'': [1000,400,100], ''extents'': [100,200,50]}'
+      type: object
+  SetLocationTracking:
+    description: Resets the tracking of specific containers
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              cycleIndex:
+                description: The cycle index to track the locations for
+              locationReplaceInfos:
+                description: 'A dict that should have the keys: name, containerDynamicProperties, rejectContainerIds, uri, pose, cycleIndex'
+              removeLocationNames:
+                $merge: '#/components/removeLocationNames'
+              minRobotBridgeTimeStampUS:
+                description: The minimum expected time stamp.
+                type: integer
+              dynamicObstacleBaseName:
+                type: string
+              targetUpdateBaseName:
+                type: string
+              ioSignalsInfo:
+                $merge: '#/components/ioSignalsInfo'
+              unit:
+                $merge: '#/components/unit'
+  ResetLocationTracking:
+    description: Resets tracking updates for locations
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              resetAllLocations:
+                description: If True, then will reset all the locations
+                type: boolean
+              resetLocationName:
+                description: Resets only the location with matching name
+                type: string
+              resetLocationNames:
+                description: Resets only locations with matching name
+                type: array
+                items:
+                  type: string
+              checkIdAndResetLocationName:
+                description: (locationName, containerId) - only reset the location if the container id matches
+    returns:
+      description: clearedLocationNames
+      type: object
+      properties:
+        clearedLocationNames:
+          description: clearedLocationNames
+          type: object
+  GetLocationTrackingInfos:
+    description: Gets the active tracked locations
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+    returns:
+      description: activeLocationTrackingInfos
+      type: object
+      properties:
+        activeLocationTrackingInfos:
+          description: activeLocationTrackingInfos
+          type: object
+  UpdateLocationContainerIdType:
+    description: Resets the tracking of specific containers
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              locationName:
+                description: Name of the location the container is in
+                required: true
+                type: string
+              containerName:
+                description: Name of the container
+                required: true
+                type: string
+              containerId:
+                description: ID of the container
+                required: true
+                type: string
+              containerType:
+                description: Type of the container
+                required: true
+                type: string
+              trackingCycleIndex:
+                description: If specified, then the cycle with same cycleIndex will update location tracking in the same call.
+              unit:
+                $merge: '#/components/unit'
+  ResetLocationTrackingContainerId:
+    description: Resets the containerId of self._activeLocationTrackingInfos if it matches checkContainerId.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              locationName:
+                description: The name of the location that may be reset.
+                required: true
+                type: string
+              checkContainerId:
+                description: If checkContainerId is specified and not empty and it matches the current containerId of the tracking location, then reset the current tracking location
+                required: true
+  RemoveObjectsWithPrefix:
+    description: Removes objects with prefix.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              prefix:
+                description: (DEPRECATED)
+                type: string
+              removeNamePrefixes:
+                $merge: '#/components/removeNamePrefixes'
+              removeLocationNames:
+                $merge: '#/components/removeLocationNames'
+              doRemoveOnlyDynamic:
+                $merge: '#/components/doRemoveOnlyDynamic'
+    returns:
+      description: With key 'removedBodyNames' for the removed object names
+      type: object
+  GetTrajectoryLog:
+    description: Gets the recent trajectories executed on the binpicking server. The internal server keeps trajectories around for 10 minutes before clearing them.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              saverawtrajectories:
+                description: If True, will save the raw trajectories.
+                type: boolean
+              startindex:
+                description: "Start of the trajectory to get. If negative, will start counting from the end. For example, -1 is the last element, -2 is the second to last. Default: 0"
+                type: integer
+              num:
+                description: "Number of trajectories from startindex to return. If 0, will return all the trajectories starting from startindex. Default: 0"
+                type: integer
+              includejointvalues:
+                default: false
+                description: If True, will include timedjointvalues. If False, will just give back the trajectories.
+                type: boolean
+    returns:
+      description: "A dict with structure: \n    total: 10\n    trajectories: [\n    {\n    \"timestarted\": 12345215\n    \"name\": \"movingtodest\",\n    \"numpoints\": 100,\n    \"duration\": 0.8,\n    \"timedjointvalues\": [0, 0, 0, .....]\n    },\n    { ... }\n    ]\n    \n    Where timedjointvalues is a list of joint values and the trajectory time. For a 3DOF robot sampled at 0.008s, this is\n    [J1, J2, J3, 0, J1, J2, J3, 0.008, J1, J2, J3, 0.016, ...]"
+      type: object
+  ChuckGripper:
+    description: Chucks the manipulator
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              robotname:
+                $merge: '#/components/robotname'
+              grippername:
+                $merge: '#/components/grippername'
+              toolname:
+                $merge: '#/components/toolname'
+  UnchuckGripper:
+    description: Unchucks the manipulator and releases the target
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              robotname:
+                $merge: '#/components/robotname'
+              grippername:
+                $merge: '#/components/grippername'
+              targetname:
+                $merge: '#/components/targetname'
+                description: Name of the target object.
+              toolname:
+                $merge: '#/components/toolname'
+              pulloutdist:
+                description: Distance to move away along the tool direction after releasing.
+                type: number
+              deletetarget:
+                description: 'If 1, removes the target object from the environment after releasing. (Default: 1)'
+                type: integer
+  CalibrateGripper:
+    description: Goes through the gripper calibration procedure
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              robotname:
+                $merge: '#/components/robotname'
+              grippername:
+                $merge: '#/components/grippername'
+              toolname:
+                $merge: '#/components/toolname'
+  StopGripper:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              robotname:
+                $merge: '#/components/robotname'
+              grippername:
+                $merge: '#/components/grippername'
+              toolname:
+                $merge: '#/components/toolname'
+  MoveGripper:
+    description: Moves the chuck of the manipulator to a given value.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              grippervalues:
+                description: Target value(s) of the chuck.
+                required: true
+                type: array
+                items:
+                  type: number
+              robotname:
+                $merge: '#/components/robotname'
+              grippername:
+                $merge: '#/components/grippername'
+              toolname:
+                $merge: '#/components/toolname'
+  ExecuteRobotProgram:
+    description: Execute a robot specific program by name
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              robotProgramName:
+                required: true
+                type: string
+              robotname:
+                $merge: '#/components/robotname'
+  SaveScene:
+    description: Saves the current scene to file
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              filename:
+                description: e.g. /tmp/testscene.mujin.dae, if not specified, it will be saved with an auto-generated filename
+                type: string
+              preserveexternalrefs:
+                description: If True, any bodies that are currently being externally referenced from the environment will be saved as external references.
+                type: boolean
+              externalref:
+                description: If '*', then each of the objects will be saved as externally referencing their original filename. Otherwise will force saving specific bodies as external references.
+                type: string
+              saveclone:
+                description: (DEPRECATED) If 1, will save the scenes for all the cloned environments
+              saveReferenceUriAsHint:
+                description: If True, use save the reference uris as referenceUriHint so that webstack does not get confused and deletes content
+                type: boolean
+    returns:
+      description: 'The filename the scene is saved to, in a json dictionary, e.g. {''filename'': ''2013-11-01-17-10-00-UTC.dae''}'
+      type: object
+  SaveGripper:
+    description: Separate gripper from a robot in a scene and save it.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_SetRobotClientParameters'
+              robotname:
+                $merge: '#/components/robotname'
+                description: Name of the robot waiting to extract the hand from.
+              filename:
+                description: File name to save on the file system. e.g. /tmp/robotgripper/mujin.dae
+                type: string
+              manipname:
+                description: Name of the manipulator.
+                type: string
+  MoveJointsToJointConfigurationStates:
+    description: Moves the robot to desired joint angles specified in jointStates
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/moveJointsParameters'
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              jointConfigurationStates:
+                required: true
+              robotname:
+                $merge: '#/components/robotname'
+              startJointConfigurationStates:
+                type: ''
+              jointStates:
+                description: List[{'jointName':str, 'jointValue':float}]
+                type: array
+              jointindices:
+                $merge: '#/components/jointindices'
+  MoveJoints:
+    description: Moves the robot to desired joint angles specified in jointvalues
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              forceTorqueBasedEstimatorParameters:
+                $merge: '#/components/forceTorqueBasedEstimatorParameters'
+              $merge:
+              - '#/components/moveJointsParameters'
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              goaljoints:
+                description: List of joint values to move to.
+                type: array
+                items:
+                  type: number
+              jointindices:
+                $merge: '#/components/jointindices'
+              robotname:
+                $merge: '#/components/robotname'
+              startvalues:
+                $merge: '#/components/startvalues'
+              robotProgramName:
+                type: string
+  MoveJointsToPositionConfiguration:
+    description: Moves the robot to desired position configuration specified in positionConfigurationName
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              startJointConfigurationStates:
+                description: List of dicts for each joint.
+                type: array
+                items:
+                  type: object
+              robotProgramName:
+                type: string
+              forceTorqueBasedEstimatorParameters:
+                $merge: '#/components/forceTorqueBasedEstimatorParameters'
+              $merge:
+              - '#/components/moveJointsParameters'
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              positionConfigurationName:
+                description: If specified, the name of position configuration to move to. If it does not exist, will raise an error.
+                type: string
+              positionConfigurationCandidateNames:
+                description: If specified, goes to the first position that is defined for the robot. If no positions exist, returns without moving the robot.
+                type: array
+                items:
+                  type: string
+              robotname:
+                $merge: '#/components/robotname'
+              startvalues:
+                $merge: '#/components/startvalues'
+    returns:
+      type: object
+      description: Dictionary with keys goalPositionName and values goalConfiguration
+  GetRobotBridgeIOVariables:
+    description: Returns the data of the IO in ASCII hex as a string
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_SetRobotClientParameters'
+              ioname:
+                $merge: '#/components/ioname'
+                description: One IO name to read
+              ionames:
+                $merge: '#/components/ionames'
+                description: A list of the IO names to read
+              robotname:
+                $merge: '#/components/robotname'
+  SetRobotBridgeIOVariables:
+    description: 'Sets a set of IO variables in the robot bridge.
+
+
+      This should not lock self.env since it can happen during the runtime of a task and lock out other functions waiting in the queue.
+
+      '
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              forceasync:
+                type: boolean
+              $merge:
+              - '#/components/Internal_SetRobotClientParameters'
+              iovalues:
+                required: true
+              robotname:
+                $merge: '#/components/robotname'
+  ComputeIkParamPosition:
+    description: Given the name of a Kinbody, computes the manipulator (TCP) position in the kinbody frame to generate values for an IKParameterization.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              unit:
+                $merge: '#/components/unit'
+              name:
+                required: true
+                type: string
+                description: Name of the Kinbody (the robot).
+              jointvalues:
+                description: If given, the robot's joints are set to these values before calculating the manipulator (TCP) position. If not set, uses the current values.
+                $merge: '#/components/jointvalues'
+    returns:
+      type: object
+      properties:
+        translation:
+          $merge: '#/components/translation'
+        quaternion:
+          $merge: '#/components/quaternion'
+        direction:
+          $merge: '#/components/Vector3Schema'
+          description: The global direction of the manipulator (assuming that the direction of the manipulator is the positive Z-axis).
+        angleXZ:
+          type: number
+        angleYX:
+          type: number
+        angleZY:
+          type: number
+        angleX:
+          type: number
+        angleY:
+          type: number
+        angleZ:
+          type: number
+  ComputeIKFromParameters:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              targetname:
+                $merge: '#/components/targetname'
+              graspsetname:
+                $merge: '#/components/graspsetname'
+              ikparamnames:
+                $merge: '#/components/ikparamnames'
+              limit:
+                description: Number of solutions to return
+                type: number
+              useSolutionIndices:
+                type: boolean
+              disabletarget:
+                type: boolean
+              unit:
+                $merge: '#/components/unit'
+              randomBoxInfo:
+                $merge: '#/mujinbinpickingmanager.schema.binpickingparametersschema/binpickingParametersSchema/properties/randomBoxInfo'
+                description: 'Info structure for maintaining grasp parameters for random box picking. Used when picking up randomized boxes (targetIsRandomBox is True). Keys: usefaces, dictFacePriorities, boxDirAngle, toolTranslationOffsets'
+              freeincvalue:
+                description: The discretization of the free joints of the robot when computing ik.
+                type: number
+              freeinc:
+                description: (DEPRECATED) The discretization of the free joints of the robot when computing ik.
+                type: number
+              applyapproachoffset:
+                type: boolean
+              inPlaneAngleDeviation:
+                type: number
+              outOfPlaneAngleDeviation:
+                type: number
+              searchfreeparams:
+                type: boolean
+              returnClosestToCurrent:
+                type: boolean
+              filteroptionslist:
+                description: 'A list of filter option strings. Can be: CheckEnvCollisions, IgnoreCustomFilters, IgnoreEndEffectorCollisions, IgnoreEndEffectorEnvCollisions, IgnoreEndEffectorSelfCollisions, IgnoreJointLimits, IgnoreSelfCollisions. Overrides filteroptions.'
+                type: array
+                items:
+                  type: string
+              filteroptions:
+                description: OpenRAVE IkFilterOptions bitmask. By default this is 1, which means all collisions are checked
+                type: integer
+              toolname:
+                $merge: '#/components/toolname'
+                description: Tool name
+                type: string
+    returns:
+      description: 'A dictionary of:
+
+
+        - solutions: array of IK solutions (each of which is an array of DOF values), sorted by minimum travel distance and truncated to match the limit
+
+        '
+  ShutdownRobotBridge:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_SetRobotClientParameters'
+  GetRobotBridgeState:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              ionames:
+                $merge: '#/components/ionames'
+              $merge:
+              - '#/components/Internal_SetRobotClientParameters'
+  ClearRobotBridgeError:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_SetRobotClientParameters'
+  SetRobotBridgePause:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_SetRobotClientParameters'
+  SetRobotBridgeResume:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_SetRobotClientParameters'
+  SetJogModeVelocities:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              robotJogParameters:
+                description: A dictionary. Includes field 'jogtype' (One of 'joints', 'world', 'robot', 'tool').
+                type: object
+              simulationtimestep:
+                description: Time step of the simulation.
+                type: number
+              plotDirection:
+                description: If True, plot the direction.
+                type: boolean
+              $merge:
+              - '#/components/Internal_SetRobotClientParameters'
+              movejointsigns:
+                description: Joint signs used for jogging. If less than the number of joints, will be padded with zeros.
+                required: true
+                type: array
+                items:
+                  type: number
+              robotname:
+                $merge: '#/components/robotname'
+              toolname:
+                $merge: '#/components/toolname'
+                description: Name of the manipulator. Defaults to self.toolname
+                type: string
+              robotspeed:
+                $merge: '#/components/robotspeed'
+              robotaccelmult:
+                $merge: '#/components/robotaccelmult'
+                description: Value in (0,1] setting the percentage of robot acceleration to move at
+                type: number
+              canJogInCheckMode:
+                description: 'If True, then allow jogging even if in check mode. (Default: False)'
+                type: boolean
+              jogtype:
+                description: 'One of ''joints'', ''world'', ''robot'', ''tool''. (DEPRECATED: set this as a field in robotJogParameters instead)'
+                type: string
+              checkSelfCollisionWhileJogging:
+                type: boolean
+              force:
+                description: If true, forces the velocities to be set.
+                type: boolean
+  EndJogMode:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_SetRobotClientParameters'
+  SetRobotBridgeServoOn:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              isservoon:
+                description: If True, turns servo on.
+                required: true
+                type: boolean
+              robotname:
+                $merge: '#/components/robotname'
+  SetRobotBridgeLockMode:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              islockmode:
+                description: If True, turns on Lock Mode. During Lock Mode, all communication with the physical robot is turned off and the hardware will not move.
+                required: true
+                type: boolean
+              robotname:
+                $merge: '#/components/robotname'
+  ResetSafetyFault:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+  SetRobotBridgeControlMode:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              controlMode:
+                description: The control mode to use, e.g. "Manual".
+                required: true
+                type: string
+  GetDynamicObjects:
+    description: Get a list of dynamically added objects in the scene, from vision detection and physics simulation.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+  ComputeRobotConfigsForGraspVisualization:
+    description: Returns robot configs for grasp visualization
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              approachoffset:
+                type: number
+              departoffsetdir:
+                $merge: '#/components/moveJointsParameters/departOffsetDir'
+              departoffsetintool:
+                description: null
+                type: array
+                items:
+                  type: number
+              shadowrobotname:
+                type: string
+              shadowrobottoolname:
+                type: string
+              targetname:
+                description: Target object's name.
+                required: true
+                type: string
+              graspname:
+                description: Name of the grasp for which to visualize grasps.
+                required: true
+                type: string
+              robotname:
+                $merge: '#/components/robotname'
+                description: Name of the robot
+                type: string
+              toolname:
+                $merge: '#/components/toolname'
+                default: self.toolname
+                description: Name of the manipulator.
+                type: string
+              unit:
+                $merge: '#/components/unit'
+                default: mm
+  ResetCacheTemplates:
+    description: Resets any cached templates
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+  SetRobotBridgeExternalIOPublishing:
+    description: Enables publishing collision data to the robotbridge
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              enable:
+                description: If True, collision data will be published to robotbridge.
+                required: true
+                type: boolean
+  RestoreSceneInitialState:
+    description: Restores the scene to the state on the filesystem
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              preserverobotdofvalues:
+                type: boolean
+  RunMotorControlTuningStepTest:
+    description: Runs step response test on specified joint and returns result
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              jointName:
+                $merge: '#/components/jointName'
+                required: true
+              amplitude:
+                $merge: '#/components/amplitude'
+                required: true
+  RunMotorControlTuningMaximulLengthSequence:
+    description: Runs maximum length sequence test on specified joint and returns result
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              jointName:
+                $merge: '#/components/jointName'
+                required: true
+              amplitude:
+                $merge: '#/components/amplitude'
+                required: true
+  RunMotorControlTuningDecayingChirp:
+    description: runs chirp test on specified joint and returns result
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              jointName:
+                $merge: '#/components/jointName'
+                required: true
+              amplitude:
+                $merge: '#/components/amplitude'
+                required: true
+              freqMax:
+                $merge: '#/components/freqMax'
+                required: true
+  RunMotorControlTuningGaussianImpulse:
+    description: Runs Gaussian Impulse test on specified joint and returns result
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              jointName:
+                $merge: '#/components/jointName'
+                required: true
+              amplitude:
+                $merge: '#/components/amplitude'
+                required: true
+  RunMotorControlTuningBangBangResponse:
+    description: Runs bangbang trajectory in acceleration or jerk space and returns result
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              jointName:
+                $merge: '#/components/jointName'
+                required: true
+              amplitude:
+                $merge: '#/components/amplitude'
+                required: true
+  RunDynamicsIdentificationTest:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+  GetTimeToRunDynamicsIdentificationTest:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              jointName:
+                $merge: '#/components/jointName'
+              minJointAngle:
+                description: The joint angle to start the dynamics identification test at.
+                type: number
+              maxJointAngle:
+                description: The joint angle to finish the dynamics identification test at.
+                type: number
+  CalculateTestRangeFromCollision:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              jointName:
+                $merge: '#/components/jointName'
+              unit:
+                $merge: '#/components/unit'
+              envclearance:
+                $merge: '#/components/envclearance'
+  GetMotorControlParameterSchema:
+    description: Gets motor control parameter schema
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+  GetMotorControlParameter:
+    description: 'Gets motor control parameters as a name-value dict, e.g.: {''J1'':{''KP'':1}, ''J2'':{''KV'':2}}'
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              jointName:
+                required: true
+                type: string
+              parameterName:
+                required: true
+                type: string
+  GetMotorControlParameters:
+    description: Gets cached motor control parameters as name-value dict
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+  SetMotorControlParameter:
+    description: Sets motor control parameter
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge:
+              - '#/components/Internal_MoveCommandDecoratorParameters'
+              - '#/components/Internal_SetRobotClientParameters'
+              jointName:
+                required: true
+                type: string
+              parameterName:
+                description: The name of the parameter to set.
+                required: true
+                type: string
+              parameterValue:
+                description: The value to assign to the parameter.
+                required: true
+  IsProfilingRunning:
+    description: Queries if profiling is running on planning
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+  StartProfiling:
+    description: Start profiling planning
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              clocktype:
+                default: cpu
+                type: string
+  StopProfiling:
+    description: Stop profiling planning
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+  ReplaceBodies:
+    description: Replaces bodies in the environment with new uris
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              bodieslist:
+                required: true
+              replaceInfos:
+                description: 'list of dicts with keys: name, uri, containerDynamicProperties'
+                type: array
+              testLocationName:
+                description: If specified, will test if the container in this location matches testLocationContainerId, and only execute the replace if it matches and testLocationContainerId is not empty.
+                type: string
+              testLocationContainerId:
+                description: containerId used for testing logic with testLocationName
+                type: string
+              removeNamePrefixes:
+                $merge: '#/components/removeNamePrefixes'
+              removeLocationNames:
+                $merge: '#/components/removeLocationNames'
+              doRemoveOnlyDynamic:
+                $merge: '#/components/doRemoveOnlyDynamic'
+              unit:
+                $merge: '#/components/unit'
+  GetState:
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              $merge: '#/components/Internal_SetRobotClientParameters'
+  EnsureSyncWithRobotBridge:
+    description: Ensures that planning has synchronized with robotbridge data that is newer than syncTimeStampUS
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              syncTimeStampUS:
+                description: us (microseconds, linux time) of the timestamp
+                required: true
+  ResetCachedRobotConfigurationState:
+    description: Resets cached robot configuration (position of the robot) in the planning slave received from slave notification. Need to perform every time robot moved not from the task slaves.
+    $merge: '#/components/StandardPlanningServerRequestParameters'
+    parameters:
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
