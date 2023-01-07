@@ -1,0 +1,85 @@
+template: 'templates/client_template.py.mako'
+clientType: handeyecalibration
+templateArgs:  # Strings are added to client_template.py.mako
+  tasktype: handeyecalibration
+  clientTaskName: HandEyeCalibration
+  parentClassFile: planningclient
+  parentClassName: PlanningClient
+  extraSuperConstructorArgs: ''
+  extraConstructorArgs: |
+    robot='',
+  extraClassAttributes:
+  extraConstructorArgsDocstringLines: |
+    robot (str, optional): Name of the robot, e.g. VP-5243I
+  extraConstructorContent: |
+    self.robot = robot
+  extraClientContent: ''
+  extraClientStaticFunctions: |
+    def ExecuteCommand(self, taskparameters, **kwargs):
+      if 'robot' not in taskparameters:
+        taskparameters['robot'] = self.robot
+      super(ExecuteCommand, self).ExecuteCommand(taskparameters=taskparameters, **kwargs)
+components:
+  timeout:
+    description: Time in seconds after which the command is assumed to have failed.
+    type: number
+    x-doNotAddToPayload: true
+x-specModifications:
+  services:
+    ComputeCalibrationPoses:
+      description: "Compute a set of calibration poses that satisfy the angle constraints using latin hypercube sampling (or stratified sampling upon failure)"
+      parameters: 
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                cameracontainername:
+                  paramOrderingIndex: 0
+                primarysensorname:
+                  paramOrderingIndex: 1
+                secondarysensornames:
+                  paramOrderingIndex: 2
+                numsamples:
+                  paramOrderingIndex: 3
+                calibboardvisibility:
+                  paramOrderingIndex: 4
+                calibboardLinkName:
+                  paramOrderingIndex: 5
+                calibboardGeomName:
+                  paramOrderingIndex: 6
+                timeout:
+                  $merge: '#/components/timeout'
+                  default: 3000
+                  paramOrderingIndex: 7
+                robot:
+                  paramOrderingIndex: 8
+    SampleCalibrationConfiguration:
+      parameters: 
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                cameracontainername: 
+                  paramOrderingIndex: 0
+                primarysensorname: 
+                  paramOrderingIndex: 1
+                secondarysensornames: 
+                  paramOrderingIndex: 2
+                gridindex:
+                  paramOrderingIndex: 3
+                calibboardvisibility: 
+                  paramOrderingIndex: 4
+                calibboardLinkName: 
+                  paramOrderingIndex: 5
+                calibboardGeomName: 
+                  paramOrderingIndex: 6
+                timeout:
+                  $merge: '#/components/timeout'
+                  default: 3000
+                  paramOrderingIndex: 7
+                minPatternTiltAngle: 
+                  paramOrderingIndex: 8
+                maxPatternTiltAngle: 
+                  paramOrderingIndex: 9
+                robot:
+                  paramOrderingIndex: 10
