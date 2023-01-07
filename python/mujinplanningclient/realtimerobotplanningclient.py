@@ -259,7 +259,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             instobjectname (str, optional): If goaltype is not set and both instobjectname and ikparamname are set, use ikparamname of instobjectname as target position.
             ionames (list, optional): A list of IO names to read/write
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
-            moveStraightParams (dict, optional): Parameters used for linear movement like grasp approach, grasp depart, etc.
+            moveStraightParams: A set of parameters defining how the robot behaves during linear motions.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
             robotname (str, optional): Name of the robot
@@ -332,21 +332,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         robotaccelmult=None,
         timeout=10,
         chuckgripper=None,
-        currentlimitratios=None,
-        departAccel=None,
-        departOffsetAwayFromGravity=None,
-        departOffsetDir=None,
-        execute=None,
-        executionFilterFactor=None,
-        filtertraj=None,
-        ignoreGrabbingTarget=None,
         ikparamname=None,
         ikparamoffset=None,
         instobjectname=None,
         ionames=None,
-        jitter=None,
         locationCollisionInfos=None,
-        maxJitterLinkDist=None,
         minimumgoalpaths=None,
         moveStraightParams=None,
         pathPlannerParameters=None,
@@ -367,23 +357,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             chuckgripper (bool, optional):
-            currentlimitratios (list[float], optional): The joints' current limit ratios.
-            departAccel (float, optional):
-            departOffsetAwayFromGravity (float, optional): The distance to depart vertically upwards after picking/placing. Overridden by departOffsetDir.
-            departOffsetDir (list[float], optional): Direction in which to apply the offset when departing from the pick/place operation.
-            execute:
-            executionFilterFactor (float, optional):
-            filtertraj (bool, optional):
-            ignoreGrabbingTarget (bool, optional):
             ikparamname (str, optional): If goaltype is not set and both instobjectname and ikparamname are set, use ikparamname of instobjectname as target position.
             ikparamoffset (list[float], optional):
             instobjectname (str, optional): If goaltype is not set and both instobjectname and ikparamname are set, use ikparamname of instobjectname as target position.
             ionames (list, optional): A list of IO names to read/write
-            jitter (float, optional):
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
-            maxJitterLinkDist:
             minimumgoalpaths (int, optional): Number of solutions the planner must provide before it is allowed to finish.
-            moveStraightParams (dict, optional): Parameters used for linear movement like grasp approach, grasp depart, etc.
+            moveStraightParams: A set of parameters defining how the robot behaves during linear motions.
             pathPlannerParameters:
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
             robotname (str, optional): Name of the robot
@@ -399,24 +379,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         if chuckgripper is not None:
             taskparameters['chuckgripper'] = chuckgripper
-        if currentlimitratios is not None:
-            taskparameters['currentlimitratios'] = currentlimitratios
-        if departAccel is not None:
-            taskparameters['departAccel'] = departAccel
-        if departOffsetAwayFromGravity is not None:
-            taskparameters['departOffsetAwayFromGravity'] = departOffsetAwayFromGravity
-        if departOffsetDir is not None:
-            taskparameters['departOffsetDir'] = departOffsetDir
         if envclearance is not None:
             taskparameters['envclearance'] = envclearance
-        if execute is not None:
-            taskparameters['execute'] = execute
-        if executionFilterFactor is not None:
-            taskparameters['executionFilterFactor'] = executionFilterFactor
-        if filtertraj is not None:
-            taskparameters['filtertraj'] = filtertraj
-        if ignoreGrabbingTarget is not None:
-            taskparameters['ignoreGrabbingTarget'] = ignoreGrabbingTarget
         if ikparamname is not None:
             taskparameters['ikparamname'] = ikparamname
         if ikparamoffset is not None:
@@ -425,12 +389,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['instobjectname'] = instobjectname
         if ionames is not None:
             taskparameters['ionames'] = ionames
-        if jitter is not None:
-            taskparameters['jitter'] = jitter
         if locationCollisionInfos is not None:
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
-        if maxJitterLinkDist is not None:
-            taskparameters['maxJitterLinkDist'] = maxJitterLinkDist
         if minimumgoalpaths is not None:
             taskparameters['minimumgoalpaths'] = minimumgoalpaths
         if moveStraightParams is not None:
@@ -1956,7 +1916,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['toolname'] = toolname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ComputeIkParamPosition(self, name, robotname=None, timeout=10, jointvalues=None, unit='mm'):
+    def ComputeIkParamPosition(self, name, robotname=None, timeout=10, jointvalues=None, toolname=None, unit='mm'):
         """Given the name of a Kinbody, computes the manipulator (TCP) position in the kinbody frame to generate values for an IKParameterization.
 
         Args:
@@ -1964,6 +1924,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             robotname (str, optional): Name of the robot
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             jointvalues (list[float], optional): If given, the robot's joints are set to these values before calculating the manipulator (TCP) position. If not set, uses the current values.
+            toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
             unit (str, optional): The unit of the given values. (Default: 'mm')
 
         Returns:
@@ -1988,9 +1949,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['jointvalues'] = jointvalues
         if robotname is not None:
             taskparameters['robotname'] = robotname
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ComputeIKFromParameters(self, toolname=None, timeout=10, applyapproachoffset=None, disabletarget=None, filteroptions=None, filteroptionslist=None, freeinc=None, freeincvalue=None, graspsetname=None, ikparamnames=None, inPlaneAngleDeviation=None, limit=None, outOfPlaneAngleDeviation=None, randomBoxInfo=None, returnClosestToCurrent=None, searchfreeparams=None, targetname=None, unit='mm', useSolutionIndices=None):
+    def ComputeIKFromParameters(self, toolname=None, timeout=10, applyapproachoffset=None, disabletarget=None, filteroptions=None, filteroptionslist=None, freeinc=None, freeincvalue=None, graspsetname=None, ikparamnames=None, inPlaneAngleDeviation=None, limit=None, outOfPlaneAngleDeviation=None, randomBoxInfo=None, returnClosestToCurrent=None, robotname=None, searchfreeparams=None, targetname=None, unit='mm', useSolutionIndices=None):
         """
 
         Args:
@@ -2009,6 +1972,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             outOfPlaneAngleDeviation (float, optional):
             randomBoxInfo (dict, optional): Info structure for maintaining grasp parameters for random box picking. Used when picking up randomized boxes (targetIsRandomBox is True). Keys: usefaces, dictFacePriorities, boxDirAngle, toolTranslationOffsets
             returnClosestToCurrent (bool, optional):
+            robotname (str, optional): Name of the robot
             searchfreeparams (bool, optional):
             targetname (str, optional): Name of the target object
             unit (str, optional): The unit of the given values. (Default: 'mm')
@@ -2049,6 +2013,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['randomBoxInfo'] = randomBoxInfo
         if returnClosestToCurrent is not None:
             taskparameters['returnClosestToCurrent'] = returnClosestToCurrent
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if searchfreeparams is not None:
             taskparameters['searchfreeparams'] = searchfreeparams
         if targetname is not None:
