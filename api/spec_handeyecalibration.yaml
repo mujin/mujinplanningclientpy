@@ -68,7 +68,7 @@ services:  # The API of the calibration task
                 required: true
               calibboardvisibility:
                 $merge: '#/components/calibboardvisibility'
-                # required: true
+                required: true
               calibboardLinkName:
                 $merge: '#/components/calibboardLinkName'
               calibboardGeomName:
