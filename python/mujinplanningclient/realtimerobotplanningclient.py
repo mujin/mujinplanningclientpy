@@ -171,7 +171,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
     # ============== Auto-generated code starts here
 
-    def GetJointValues(self, timeout=10, executetimeout=10, unit='mm', locationCollisionInfos=None, robotBridgeConnectionInfo=None):
+    def GetJointValues(self, timeout=10, executetimeout=10, unit='mm', locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotname=None):
         """Gets the current robot joint values
 
         Args:
@@ -180,6 +180,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             unit (str, optional): The unit of the given values. (Default: 'mm')
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            robotname (str, optional): Name of the robot
 
         Returns:
             Current joint values in a json dictionary with key currentjointvalues and value [0,0,0,0,0,0]
@@ -194,6 +195,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         if robotBridgeConnectionInfo is not None:
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     def MoveToolLinear(
@@ -224,6 +227,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         moveStraightParams=None,
         robotBridgeConnectionInfo=None,
         robotaccelmult=None,
+        robotname=None,
         unit='mm',
     ):
         """Moves the tool linearly in cartesian (3D) space.
@@ -255,6 +259,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             moveStraightParams (dict, optional): Parameters used for linear movement like grasp approach, grasp depart, etc.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            robotname (str, optional): Name of the robot
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
         taskparameters = {
@@ -287,6 +292,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
         if robotaccelmult is not None:
             taskparameters['robotaccelmult'] = robotaccelmult
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if robotspeed is not None:
             taskparameters['robotspeed'] = robotspeed
         if toolname is not None:
@@ -341,6 +348,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         moveStraightParams=None,
         pathPlannerParameters=None,
         robotBridgeConnectionInfo=None,
+        robotname=None,
         smootherParameters=None,
         unit='mm',
     ):
@@ -375,6 +383,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             moveStraightParams (dict, optional): Parameters used for linear movement like grasp approach, grasp depart, etc.
             pathPlannerParameters:
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            robotname (str, optional): Name of the robot
             smootherParameters:
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
@@ -429,6 +438,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
         if robotaccelmult is not None:
             taskparameters['robotaccelmult'] = robotaccelmult
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if robotspeed is not None:
             taskparameters['robotspeed'] = robotspeed
         if smootherParameters is not None:
@@ -1997,13 +2008,14 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['useSolutionIndices'] = useSolutionIndices
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ShutdownRobotBridge(self, timeout=10, locationCollisionInfos=None, robotBridgeConnectionInfo=None, unit='mm'):
+    def ShutdownRobotBridge(self, timeout=10, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotname=None, unit='mm'):
         """
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            robotname (str, optional): Name of the robot
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
         taskparameters = {
@@ -2014,9 +2026,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         if robotBridgeConnectionInfo is not None:
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetRobotBridgeState(self, timeout=10, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, unit='mm'):
+    def GetRobotBridgeState(self, timeout=10, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotname=None, unit='mm'):
         """
 
         Args:
@@ -2024,6 +2038,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             ionames (list, optional): A list of IO names to read/write
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            robotname (str, optional): Name of the robot
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
         taskparameters = {
@@ -2036,15 +2051,18 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         if robotBridgeConnectionInfo is not None:
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def ClearRobotBridgeError(self, timeout=10, locationCollisionInfos=None, robotBridgeConnectionInfo=None, unit='mm'):
+    def ClearRobotBridgeError(self, timeout=10, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotname=None, unit='mm'):
         """
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            robotname (str, optional): Name of the robot
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
         taskparameters = {
@@ -2055,15 +2073,18 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         if robotBridgeConnectionInfo is not None:
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetRobotBridgePause(self, timeout=10, locationCollisionInfos=None, robotBridgeConnectionInfo=None, unit='mm'):
+    def SetRobotBridgePause(self, timeout=10, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotname=None, unit='mm'):
         """
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            robotname (str, optional): Name of the robot
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
         taskparameters = {
@@ -2074,15 +2095,18 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         if robotBridgeConnectionInfo is not None:
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetRobotBridgeResume(self, timeout=10, locationCollisionInfos=None, robotBridgeConnectionInfo=None, unit='mm'):
+    def SetRobotBridgeResume(self, timeout=10, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotname=None, unit='mm'):
         """
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            robotname (str, optional): Name of the robot
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
         taskparameters = {
@@ -2093,6 +2117,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         if robotBridgeConnectionInfo is not None:
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     def SetJogModeVelocities(self, movejointsigns, robotname=None, toolname=None, robotspeed=None, robotaccelmult=None, canJogInCheckMode=None, timeout=1, fireandforget=False, jogtype=None, checkSelfCollisionWhileJogging=None, force=None, locationCollisionInfos=None, plotDirection=None, robotBridgeConnectionInfo=None, robotJogParameters=None, simulationtimestep=None, unit='mm'):
@@ -2150,7 +2176,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['toolname'] = toolname
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def EndJogMode(self, timeout=1, fireandforget=False, locationCollisionInfos=None, robotBridgeConnectionInfo=None, unit='mm'):
+    def EndJogMode(self, timeout=1, fireandforget=False, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotname=None, unit='mm'):
         """
 
         Args:
@@ -2158,6 +2184,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            robotname (str, optional): Name of the robot
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
         taskparameters = {
@@ -2168,6 +2195,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         if robotBridgeConnectionInfo is not None:
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
     def SetRobotBridgeServoOn(self, servoon, robotname=None, timeout=3, fireandforget=False):
@@ -2333,7 +2362,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunMotorControlTuningMaximulLengthSequence(self, jointName, amplitude, timeout=10, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotspeed=None, unit='mm'):
+    def RunMotorControlTuningMaximulLengthSequence(self, jointName, amplitude, timeout=10, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotname=None, robotspeed=None, unit='mm'):
         """Runs maximum length sequence test on specified joint and returns result
 
         Args:
@@ -2344,6 +2373,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            robotname (str, optional): Name of the robot
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
@@ -2361,11 +2391,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
         if robotaccelmult is not None:
             taskparameters['robotaccelmult'] = robotaccelmult
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if robotspeed is not None:
             taskparameters['robotspeed'] = robotspeed
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunMotorControlTuningDecayingChirp(self, jointName, amplitude, freqMax, timeout=120, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotspeed=None, unit='mm'):
+    def RunMotorControlTuningDecayingChirp(self, jointName, amplitude, freqMax, timeout=120, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotname=None, robotspeed=None, unit='mm'):
         """runs chirp test on specified joint and returns result
 
         Args:
@@ -2377,6 +2409,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            robotname (str, optional): Name of the robot
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
@@ -2395,11 +2428,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
         if robotaccelmult is not None:
             taskparameters['robotaccelmult'] = robotaccelmult
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if robotspeed is not None:
             taskparameters['robotspeed'] = robotspeed
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunMotorControlTuningGaussianImpulse(self, jointName, amplitude, timeout=20, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotspeed=None, unit='mm'):
+    def RunMotorControlTuningGaussianImpulse(self, jointName, amplitude, timeout=20, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotname=None, robotspeed=None, unit='mm'):
         """Runs Gaussian Impulse test on specified joint and returns result
 
         Args:
@@ -2410,6 +2445,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            robotname (str, optional): Name of the robot
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
@@ -2427,11 +2463,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
         if robotaccelmult is not None:
             taskparameters['robotaccelmult'] = robotaccelmult
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if robotspeed is not None:
             taskparameters['robotspeed'] = robotspeed
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunMotorControlTuningBangBangResponse(self, jointName, amplitude, timeout=60, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotspeed=None, unit='mm'):
+    def RunMotorControlTuningBangBangResponse(self, jointName, amplitude, timeout=60, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotname=None, robotspeed=None, unit='mm'):
         """Runs bangbang trajectory in acceleration or jerk space and returns result
 
         Args:
@@ -2442,6 +2480,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            robotname (str, optional): Name of the robot
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
@@ -2459,11 +2498,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
         if robotaccelmult is not None:
             taskparameters['robotaccelmult'] = robotaccelmult
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if robotspeed is not None:
             taskparameters['robotspeed'] = robotspeed
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def RunDynamicsIdentificationTest(self, timeout, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotspeed=None, unit='mm'):
+    def RunDynamicsIdentificationTest(self, timeout, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotname=None, robotspeed=None, unit='mm'):
         """
 
         Args:
@@ -2472,6 +2513,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            robotname (str, optional): Name of the robot
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
@@ -2487,11 +2529,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
         if robotaccelmult is not None:
             taskparameters['robotaccelmult'] = robotaccelmult
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if robotspeed is not None:
             taskparameters['robotspeed'] = robotspeed
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetTimeToRunDynamicsIdentificationTest(self, timeout=10, jointName=None, minJointAngle=None, maxJointAngle=None, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotspeed=None, unit='mm'):
+    def GetTimeToRunDynamicsIdentificationTest(self, timeout=10, jointName=None, minJointAngle=None, maxJointAngle=None, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotname=None, robotspeed=None, unit='mm'):
         """
 
         Args:
@@ -2503,6 +2547,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            robotname (str, optional): Name of the robot
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
@@ -2524,11 +2569,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
         if robotaccelmult is not None:
             taskparameters['robotaccelmult'] = robotaccelmult
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if robotspeed is not None:
             taskparameters['robotspeed'] = robotspeed
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def CalculateTestRangeFromCollision(self, timeout=10, jointName=None, unit='mm', envclearance=None, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotspeed=None):
+    def CalculateTestRangeFromCollision(self, timeout=10, jointName=None, unit='mm', envclearance=None, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotname=None, robotspeed=None):
         """
 
         Args:
@@ -2540,6 +2587,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            robotname (str, optional): Name of the robot
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
         """
         taskparameters = {
@@ -2558,6 +2606,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
         if robotaccelmult is not None:
             taskparameters['robotaccelmult'] = robotaccelmult
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if robotspeed is not None:
             taskparameters['robotspeed'] = robotspeed
         return self.ExecuteCommand(taskparameters, timeout=timeout)
@@ -2573,7 +2623,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetMotorControlParameter(self, jointName, parameterName, timeout=10, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotspeed=None, unit='mm'):
+    def GetMotorControlParameter(self, jointName, parameterName, timeout=10, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotname=None, robotspeed=None, unit='mm'):
         """Gets motor control parameters as a name-value dict, e.g.: {'J1':{'KP':1}, 'J2':{'KV':2}}
 
         Args:
@@ -2584,6 +2634,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            robotname (str, optional): Name of the robot
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
@@ -2601,6 +2652,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
         if robotaccelmult is not None:
             taskparameters['robotaccelmult'] = robotaccelmult
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if robotspeed is not None:
             taskparameters['robotspeed'] = robotspeed
         return self.ExecuteCommand(taskparameters, timeout=timeout)
@@ -2616,7 +2669,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetMotorControlParameter(self, jointName, parameterName, parameterValue, timeout=10, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotspeed=None, unit='mm'):
+    def SetMotorControlParameter(self, jointName, parameterName, parameterValue, timeout=10, ionames=None, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotname=None, robotspeed=None, unit='mm'):
         """Sets motor control parameter
 
         Args:
@@ -2628,6 +2681,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            robotname (str, optional): Name of the robot
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
@@ -2646,6 +2700,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
         if robotaccelmult is not None:
             taskparameters['robotaccelmult'] = robotaccelmult
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if robotspeed is not None:
             taskparameters['robotspeed'] = robotspeed
         return self.ExecuteCommand(taskparameters, timeout=timeout)
@@ -2719,7 +2775,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['testLocationName'] = testLocationName
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetState(self, timeout=10.0, fireandforget=False, locationCollisionInfos=None, robotBridgeConnectionInfo=None, unit='mm'):
+    def GetState(self, timeout=10.0, fireandforget=False, locationCollisionInfos=None, robotBridgeConnectionInfo=None, robotname=None, unit='mm'):
         """
 
         Args:
@@ -2727,6 +2783,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
             locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            robotname (str, optional): Name of the robot
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
         taskparameters = {
@@ -2737,6 +2794,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         if robotBridgeConnectionInfo is not None:
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
     def EnsureSyncWithRobotBridge(self, syncTimeStampUS, timeout=10, fireandforget=False):
