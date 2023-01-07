@@ -2,6 +2,17 @@
 include:
 - components.yaml
 components:
+  ### NOTE(felixvd): I considered adding these everywhere, but it doesn't seem to make sense.
+  # StandardRealtimeRobotServerRequestParameters:
+  #   $merge: '#/components/StandardPlanningServerRequestParameters'
+  #   taskparams:
+  #     properties:
+  #       taskparameters:
+  #         properties:
+  #           robotname:
+  #             $merge: '#/components/robotname'
+  #           toolname:
+  #             $merge: '#/components/toolname'
   Internal_ExecuteCommandParameters:
     timeout:
       default: 4.0
@@ -76,6 +87,7 @@ components:
     capturelog:
       description: If True, will read very accurate values from the robot control log (this is slow)
       type: boolean
+      ###
     savetrajectorylog:
       description: If True, will save the commanded (input) trajectories before they are executed
       type: boolean
@@ -97,6 +109,7 @@ components:
     executionReverseRecoveryDistance:
       description: Specifies the reversing distance for trajectories to recover from collision/position error. This is passed to robotbridge. If None, robotbridge uses default internally (most likely 50 mm).
       type: number
+      ###
     webstackMountpoint:
       description: Location to load certain data from (e.g. template targets). Overrides localMediaDir.
       type: string
@@ -109,6 +122,10 @@ components:
   Internal_SetRobotClientParameters:
     unit:
       $merge: '#/components/unit'
+    robotname:
+      $merge: '#/components/robotname'
+    toolname:
+      $merge: '#/components/toolname'
     robotBridgeConnectionInfo:
       $merge: '#/components/robotBridgeConnectionInfo'
     locationCollisionInfos:
@@ -226,7 +243,7 @@ components:
     locationCollisionInfos:
       $merge: '#/components/locationCollisionInfos'
     currentlimitratios:
-      description: The joints' current limt ratios.
+      description: The joints' current limit ratios.
       type: array
       items:
         type: number
@@ -252,6 +269,39 @@ components:
       $merge: '#/components/moveStraightParams'
     forceTorqueBasedEstimatorParameters:
       $merge: '#/components/forceTorqueBasedEstimatorParameters'
+    ## Taken from SetGoals
+    dynamicEnvironmentState:
+      $merge: '#/components/dynamicEnvironmentState'
+    savetrajectorylog:
+      description: If True, will save the commanded (input) trajectories before they are executed
+      type: boolean
+    saveRobotFeedbackLog:
+      description: If True, will tell robotbridge to save trajectory files
+      type: boolean
+    loadRobotFeedbackLog:
+      description: If True, will tell robotbridge to load the robot feedback log after trajectory ends
+      type: boolean
+    saveConcatenateTrajectoryLog:
+      description: If True, will save trajectories used for inputs of concatenate trajectory functions
+      type: boolean
+    saveFilterTrajectoryLog:
+      description: If True, will save trajectories used for filtering, such as SmartFilter
+      type: boolean
+    executionConnectingTrajReverseMult:
+      description: Used for several code paths such as MoveToolLinear, MoveJointsNoDec, MoveToHandPosition. This is passed to robotbridge. If None, robotbridge uses default value internally.
+      type: number
+    executionReverseRecoveryDistance:
+      description: Specifies the reversing distance for trajectories to recover from collision/position error. This is passed to robotbridge. If None, robotbridge uses default internally (most likely 50 mm).
+      type: number
+    debuglevel:
+      description: Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE.
+      type: integer
+    jittererParameters:
+      $merge: '#/components/jittererParameters'
+    ## Does this one even work??!
+    gripperInfo:
+      description: "TODO(felixvd): Check if this really propagates."
+      type: object
   moveStraightParams:
     description: A set of parameters defining how the robot behaves during linear motions.
     type: object
