@@ -8,8 +8,8 @@ mujinapi: 0.0.1
 services:
   GetJointValues:
     description: Gets the current robot joint values
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -26,8 +26,8 @@ services:
       type: object
   MoveToolLinear:
     description: Moves the tool linearly in cartesian (3D) space.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -90,8 +90,8 @@ services:
                 type: number
   MoveToHandPosition:
     description: Computes the inverse kinematics and moves the manipulator to any one of the goals specified.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -159,8 +159,8 @@ services:
                 $merge: '#/components/robotaccelmult'
   UpdateObjects:
     description: Updates objects in the scene with the envstate
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -253,8 +253,8 @@ services:
                 default: mm
   Grab:
     description: Grabs an object with tool
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -266,8 +266,8 @@ services:
                 $merge: '#/components/toolname'
   Release:
     description: Releases a grabbed object.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -277,8 +277,8 @@ services:
                 required: true
   GetGrabbed:
     description: Gets the names of the objects currently grabbed
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -288,8 +288,8 @@ services:
       type: object
   GetTransform:
     description: Gets the transform of an object
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -318,8 +318,8 @@ services:
       type: object
   SetTransform:
     description: Sets the transform of an object. Rotation can be specified by either quaternion or rotation matrix.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -339,8 +339,8 @@ services:
                 $merge: '#/components/quaternion'
   GetOBB:
     description: Get the oriented bounding box (OBB) of object.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -359,8 +359,8 @@ services:
       type: object
   GetInnerEmptyRegionOBB:
     description: Get the inner empty oriented bounding box (OBB) of a container.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -379,8 +379,8 @@ services:
       type: object
   GetInstObjectAndSensorInfo:
     description: Returns information about the inst objects and sensors that are a part of those inst objects.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -401,8 +401,8 @@ services:
                 type: boolean
   GetInstObjectInfoFromURI:
     description: Opens a URI and returns info about the internal/external and geometry info from it.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -419,8 +419,8 @@ services:
                   type: number
   GetAABB:
     description: Gets the axis-aligned bounding box (AABB) of an object.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -439,8 +439,8 @@ services:
       type: object
   SetLocationTracking:
     description: Resets the tracking of specific containers
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -464,8 +464,8 @@ services:
                 $merge: '#/components/unit'
   ResetLocationTracking:
     description: Resets tracking updates for locations
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -492,8 +492,8 @@ services:
           type: object
   GetLocationTrackingInfos:
     description: Gets the active tracked locations
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -507,8 +507,8 @@ services:
           type: object
   UpdateLocationContainerIdType:
     description: Resets the tracking of specific containers
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -535,8 +535,8 @@ services:
                 $merge: '#/components/unit'
   ResetLocationTrackingContainerId:
     description: Resets the containerId of self._activeLocationTrackingInfos if it matches checkContainerId.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -550,8 +550,8 @@ services:
                 required: true
   RemoveObjectsWithPrefix:
     description: Removes objects with prefix.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -571,8 +571,8 @@ services:
       type: object
   GetTrajectoryLog:
     description: Gets the recent trajectories executed on the binpicking server. The internal server keeps trajectories around for 10 minutes before clearing them.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -595,8 +595,8 @@ services:
       type: object
   ChuckGripper:
     description: Chucks the manipulator
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -611,8 +611,8 @@ services:
                 $merge: '#/components/toolname'
   UnchuckGripper:
     description: Unchucks the manipulator and releases the target
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -637,8 +637,8 @@ services:
                 type: integer
   CalibrateGripper:
     description: Goes through the gripper calibration procedure
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -652,8 +652,8 @@ services:
               toolname:
                 $merge: '#/components/toolname'
   StopGripper:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -668,8 +668,8 @@ services:
                 $merge: '#/components/toolname'
   MoveGripper:
     description: Moves the chuck of the manipulator to a given value.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -691,8 +691,8 @@ services:
                 $merge: '#/components/toolname'
   ExecuteRobotProgram:
     description: Execute a robot specific program by name
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -707,8 +707,8 @@ services:
                 $merge: '#/components/robotname'
   SaveScene:
     description: Saves the current scene to file
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -732,8 +732,8 @@ services:
       type: object
   SaveGripper:
     description: Separate gripper from a robot in a scene and save it.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -751,8 +751,8 @@ services:
                 type: string
   MoveJointsToJointConfigurationStates:
     description: Moves the robot to desired joint angles specified in jointStates
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -774,8 +774,8 @@ services:
                 $merge: '#/components/jointindices'
   MoveJoints:
     description: Moves the robot to desired joint angles specified in jointvalues
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -801,8 +801,8 @@ services:
                 type: string
   MoveJointsToPositionConfiguration:
     description: Moves the robot to desired position configuration specified in positionConfigurationName
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -837,8 +837,8 @@ services:
       description: Dictionary with keys goalPositionName and values goalConfiguration
   GetRobotBridgeIOVariables:
     description: Returns the data of the IO in ASCII hex as a string
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -860,8 +860,8 @@ services:
       This should not lock self.env since it can happen during the runtime of a task and lock out other functions waiting in the queue.
 
       '
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -876,8 +876,8 @@ services:
                 $merge: '#/components/robotname'
   ComputeIkParamPosition:
     description: Given the name of a Kinbody, computes the manipulator (TCP) position in the kinbody frame to generate values for an IKParameterization.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -914,8 +914,8 @@ services:
         angleZ:
           type: number
   ComputeIKFromParameters:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -971,8 +971,8 @@ services:
 
         If no solutions found, the field 'errors' will contain reasons for the failure."
   ShutdownRobotBridge:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -980,8 +980,8 @@ services:
               $merge:
               - '#/components/Internal_SetRobotClientParameters'
   GetRobotBridgeState:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -991,8 +991,8 @@ services:
               $merge:
               - '#/components/Internal_SetRobotClientParameters'
   ClearRobotBridgeError:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1000,8 +1000,8 @@ services:
               $merge:
               - '#/components/Internal_SetRobotClientParameters'
   SetRobotBridgePause:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1009,8 +1009,8 @@ services:
               $merge:
               - '#/components/Internal_SetRobotClientParameters'
   SetRobotBridgeResume:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1018,8 +1018,8 @@ services:
               $merge:
               - '#/components/Internal_SetRobotClientParameters'
   SetJogModeVelocities:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1065,8 +1065,8 @@ services:
                 description: If true, forces the velocities to be set.
                 type: boolean
   EndJogMode:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1074,8 +1074,8 @@ services:
               $merge:
               - '#/components/Internal_SetRobotClientParameters'
   SetRobotBridgeServoOn:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1087,8 +1087,8 @@ services:
               robotname:
                 $merge: '#/components/robotname'
   SetRobotBridgeLockMode:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1100,15 +1100,15 @@ services:
               robotname:
                 $merge: '#/components/robotname'
   ResetSafetyFault:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
             properties: {}
   SetRobotBridgeControlMode:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1119,16 +1119,16 @@ services:
                 type: string
   GetDynamicObjects:
     description: Get a list of dynamically added objects in the scene, from vision detection and physics simulation.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
             properties: {}
   ComputeRobotConfigsForGraspVisualization:
     description: Returns robot configs for grasp visualization
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1167,16 +1167,16 @@ services:
                 default: mm
   ResetCacheTemplates:
     description: Resets any cached templates
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
             properties: {}
   SetRobotBridgeExternalIOPublishing:
     description: Enables publishing collision data to the robotbridge
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1187,8 +1187,8 @@ services:
                 type: boolean
   RestoreSceneInitialState:
     description: Restores the scene to the state on the filesystem
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1197,8 +1197,8 @@ services:
                 type: boolean
   RunMotorControlTuningStepTest:
     description: Runs step response test on specified joint and returns result
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1211,8 +1211,8 @@ services:
                 required: true
   RunMotorControlTuningMaximulLengthSequence:
     description: Runs maximum length sequence test on specified joint and returns result
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1228,8 +1228,8 @@ services:
                 required: true
   RunMotorControlTuningDecayingChirp:
     description: runs chirp test on specified joint and returns result
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1248,8 +1248,8 @@ services:
                 required: true
   RunMotorControlTuningGaussianImpulse:
     description: Runs Gaussian Impulse test on specified joint and returns result
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1265,8 +1265,8 @@ services:
                 required: true
   RunMotorControlTuningBangBangResponse:
     description: Runs bangbang trajectory in acceleration or jerk space and returns result
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1281,8 +1281,8 @@ services:
                 $merge: '#/components/amplitude'
                 required: true
   RunDynamicsIdentificationTest:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1291,8 +1291,8 @@ services:
               - '#/components/Internal_MoveCommandDecoratorParameters'
               - '#/components/Internal_SetRobotClientParameters'
   GetTimeToRunDynamicsIdentificationTest:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1309,8 +1309,8 @@ services:
                 description: The joint angle to finish the dynamics identification test at.
                 type: number
   CalculateTestRangeFromCollision:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1326,16 +1326,16 @@ services:
                 $merge: '#/components/envclearance'
   GetMotorControlParameterSchema:
     description: Gets motor control parameter schema
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
             properties: {}
   GetMotorControlParameter:
     description: 'Gets motor control parameters as a name-value dict, e.g.: {''J1'':{''KP'':1}, ''J2'':{''KV'':2}}'
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1351,16 +1351,16 @@ services:
                 type: string
   GetMotorControlParameters:
     description: Gets cached motor control parameters as name-value dict
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
             properties: {}
   SetMotorControlParameter:
     description: Sets motor control parameter
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1381,16 +1381,16 @@ services:
                 required: true
   IsProfilingRunning:
     description: Queries if profiling is running on planning
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
             properties: {}
   StartProfiling:
     description: Start profiling planning
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1400,16 +1400,16 @@ services:
                 type: string
   StopProfiling:
     description: Stop profiling planning
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
             properties: {}
   ReplaceBodies:
     description: Replaces bodies in the environment with new uris
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1434,8 +1434,8 @@ services:
               unit:
                 $merge: '#/components/unit'
   GetState:
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1443,8 +1443,8 @@ services:
               $merge: '#/components/Internal_SetRobotClientParameters'
   EnsureSyncWithRobotBridge:
     description: Ensures that planning has synchronized with robotbridge data that is newer than syncTimeStampUS
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
@@ -1455,8 +1455,8 @@ services:
   ResetCachedRobotConfigurationState:
     # TODO(felixvd): This is a dummy function in realtimerobottask. Huh??
     description: Resets cached robot configuration (position of the robot) in the planning slave received from slave notification. Need to perform every time robot moved not from the task slaves.
-    $merge: '#/components/StandardPlanningServerRequestParameters'
     parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
