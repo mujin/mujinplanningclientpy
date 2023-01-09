@@ -104,7 +104,7 @@ class PlanningClient(object):
         controllerurl='http://127.0.0.1',
         controllerusername='',
         controllerpassword='',
-        **ignoredArgs  # Other keyword args are not used, but allowed for easy initialization from a dictionary
+        **ignoredArgs  # Additional keyword args are not used, but allowed for easy initialization from a dictionary
     ):
         """Logs into the Mujin controller and initializes the connection to the planning server (using ZMQ).
 
