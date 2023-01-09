@@ -1,6 +1,7 @@
 # Components from `realtimerobotclient.py`
 include:
 - components.yaml
+- mujinrepo:mujinbinpickingmanager.schema.binpickingparametersschema
 components:
   ### NOTE(felixvd): I considered adding these everywhere, but it doesn't seem to make sense.
   # StandardRealtimeRobotServerRequestParameters:
@@ -303,67 +304,69 @@ components:
       description: "TODO(felixvd): Check if this really propagates."
       type: object
   moveStraightParams:
+    ### The lines below are from the SetGoals function in the task, but there is a schema that this should refer to:
+    $merge: '#/mujinbinpickingmanager.schema.binpickingparametersschema/moveStraightParamsSchema'
     description: A set of parameters defining how the robot behaves during linear motions.
-    type: object
-    properties:
-      trajSampleTimeStep:
-        type: number
-        # default:controller_timestep, # s
-      workVerifyStepLength:
-        type: number
-        # default: 10, # mm
-      workmaxdeviationangle:
-        type: number
-        # default:30, # deg
-      workignorefirstcollision:
-        type: number
-        # default:0.01, # s
-      workignorefirstcollisionee:
-        type: number
-        # default:5, # s
-      workignorelastcollisionee:
-        type: number
-        # default:5, # s
-      ikMidpointMaxDistMult:
-        type: number
-        # default:1.0,
-      ikMidpointMaxTransDist:
-        type: number
-        # default:1.0, # mm, default translational deviation of trajectory
-      ikMidpointMaxRotDist:
-        type: number
-        # default:1.0, # deg
-      maxAdaptiveSteps:
-        type: integer
-        # default: 150,
-      workVerifyMaxAdaptiveSteps:
-        type: integer
-        # default: 10,
-      useworkspaceplanner:
-        type: int
-        # default:1,
-      moveStraightMode:
-        type: string
-        # default:'6d',
-      maxRevoluteDifference:
-        description: deg
-        type: number
-        # default: 90.0, # deg
-      closeConfigurationThresh:
-        type: number
-        # default: 0.25, # degrees
-      closeIkThresh:
-        type: number
-        # default: 1.0, # mm
-      translationDiffThresh:
-        type: number
-        # default: 0.1, # mm
-      jerkLimited:
-        type: boolean
-        # default: False,
-      dynamicsConstraintsType:
-        type: string
-        enum: ['IgnoreTorque', 'NominalTorque', 'InstantaneousTorque']
+    # type: object
+    # properties:
+    #   trajSampleTimeStep:
+    #     type: number
+    #     # default:controller_timestep, # s
+    #   workVerifyStepLength:
+    #     type: number
+    #     # default: 10, # mm
+    #   workmaxdeviationangle:
+    #     type: number
+    #     # default:30, # deg
+    #   workignorefirstcollision:
+    #     type: number
+    #     # default:0.01, # s
+    #   workignorefirstcollisionee:
+    #     type: number
+    #     # default:5, # s
+    #   workignorelastcollisionee:
+    #     type: number
+    #     # default:5, # s
+    #   ikMidpointMaxDistMult:
+    #     type: number
+    #     # default:1.0,
+    #   ikMidpointMaxTransDist:
+    #     type: number
+    #     # default:1.0, # mm, default translational deviation of trajectory
+    #   ikMidpointMaxRotDist:
+    #     type: number
+    #     # default:1.0, # deg
+    #   maxAdaptiveSteps:
+    #     type: integer
+    #     # default: 150,
+    #   workVerifyMaxAdaptiveSteps:
+    #     type: integer
+    #     # default: 10,
+    #   useworkspaceplanner:
+    #     type: int
+    #     # default:1,
+    #   moveStraightMode:
+    #     type: string
+    #     # default:'6d',
+    #   maxRevoluteDifference:
+    #     description: deg
+    #     type: number
+    #     # default: 90.0, # deg
+    #   closeConfigurationThresh:
+    #     type: number
+    #     # default: 0.25, # degrees
+    #   closeIkThresh:
+    #     type: number
+    #     # default: 1.0, # mm
+    #   translationDiffThresh:
+    #     type: number
+    #     # default: 0.1, # mm
+    #   jerkLimited:
+    #     type: boolean
+    #     # default: False,
+    #   dynamicsConstraintsType:
+    #     type: string
+    #     enum: ['IgnoreTorque', 'NominalTorque', 'InstantaneousTorque']
   jittererParameters:
     maxJitter:
       description: Maximum amount of jitter applied to a joint during one iteration.

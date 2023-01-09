@@ -43,7 +43,7 @@ services:
               execute:
                 $merge: '#/components/moveJointsParameters/execute'
               moveStraightParams:
-                $merge: '#/mujinbinpickingmanager.schema.binpickingparametersschema/moveStraightParamsSchema'
+                $merge: '#/components/moveStraightParams'
               $merge:
               - '#/components/Internal_MoveCommandDecoratorParameters'
               - '#/components/Internal_SetRobotClientParameters'
@@ -96,12 +96,11 @@ services:
         properties:
           taskparameters:
             properties:
+              $merge: '#/components/moveJointsParameters'
               minimumgoalpaths:
                 $merge: '#/components/minimumgoalpaths'
               chuckgripper:
                 type: boolean
-              currentlimitratios:
-                $merge: '#/components/moveJointsParameters/currentlimitratios'
               instobjectname:
                 $merge: '#/components/Internal_MoveToParams/instobjectname'
               ikparamname:
@@ -112,28 +111,8 @@ services:
                 $merge: '#/components/pathPlannerParameters'
               smootherParameters:
                 $merge: '#/components/smootherParameters'
-              ignoreGrabbingTarget:
-                $merge: '#/components/moveJointsParameters/ignoreGrabbingTarget'
-              jitter:
-                $merge: '#/components/moveJointsParameters/jitter'
-              unit:
-                $merge: '#/components/moveJointsParameters/unit'
-              maxJitterLinkDist:
-                $merge: '#/components/moveJointsParameters/maxJitterLinkDist'
-              execute:
-                $merge: '#/components/moveJointsParameters/execute'
-              filtertraj:
-                $merge: '#/components/moveJointsParameters/filtertraj'
-              executionFilterFactor:
-                $merge: '#/components/moveJointsParameters/executionFilterFactor'
-              departOffsetDir:
-                $merge: '#/components/moveJointsParameters/departOffsetDir'
-              departOffsetAwayFromGravity:
-                $merge: '#/components/moveJointsParameters/departOffsetAwayFromGravity'
-              departAccel:
-                $merge: '#/components/moveJointsParameters/departAccel'
               moveStraightParams:
-                $merge: '#/mujinbinpickingmanager.schema.binpickingparametersschema/moveStraightParamsSchema'
+                $merge: '#/components/moveStraightParams'
               $merge:
               - '#/components/Internal_MoveCommandDecoratorParameters'
               - '#/components/Internal_SetRobotClientParameters'
@@ -882,6 +861,10 @@ services:
         properties:
           taskparameters:
             properties:
+              robotname:
+                $merge: '#/components/robotname'
+              toolname:
+                $merge: '#/components/toolname'
               unit:
                 $merge: '#/components/unit'
               name:
@@ -962,6 +945,8 @@ services:
               filteroptions:
                 description: OpenRAVE IkFilterOptions bitmask. By default this is 1, which means all collisions are checked
                 type: integer
+              robotname:
+                $merge: '#/components/robotname'
               toolname:
                 $merge: '#/components/toolname'
                 description: Tool name
@@ -1156,7 +1141,6 @@ services:
                 type: string
               robotname:
                 $merge: '#/components/robotname'
-                description: Name of the robot
                 type: string
               toolname:
                 $merge: '#/components/toolname'
