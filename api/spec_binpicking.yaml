@@ -1,0 +1,543 @@
+include:
+- components_binpicking.yaml
+- mujinrepo:mujinbinpickingmanager.schema.binpickingparametersschema
+- mujinrepo:mujinbinpickingmanager.schema.containerschema
+info: null
+description: The Binpicking API of the Mujin Planning Server.
+mujinapi: 0.0.1
+services:
+  PickAndPlace:
+    description: Picks up an object with the targetnamepattern and places it down at one of the goals. First computes the entire plan from robot moving to a grasp and then moving to its destination, then runs it on the real robot. Task finishes once the real robot is at the destination.
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              goaltype:
+                description: (DEPRECATED) type of the goal, e.g. translationdirection5d or transform6d
+                required: true
+                type: string
+              goals:
+                description: "(DEPRECATED) flat list of goals, e.g. two 5d ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]"
+                required: true
+                type: string
+              cameranames:
+                type: array
+                description: The names of the cameras to avoid occlusions with the robot
+              deletetarget:
+                type: integer
+                description: whether to delete target after pick and place is done
+              regionname:
+                $merge: '#/components/regionname'
+              envclearance:
+                $merge: '#/components/envclearance'
+              approachoffset:
+                type: number
+                description: Distance in millimeters to move straight to the grasp point, e.g. 30 mm
+              desttargetname:
+                type: string
+                description: The destination target name where the destination goal ikparams come from
+              destikparamnames:
+                type: string
+                description: A list of lists of ikparam names for the destinations of the target. Only destikparamnames[0] is looked at and tells the system to place the part in any of the ikparams in destikparamnames[0]
+              leaveoffsetintool:
+                type: integer
+                description: If 1, destdepartoffsetdir is in the tool coordinate system. If 0, destdepartoffsetdir is in the global coordinate system. By default this is 0.
+              targetnamepattern:
+                type: string
+                description: regular expression describing the name of the object. No default will be provided, caller must set this. See https://docs.python.org/2/library/re.html
+              toolname:
+                $merge: '#/components/toolname'
+              departoffsetdir:
+                type: array
+                description: The direction and distance in mm to move the part in global frame (usually along negative gravity) after it is grasped, e.g. [0,0,50]
+              destdepartoffsetdir:
+                type: array
+                description: The direction and distance in mm to move away from the object after it is placed, e.g. [0,0,30]. Depending on leaveoffsetintool parameter, this can in the global coordinate system or tool coordinate system.
+              debuglevel:
+                $merge: '#/components/debuglevel'
+              movetodestination:
+                description: planning parameter
+                type: string
+              freeinc:
+                description: planning parameter
+                type: string
+              worksteplength:
+                description: planning parameter
+                type: string
+              densowavearmgroup:
+                description: planning parameter
+                type: string
+              graspsetname:
+                description: the name of the grasp set belong to the target objects to use for the target. Grasp sets are a list of ikparams
+                type: string
+              robotspeed: 
+                $merge: '#/components/robotspeed'
+  StartPickAndPlaceThread:
+    description: Start a background loop to continuously pick up objects with the targetnamepattern and place them down at the goals. The loop will check new objects arriving in and move the robot as soon as it finds a feasible grasp. The thread can be quit with StopPickPlaceThread.
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              goaltype:
+                description: type of the goal, e.g. translationdirection5d
+                type: string
+              goals:
+                description: "flat list of goals, e.g. two 5d ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]"
+                type: list
+              cameranames:
+                type: array
+                description: the names of the cameras to avoid occlusions with the robot
+              deletetarget:
+                type: integer
+                description: whether to delete target after pick and place is done
+              regionname:
+                $merge: '#/components/regionname'
+              envclearance:
+                $merge: '#/components/envclearance'
+              cycledests:
+                type: integer
+                description: When finished cycling through all destikparamnames, will delete all the targets and start from the first index again doing this for cycledests times. By default it is 1.
+              approachoffset:
+                type: array
+                description: distance in millimeters to move straight to the grasp point, e.g. 30 mm
+              desttargetname:
+                type: string
+                description: The destination target name where the destination goal ikparams come from
+              destikparamnames:
+                type: array
+                description: A list of lists of ikparam names for the ordered destinations of the target. destikparamnames[0] is where the first picked up part goes, desttargetname[1] is where the second picked up target goes.
+              leaveoffsetintool:
+                type: integer
+                description: If 1, destdepartoffsetdir is in the tool coordinate system. If 0, destdepartoffsetdir is in the global coordinate system. By default this is 0.
+              targetnamepattern:
+                type: string
+                description: regular expression describing the name of the object, no default will be provided, caller must set this. See https://docs.python.org/2/library/re.html
+              toolname:
+                $merge: '#/components/toolname'
+              destdepartoffsetdir:
+                type: array
+                description: the direction and distance in mm to move away from the object after it is placed, e.g. [0,0,30]. Depending on leaveoffsetintool parameter, this can in the global coordinate system or tool coordinate system.
+              departoffsetdir:
+                type: array
+                description: the direction and distance in mm to move the part in global frame (usually along negative gravity) after it is grasped, e.g. [0,0,50]
+              debuglevel:
+                $merge: '#/components/debuglevel'
+              movetodestination:
+                description: planning parameter
+                type: integer
+              worksteplength:
+                description: planning parameter
+                type: number
+              densowavearmgroup:
+                description: robot parameters
+              graspsetname:
+                description: the name of the grasp set belong to the target objects to use for the target. Grasp sets are a list of ikparams
+              useworkspaceplanner:
+                description: If 1 is set, will try the workspace planner for moving the hand straight. If 2 is set, will try the 
+                type: integer
+              forceStartRobotValues:
+                description: planning loop should always start from these values rather than reading from robot
+                type: list[number]
+              initiallyDisableRobotBridge:
+                description: if True, stops any communication with the robotbridge until robot bridge is enabled
+                type: boolean
+              robotspeed: 
+                $merge: '#/components/robotspeed'
+  StopPickPlaceThread:
+    description: stops the pick and place thread started with StartPickAndPlaceThread
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              finishCode:
+                type: string
+                description: optional finish code to end the cycle with (if it doesn't end with something else beforehand)
+              resetStatusPickPlace:
+                type: bool
+                description: if True, then reset the statusPickPlace field of hte planning slave. By default False.
+              resetExecutionState:
+                type: bool
+                description: if True, then reset the order state variables. By default True
+  GetPickPlaceStatus:
+    returns:
+      description: 'Status (0: not running, 1: no error, 2: error) of the pick and place thread in a json dictionary, e.g. {''status'': 2, ''error'': ''an error happened''}'
+    description: gets the status of the pick and place thread
+  ComputeIK:
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              direction:
+                type: array
+                description: grasp (but basically the just the ikparam) direction in world cooordinates
+              angle:
+                type: number
+                description: grasp (but basically the just the ikparam) angle in world cooordinates
+              iktype:
+                type: string
+                description: grasp (but basically the just the ikparam)
+              freeincvalue:
+                type: number
+                description: The discretization of the free joints of the robot when computing ik.
+              quaternion:
+                $merge: '#/components/quaternion'
+              toolname:
+                $merge: '#/components/toolname'
+              limit:
+                type: integer
+                description: number of solutions to return
+              preshape:
+                type: array
+                description: If the tool has fingers after the end effector, specify their values. The gripper DOFs come from **gripper_dof_pks** field from the tool.
+              filteroptions:
+                $merge: '#/components/filteroptions'
+              translation:
+                $merge: '#/components/translation'
+    returns:
+      description: array of IK solutions (each of which is an array of DOF values), sorted by minimum travel distance and truncated to match the limit
+  InitializePartsWithPhysics:
+    description: Start a physics simulation where the parts drop down into the bin. The method returns as soon as the physics is initialized, user has to wait for the "duration" or call StopPhysicsThread command.
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              numtargets:
+                description: the number of targets to create
+              basename:
+                description: The basename to give to all the new target names. Numbers are suffixed at the end, like basename+'0134'. If not specified, will use a basename derived from the targeturi.
+              targeturi:
+                description: the target uri to initialize the scene with
+              deleteprevious:
+                description: if True, will delete all the previous targets in the scene. By default this is True.
+              forcegravity:
+                description: if not None, the gravity with which the objects should fall with. If None, then uses the scene's gravity
+              duration:
+                description: the duration in seconds to continue the physics until it is stopped.
+              regionname:
+                $merge: '#/components/regionname'
+                description: The container name to drop the parts into.
+  StopPhysicsThread:
+    description: stops the physics simulation started with InitializePartsWithPhysics
+  JitterPartUntilValidGrasp:
+    description: Select a part that wasn't able to be grasped and jitter its location such that a grasp set is found for it that will take it to the destination.
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              jitterdist:
+                description: Amount to jitter the target object translation by
+              leaveoffsetintool:
+                description: If 1, destdepartoffsetdir is in the tool coordinate system. If 0, destdepartoffsetdir is in the global coordinate system. By default this is 0.
+              jitteriters:
+                description: Number of times to try jittering before giving up.
+              toolname:
+                $merge: '#/components/toolname'
+              desttargetname:
+                description: The destination target name where the destination goal ikparams come from. If no name is specified, then robot won't consider putting the target into the destination when it searches for grasps.
+              destikparamnames:
+                description: A list of lists of ikparam names for the ordered destinations of the target. destikparamnames[0] is where the first picked up part goes, desttargetname[1] is where the second picked up target goes.
+              graspsetname:
+                $merge: '#/components/graspsetname'
+              jitterangle:
+                description: Amount to jitter the target object's orientation angle
+              departoffsetdir:
+                description: The depart distance for simulating full grasp.
+              targetname:
+                $merge: '#/components/targetname'
+              approachoffset:
+                description: The approach distance for simulating full grasp.
+              destdepartoffsetdir:
+                description: the direction and distance in mm to move away from the object after it is placed, e.g. [0,0,30]. Depending on leaveoffsetintool parameter, this can in the global coordinate system or tool coordinate system.
+    returns:
+      description: "If failed, an empty dictionary. If succeeded, a dictionary with the following keys:\n    - translation: the new translation of the target part\n    - quaternion: the new quaternion of the target part\n    - jointvalues: robot joint values that are grasping the part (fingers are at their preshape).\n    - graspname: the grasp name used for jointvalues. If empty, then no grasp was found.\n    - destikname: the name of the destination ikparam that was chosen with the grasp\n    - destjointvalues: robot joint values at one of the specified destinations (fingers are at their final positions).\n    - desttranslation: the new translation of the target part\n    - destquaternion: the new quaternion of the target part"
+  MoveToDropOff:
+    description: Moves the robot to desired joint angles.
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              dropOffInfo:
+                required: true
+              robotname:
+                $merge: '#/components/robotname'
+              execute:
+                default: 1
+                $merge: '#/components/execute'
+              robotaccelmult:
+                $merge: '#/components/robotaccelmult'
+              envclearance:
+                $merge: '#/components/envclearance'
+              timeout:
+                default: 10
+                type: number
+              robotspeed:
+                $merge: '#/components/robotspeed'
+  IsRobotOccludingBody:
+    description: returns if the robot is occluding body in the view of the specified camera
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              bodyname:
+                required: true
+                description: Name of the object
+              cameraname:
+                required: true
+                description: Name of the camera
+    returns:
+      description: 'The occlusion state in a json dictionary, e.g. {''occluded'': 0}'
+  GetPickedPositions:
+    description: returns the poses and the timestamps of the picked objects
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              unit:
+                $merge: '#/components/unit'
+    returns:
+      description: '[[1,0,0,0,100,200,300,1389774818.8366449],[1,0,0,0,200,200,300,1389774828.8366449]]}'
+  GetPickAndPlaceLog:
+    description: Gets the recent pick-and-place log executed on the binpicking server. The internal server keeps the log around until the next Pick-and-place command is executed.
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              startindex:
+                type: integer
+                description: Start of the trajectory to get. If negative, will start counting from the end. For example, -1 is the last element, -2 is the second to last element.
+              num:
+                type: integer
+                description: Number of trajectories from startindex to return. If 0 will return all the trajectories starting from startindex
+    returns:
+      description: "10\n    messages: [\n    {\n    \"message\":\"message1\",\n    \"type\":\"\",\n    \"level\":0,\n    \"data\": {\n        \"jointvalues\":[0,0,0,0,0,0]\n    }\n    },\n    ]"
+  MoveRobotOutOfCameraOcclusion:
+    description: Moves the robot out of camera occlusion and deletes targets if it was in occlusion.
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              regionname:
+                $merge: '#/components/regionname'
+              robotspeed:
+                $merge: '#/components/robotspeed'
+              toolname:
+                $merge: '#/components/toolname'
+              cameranames:
+                type: array
+                description: The names of the cameras to avoid occlusions with the robot
+  PausePickPlace: {}
+  ResumePickPlace: {}
+  SendStateTrigger:
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              stateTrigger:
+                required: true
+                type: string
+                description: a string that represents a unique trigger
+  GetBinpickingState: {}
+  SetStopPickPlaceAfterExecutionCycle:
+    description: 'Sets the cycle for stopping after the current pick cycle finishes.
+
+
+      If robot has not grabbed a part yet, then will stop the robot immediately.
+
+      On proper finish of the pick cycle, robot should go back to the finish position.'
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              finishCode:
+                description: The finish code to end with. If not specified, will be 'FinishedCycleStopped'
+  PutPartsBack:
+    # TODO(felixvd): Is this even used anymore?
+    description: Runs saved planningresult trajectories.
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              trajectory:
+                required: true
+                type: string
+              numparts:
+                required: true
+                type: integer
+              toolname:
+                $merge: '#/components/toolname'
+                type: string
+              grippervalues:
+                type: array
+  GenerateGraspModelFromIkParams:
+    description: Generates grasp model IK for given setup.
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              targeturi:
+                required: true
+                type: string
+                description: uri of target scene, e.g. '4902201402644.mujin.dae'
+              toolname:
+                required: true
+                $merge: '#/components/toolname'
+              graspsetname:
+                required: true
+                $merge: '#/components/graspsetname'
+              robotname:
+                $merge: '#/components/robotname'
+  CheckGraspModelIk:
+    description: Checks if grasp model is generated for given setup.
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              targeturi:
+                required: true
+                description: str. uri of target scene like 'mujin:4902201402644.mujin.dae'
+              toolname:
+                required: true
+                $merge: '#/components/toolname'
+              graspsetname:
+                required: true
+                $merge: '#/components/graspsetname'
+              ikparamnames:
+                type: array
+  SetCurrentLayoutDataFromPLC:
+    description: Sets current layout from PLC.
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              containername:
+                required: true
+                type: string
+              containerLayoutSize:
+                required: true
+              destObstacleName:
+                required: true
+                type: string
+              ioVariableName:
+                required: true
+                type: string
+  ClearVisualization:
+    description: Clears visualization.
+  GetPlanStatistics:
+    description: Gets plan and execute statistics of the last pick and place
+  SetCurrentLayoutDataSendOnObjectUpdateData:
+    description: Sets currentLayoutDataSendOnObjectUpdateData structure
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              doUpdate:
+                required: true
+                description: If True then currentLayoutData will be send on every ObjectUpdate, else currentLayoutDataSendOnObjectUpdate structure is reset
+              containername:
+                type: string
+              containerLayoutSize:
+              ioVariableName:
+  StartPackFormationComputationThread:
+    description: Starts a background loop to copmute packing formation.
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              debuglevel:
+                $merge: '#/components/debuglevel'
+              toolname:
+                $merge: '#/components/toolname'
+  StopPackFormationComputationThread:
+    description: Stops the packing computation thread thread started with StartPackFormationComputationThread
+  VisualizePackingState:
+    description: Stops the packing computation thread thread started with StartPackFormationComputationThread
+  VisualizePackFormationResult:
+    description: Stops the packing computation thread thread started with StartPackFormationComputationThread
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              initializeCameraPosition:
+                type: bool
+                description: Reset camera position
+  GetPackFormationSolution:
+    description: Stops the packing computation thread thread started with StartPackFormationComputationThread
+  GetPackItemPoseInWorld: {}
+  ManuallyPlacePackItem:
+    description: Places an item according to the pack formation assuming the item is placed manually and updates robotbridge state
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              packFormationComputationResult: {}
+              inputPartIndex: {}
+              placeLocationNames: {}
+              placedTargetPrefix: {}
+              orderNumber: {}
+              numLeftToPick: {}
+  SendPackFormationComputationResult:
+    description: Stops the packing computation thread thread started with StartPackFormationComputationThread
+  GetLatestPackFormationResultList:
+    description: Gets latest pack formation computation result
+  ClearPackingStateVisualization:
+    description: Clears packing visualization
+  ValidatePackFormationResultList:
+    description: |
+        Validates pack formation result list and compute info (fillRatio, packageDimensions, packedItemsInfo, etc) about it.
+
+        kwargs should be packing parameters'
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              packFormationResultList:
+                required: true
+    returns:
+      description: "{'validatedPackFormationResultList':[{'validationStatus', 'errorCode', 'errorDesc', (optional)'packFormationResult'}]}"
+      type: object
+  ComputeSamePartPackResultBySimulation:
+    description: Computes pack formation for single part type.

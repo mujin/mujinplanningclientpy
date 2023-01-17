@@ -1,0 +1,756 @@
+template: 'templates/client_template.py.mako'
+clientType: binpicking
+templateArgs:  # Strings are added to client_template.py.mako
+  tasktype: binpicking
+  clientTaskName: Binpicking
+  parentClassFile: realtimerobotclient
+  parentClassName: RealtimeRobotPlanningClient
+  extraSuperConstructorArgs: robotname=robotname, robotspeed=robotspeed, robotaccelmult=robotaccelmult, envclearance=envclearance, robotBridgeConnectionInfo=robotBridgeConnectionInfo, 
+  extraConstructorArgs: |
+    regionname=None,
+    robotname='',
+    robotspeed=None,
+    robotaccelmult=None,
+    envclearance=10.0,
+    robotBridgeConnectionInfo=None,
+  # extraClassAttributes: ''
+  ### robotname, robotspeed etc. are for passing to realtimerobotclient
+  extraClassAttributes: |
+    regionname = None  # The default region for Pick/Place calls
+    _robotname = None  # Optional name of the robot selected
+    _robotspeed = None  # Speed of the robot, e.g. 0.4
+    _robotaccelmult = None  # Current robot accel mult
+    _envclearance = None  # Environment clearance in millimeters, e.g. 20
+    _robotBridgeConnectionInfo = None  # dict holding the connection info for the robot bridge.
+  extraConstructorArgsDocstringLines: |
+    regionname (str, optional): Name of the bin, e.g. container1
+    robotname (str, optional): Name of the robot, e.g. VP-5243I
+    robotspeed (float, optional): Speed of the robot, e.g. 0.4
+    robotaccelmult (float, optional): Optional multiplier for the robot acceleration.
+    envclearance (str, optional): Environment clearance in millimeter, e.g. 20
+    robotBridgeConnectionInfo (str, optional): dict holding the connection info for the robot bridge.
+  extraConstructorContent: |
+    self.regionname = regionname
+  extraClientContent: 
+  extraClientStaticFunctions: 
+generatorSettingsComponents:
+  timeout:
+    x-doNotAddToPayload: true
+    type: number
+    default: 10
+  fireandforget:
+    x-doNotAddToPayload: true
+    type: boolean
+    default: false
+include:
+- components_realtimerobot.yaml
+x-specModifications:
+  services:
+    PickAndPlace:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                goaltype:
+                  paramOrderingIndex: 0
+                goals:
+                  paramOrderingIndex: 1
+                targetnamepattern:
+                  paramOrderingIndex: 2
+                approachoffset:
+                  default: 30
+                  paramOrderingIndex: 3
+                departoffsetdir:
+                  default: [0, 0, 50]
+                  paramOrderingIndex: 4
+                destdepartoffsetdir:
+                  default: [0, 0, 30]
+                  paramOrderingIndex: 5
+                deletetarget:
+                  default: 0
+                  paramOrderingIndex: 6
+                debuglevel:
+                  default: 4
+                  paramOrderingIndex: 7
+                movetodestination:
+                  default: 1
+                  paramOrderingIndex: 8
+                freeinc:
+                  default: [0.08]
+                  paramOrderingIndex: 9
+                worksteplength:
+                  paramOrderingIndex: 10
+                densowavearmgroup:
+                  default: 5
+                  paramOrderingIndex: 11
+                regionname:
+                  paramOrderingIndex: 12
+                cameranames:
+                  paramOrderingIndex: 13
+                envclearance:
+                  paramOrderingIndex: 14
+                toolname:
+                  paramOrderingIndex: 15
+                robotspeed: 
+                  paramOrderingIndex: 16
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  default: 1000
+                  paramOrderingIndex: 17
+                # leaveoffsetintool:
+                #   paramOrderingIndex: 18
+                # desttargetname:
+                #   paramOrderingIndex: 0
+                # destikparamnames:
+                #   paramOrderingIndex: 1
+                # graspsetname:
+                #   paramOrderingIndex: 9
+                kwargs: {}
+    StartPickAndPlaceThread:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                goaltype:
+                  paramOrderingIndex: 0
+                goals:
+                  paramOrderingIndex: 1
+                targetnamepattern:
+                  paramOrderingIndex: 2
+                approachoffset:
+                  default: 30
+                  paramOrderingIndex: 3
+                departoffsetdir:
+                  default: [0, 0, 50]
+                  paramOrderingIndex: 4
+                destdepartoffsetdir:
+                  default: [0, 0, 30]
+                  paramOrderingIndex: 5
+                deletetarget:
+                  paramOrderingIndex: 6
+                debuglevel:
+                  default: 4
+                  paramOrderingIndex: 7
+                movetodestination:
+                  default: 1
+                  paramOrderingIndex: 8
+                worksteplength:
+                  paramOrderingIndex: 9
+                densowavearmgroup:
+                  default: 5
+                  paramOrderingIndex: 10
+                regionname:
+                  paramOrderingIndex: 11
+                envclearance:
+                  paramOrderingIndex: 12
+                toolname:
+                  paramOrderingIndex: 13
+                robotspeed: 
+                  paramOrderingIndex: 14
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 15
+                kwargs: {}
+    StopPickPlaceThread:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                resetExecutionState:
+                  default: True
+                  paramOrderingIndex: 0
+                resetStatusPickPlace:
+                  default: False
+                  paramOrderingIndex: 1
+                finishCode:
+                  paramOrderingIndex: 2
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 3
+                fireandforget: 
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  default: False
+                  paramOrderingIndex: 4
+                kwargs: {}
+    GetPickPlaceStatus:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    ComputeIK:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                toolname:
+                  paramOrderingIndex: 0
+                  required: False
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 1
+                direction:
+                  paramOrderingIndex: 5
+                angle:
+                  paramOrderingIndex: 6
+                iktype:
+                  paramOrderingIndex: 2
+                freeincvalue:
+                  paramOrderingIndex: 7
+                quaternion:
+                  paramOrderingIndex: 3
+                limit:
+                  paramOrderingIndex: 9
+                preshape:
+                  paramOrderingIndex: 10
+                filteroptions:
+                  paramOrderingIndex: 8
+                translation:
+                  paramOrderingIndex: 4
+                kwargs: {}
+    InitializePartsWithPhysics:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                targeturi:
+                  paramOrderingIndex: 1
+                numtargets:
+                  paramOrderingIndex: 2
+                regionname:
+                  paramOrderingIndex: 3
+                duration:
+                  paramOrderingIndex: 4
+                basename:
+                  paramOrderingIndex: 5
+                deleteprevious:
+                  paramOrderingIndex: 6
+                forcegravity:
+                  paramOrderingIndex: 7
+                kwargs: {}
+    StopPhysicsThread:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 99
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    JitterPartUntilValidGrasp:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                toolname:
+                  paramOrderingIndex: 0
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 1
+                targetname:
+                  paramOrderingIndex: 2
+                graspsetname:
+                  paramOrderingIndex: 3
+                approachoffset:
+                  paramOrderingIndex: 4
+                departoffsetdir:
+                  paramOrderingIndex: 5
+                destdepartoffsetdir:
+                  paramOrderingIndex: 6
+                leaveoffsetintool:
+                  paramOrderingIndex: 7
+                desttargetname:
+                  paramOrderingIndex: 8
+                destikparamnames:
+                  paramOrderingIndex: 9
+                jitterangle:
+                  paramOrderingIndex: 10
+                jitteriters:
+                  paramOrderingIndex: 11
+                kwargs: {}
+    MoveToDropOff:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                dropOffInfo:
+                  paramOrderingIndex: 0
+                robotname:
+                  paramOrderingIndex: 1
+                robotspeed:
+                  paramOrderingIndex: 2
+                robotaccelmult:
+                  paramOrderingIndex: 3
+                execute:
+                  paramOrderingIndex: 4
+                startvalues:
+                  paramOrderingIndex: 5
+                envclearance:
+                  paramOrderingIndex: 6
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 7
+                kwargs: {}
+    IsRobotOccludingBody:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                bodyname:
+                  paramOrderingIndex: 0
+                cameraname:
+                  paramOrderingIndex: 1
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 2
+                kwargs: {}
+    GetPickedPositions:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                unit:
+                  default: 'm'
+                  paramOrderingIndex: 0
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 1
+                kwargs: {}
+    GetPickAndPlaceLog:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                startindex:
+                  paramOrderingIndex: 2
+                num:
+                  paramOrderingIndex: 1
+                kwargs: {}
+    MoveRobotOutOfCameraOcclusion:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                regionname:
+                  paramOrderingIndex: 0
+                robotspeed:
+                  paramOrderingIndex: 1
+                toolname:
+                  paramOrderingIndex: 2
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 3
+                cameranames:
+                  paramOrderingIndex: 4
+                kwargs: {}
+    PausePickPlace:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    ResumePickPlace:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    SendStateTrigger:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                stateTrigger:
+                  paramOrderingIndex: 0
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 1
+                fireandforget: 
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  paramOrderingIndex: 2
+                kwargs: {}
+    GetBinpickingState:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                fireandforget: 
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  paramOrderingIndex: 1
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    SetStopPickPlaceAfterExecutionCycle:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                kwargs: {}
+    PutPartsBack:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                trajectory:
+                  customParameterName: trajectoryxml
+                  paramOrderingIndex: 0
+                numparts:
+                  paramOrderingIndex: 1
+                toolname:
+                  paramOrderingIndex: 2
+                grippervalues:
+                  paramOrderingIndex: 3
+                timeout: 
+                  default: 100
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 4
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    GenerateGraspModelFromIkParams:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                graspsetname:
+                  paramOrderingIndex: 0
+                targeturi:
+                  paramOrderingIndex: 1
+                toolname:
+                  paramOrderingIndex: 2
+                robotname:
+                  paramOrderingIndex: 3
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 4
+                kwargs: {}
+    CheckGraspModelIk:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                targeturi:
+                  paramOrderingIndex: 1
+                toolname:
+                  paramOrderingIndex: 2
+                graspsetname:
+                  paramOrderingIndex: 0
+                ikparamnames:
+                  paramOrderingIndex: 3
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 4
+                kwargs: {}
+    SetCurrentLayoutDataFromPLC:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                containername:
+                  paramOrderingIndex: 0
+                containerLayoutSize:
+                  paramOrderingIndex: 1
+                destObstacleName:
+                  paramOrderingIndex: 2
+                ioVariableName:
+                  paramOrderingIndex: 3
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 4
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    ClearVisualization:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                fireandforget: 
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  paramOrderingIndex: 1
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    GetPlanStatistics:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                fireandforget: 
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  paramOrderingIndex: 1
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    SetCurrentLayoutDataSendOnObjectUpdateData:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                doUpdate:
+                  paramOrderingIndex: 0
+                containername:
+                  paramOrderingIndex: 1
+                containerLayoutSize:
+                  paramOrderingIndex: 2
+                ioVariableName:
+                  paramOrderingIndex: 3
+                fireandforget: 
+                  default: true
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  paramOrderingIndex: 4
+                kwargs: {}
+    StartPackFormationComputationThread:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                debuglevel:
+                  default: 4
+                  paramOrderingIndex: 1
+                toolname:
+                  paramOrderingIndex: 2
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    StopPackFormationComputationThread:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                fireandforget: 
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  paramOrderingIndex: 1
+                # debuglevel:
+                #   paramOrderingIndex: 1
+                # toolname:
+                #   paramOrderingIndex: 2
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    VisualizePackingState:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                fireandforget: 
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  paramOrderingIndex: 1
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    VisualizePackFormationResult:
+      TODO_FELIX_CONFIRM_BACKEND: ''
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                fireandforget: 
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  paramOrderingIndex: 1
+                initializeCameraPosition:
+                  paramOrderingIndex: 2
+    GetPackFormationSolution:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                fireandforget: 
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  paramOrderingIndex: 1
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    GetPackItemPoseInWorld:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                fireandforget: 
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  paramOrderingIndex: 1
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    ManuallyPlacePackItem:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                packFormationComputationResult:
+                  paramOrderingIndex: 0
+                inputPartIndex:
+                  paramOrderingIndex: 1
+                placeLocationNames:
+                  paramOrderingIndex: 2
+                placedTargetPrefix:
+                  paramOrderingIndex: 3
+                orderNumber:
+                  paramOrderingIndex: 4
+                numLeftToPick:
+                  paramOrderingIndex: 5
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 6
+                fireandforget: 
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  paramOrderingIndex: 7
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    SendPackFormationComputationResult:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                fireandforget: 
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  paramOrderingIndex: 1
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    GetLatestPackFormationResultList:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                fireandforget: 
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  paramOrderingIndex: 1
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    ClearPackingStateVisualization:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                fireandforget: 
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  paramOrderingIndex: 1
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    ValidatePackFormationResultList:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                packFormationResultList:
+                  paramOrderingIndex: 0
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 1
+                fireandforget: 
+                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  paramOrderingIndex: 2
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    ComputeSamePartPackResultBySimulation:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/generatorSettingsComponents/timeout'
+                  paramOrderingIndex: 0
+                  default: 100
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''

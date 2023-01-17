@@ -295,8 +295,7 @@ components:
       description: Specifies the reversing distance for trajectories to recover from collision/position error. This is passed to robotbridge. If None, robotbridge uses default internally (most likely 50 mm).
       type: number
     debuglevel:
-      description: Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE.
-      type: integer
+      $merge: '#/components/debuglevel'
     jittererParameters:
       $merge: '#/components/jittererParameters'
     ## Does this one even work??!
@@ -455,6 +454,9 @@ components:
   doRemoveOnlyDynamic:
     description: "If True, removes objects that were added through dynamic means such as UpdateObjects/UpdateEnvironmentState. Default: False"
     type: boolean
+  debuglevel:
+    description: Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE.
+    type: integer
   ioSignalsInfo:
     description: Struct for dictating if any IO signals should be written on receiving detection results  
     type: object
