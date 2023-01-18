@@ -1,0 +1,170 @@
+include:
+  - components_realtimerobot.yaml
+info: null
+description: The ITL Planning (v3) API of the Mujin Planning Server.
+mujinapi: 0.0.1
+services:
+  SetJointValues:
+    parameters:
+      $merge: "#/components/StandardPlanningServerRequestParameters"
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              jointvalues:
+                $merge: "#/components/jointvalues"
+                required: true
+              robotname:
+                $merge: "#/components/robotname"
+  GetITLState:
+    parameters:
+      $merge: "#/components/StandardPlanningServerRequestParameters"
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              robotname:
+                $merge: "#/components/robotname"
+  ExecuteTrajectory:
+    parameters:
+      $merge: "#/components/StandardPlanningServerRequestParameters"
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              identifier:
+                required: true
+              trajectories:
+                required: true
+              statevalues:
+              stepping:
+                default: False
+              istep:
+              cycles:
+                default: 1
+              restorevalues:
+              envclearance:
+                $merge: "#/components/envclearance"
+                default: 15
+              robotspeed:
+                $merge: "#/components/robotspeed"
+              robotaccelmult:
+                $merge: "#/components/robotaccelmult"
+  ExecuteTrajectoryStep:
+    parameters:
+      $merge: "#/components/StandardPlanningServerRequestParameters"
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              reverse:
+                default: False
+                type: boolean
+              envclearance:
+                $merge: "#/components/envclearance"
+              robotspeed:
+                $merge: "#/components/robotspeed"
+              robotaccelmult:
+                $merge: "#/components/robotaccelmult"
+  PauseExecuteTrajectory:
+    parameters:
+      $merge: "#/components/StandardPlanningServerRequestParameters"
+      taskparams:
+        properties:
+        taskparameters:
+          properties: {}
+  ResumeExecuteTrajectory:
+    parameters:
+      $merge: "#/components/StandardPlanningServerRequestParameters"
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+  ComputeRobotConfigsForCommandVisualization:
+    parameters:
+      $merge: "#/components/StandardPlanningServerRequestParameters"
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              executiongraph:
+                required: true
+              commandindex:
+                default: 0
+  ComputeRobotJointValuesForCommandVisualization:
+    parameters:
+      $merge: "#/components/StandardPlanningServerRequestParameters"
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              program:
+                required: true
+              commandindex:
+                default: 0
+  PlotProgramWaypoints:
+    parameters:
+      $merge: "#/components/StandardPlanningServerRequestParameters"
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+  StartITLProgram:
+    parameters:
+      $merge: "#/components/StandardPlanningServerRequestParameters"
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              programName:
+                required: true
+              robotspeed:
+              robotaccelmult:
+  StopITLProgram:
+    description: "Stops the ITL program"
+    parameters:
+      $merge: "#/components/StandardPlanningServerRequestParameters"
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+  GenerateExecutionGraph:
+    description: "Generates a list of commands for the ITL program."
+    parameters:
+      $merge: "#/components/StandardPlanningServerRequestParameters"
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              programName:
+                required: true
+              commandTimeout:
+                default: 0.2
+              totalTimeout:
+                default: 1.0
+  PlotContacts:
+    parameters:
+      $merge: "#/components/StandardPlanningServerRequestParameters"
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              report:
+                type: object
+                # default: {}
+  PopulateTargetInContainer:
+    description: "Populates targets in container using populateFn."
+    parameters:
+      $merge: "#/components/StandardPlanningServerRequestParameters"
+      taskparams:
+        properties:
+          taskparameters:
+            properties:
+              locationName:
+                required: true
+              populateTargetUri:
+                required: true
+              populateFnName:
+                required: true
+              containerMetaData:
+                type: object
