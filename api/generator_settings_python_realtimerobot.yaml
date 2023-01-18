@@ -169,7 +169,7 @@ x-specModifications:
                   paramOrderingIndex: 10
                 force:
                   paramOrderingIndex: 11
-                # ignoredArgs: {}
+                kwargs: {}
     CalculateTestRangeFromCollision:
       parameters:
         taskparams:
@@ -186,7 +186,7 @@ x-specModifications:
                   paramOrderingIndex: 3
                 envclearance:
                   paramOrderingIndex: 4
-                # ignoredArgs: {}
+                kwargs: {}
     StopGripper:
       parameters:
         taskparams:
@@ -207,7 +207,7 @@ x-specModifications:
                   default: false
                 toolname:
                   paramOrderingIndex: 5
-                # ignoredArgs: {}
+                kwargs: {}
     GetMotorControlParameters:
       parameters:
         taskparams:
@@ -218,7 +218,7 @@ x-specModifications:
                   paramOrderingIndex: 1
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     MoveToHandPosition:
       parameters:
         taskparams:
@@ -243,7 +243,7 @@ x-specModifications:
                   paramOrderingIndex: 7
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     ClearRobotBridgeError:
       parameters:
         taskparams:
@@ -254,7 +254,7 @@ x-specModifications:
                   paramOrderingIndex: 0
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     SaveGripper:
       parameters:
         taskparams:
@@ -271,7 +271,7 @@ x-specModifications:
                   paramOrderingIndex: 2
                 manipname:
                   paramOrderingIndex: 3
-                # ignoredArgs: {}
+                kwargs: {}
     ExecuteRobotProgram:
       parameters:
         taskparams:
@@ -290,7 +290,7 @@ x-specModifications:
                   paramOrderingIndex: 4
                   $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   default: false
-                # ignoredArgs: {}
+                kwargs: {}
     SetLocationTracking:
       parameters:
         taskparams:
@@ -321,7 +321,7 @@ x-specModifications:
                   paramOrderingIndex: 9
                 unit:
                   paramOrderingIndex: 10
-                # ignoredArgs: {}
+                kwargs: {}
     GetRobotBridgeIOVariables:
       parameters:
         taskparams:
@@ -338,7 +338,7 @@ x-specModifications:
                   paramOrderingIndex: 3
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     SaveScene:
       parameters:
         taskparams:
@@ -359,7 +359,7 @@ x-specModifications:
                   paramOrderingIndex: 4
                 saveReferenceUriAsHint:
                   paramOrderingIndex: 5
-                # ignoredArgs: {}
+                kwargs: {}
     ComputeIkParamPosition:
       parameters:
         taskparams:
@@ -375,15 +375,15 @@ x-specModifications:
                   paramOrderingIndex: 2
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     MoveJointsToJointConfigurationStates:
       parameters:
         taskparams:
           properties:
             taskparameters:
               properties:
-                jointConfigurationStates:
-                  mapsTo: goalJointConfigurationStates
+                goalJointConfigurationStates:
+                  customParameterName: jointConfigurationStates
                   paramOrderingIndex: 0
                 robotname:
                   paramOrderingIndex: 1
@@ -406,7 +406,7 @@ x-specModifications:
                   paramOrderingIndex: 9
                 jointindices:
                   paramOrderingIndex: 10
-                # ignoredArgs: {}
+                kwargs: {}
     GetMotorControlParameterSchema:
       parameters:
         taskparams:
@@ -417,7 +417,7 @@ x-specModifications:
                   paramOrderingIndex: 1
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     GetJointValues:
       parameters:
         taskparams:
@@ -432,7 +432,7 @@ x-specModifications:
                   paramOrderingIndex: 1
                 unit:
                   paramOrderingIndex: 2
-                # ignoredArgs: {}
+                kwargs: {}
     SetRobotBridgePause:
       parameters:
         taskparams:
@@ -443,7 +443,7 @@ x-specModifications:
                   paramOrderingIndex: 0
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     ComputeRobotConfigsForGraspVisualization:
       parameters:
         taskparams:
@@ -464,7 +464,7 @@ x-specModifications:
                   paramOrderingIndex: 6
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     SetRobotBridgeIOVariables:
       parameters:
         taskparams:
@@ -480,7 +480,7 @@ x-specModifications:
                   paramOrderingIndex: 2
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     IsProfilingRunning:
       parameters:
         taskparams:
@@ -501,16 +501,16 @@ x-specModifications:
                   paramOrderingIndex: 1
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 1
-                # ignoredArgs: {}
+                kwargs: {}
     GetInstObjectInfoFromURI:
       parameters:
         taskparams:
           properties:
             taskparameters:
               properties:
-                instobjecturi:
+                objecturi:
                   paramOrderingIndex: 0
-                  mapsTo: objecturi
+                  customParameterName: instobjecturi
                 unit:
                   paramOrderingIndex: 1
                 timeout:
@@ -519,7 +519,7 @@ x-specModifications:
                   default: 10
                 instobjectpose:
                   paramOrderingIndex: 3
-                # ignoredArgs: {}
+                kwargs: {}
     GetInstObjectAndSensorInfo:
       parameters:
         taskparams:
@@ -538,7 +538,7 @@ x-specModifications:
                   default: 10
                 ignoreMissingObjects:
                   paramOrderingIndex: 4
-                # ignoredArgs: {}
+                kwargs: {}
     RunMotorControlTuningStepTest:
       parameters:
         taskparams:
@@ -553,7 +553,7 @@ x-specModifications:
                   paramOrderingIndex: 2
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     SetTransform:
       parameters:
         taskparams:
@@ -574,7 +574,7 @@ x-specModifications:
                   paramOrderingIndex: 5
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     SetRobotBridgeControlMode:
       parameters:
         taskparams:
@@ -591,7 +591,7 @@ x-specModifications:
                   paramOrderingIndex: 2
                   $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   default: false
-                # ignoredArgs: {}
+                kwargs: {}
     RemoveObjectsWithPrefix:
       parameters:
         taskparams:
@@ -615,7 +615,7 @@ x-specModifications:
                 doRemoveOnlyDynamic:
                   $merge: '#/components/doRemoveOnlyDynamic'
                   paramOrderingIndex: 6
-                # ignoredArgs: {}
+                kwargs: {}
     UpdateObjects:
       omitFromArguments:
       - objectname
@@ -643,7 +643,7 @@ x-specModifications:
                   paramOrderingIndex: 4
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     RunMotorControlTuningBangBangResponse:
       parameters:
         taskparams:
@@ -658,7 +658,7 @@ x-specModifications:
                   paramOrderingIndex: 2
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 60
-                # ignoredArgs: {}
+                kwargs: {}
     GetMotorControlParameter:
       parameters:
         taskparams:
@@ -673,7 +673,7 @@ x-specModifications:
                   paramOrderingIndex: 3
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     GetAABB:
       parameters:
         taskparams:
@@ -690,7 +690,7 @@ x-specModifications:
                   default: 10
                 linkname:
                   paramOrderingIndex: 3
-                # ignoredArgs: {}
+                kwargs: {}
     MoveJoints:
       parameters:
         taskparams:
@@ -735,7 +735,7 @@ x-specModifications:
                   items:
                     type: number
                   paramOrderingIndex: 0
-                # ignoredArgs: {}
+                kwargs: {}
     SetRobotBridgeExternalIOPublishing:
       parameters:
         taskparams:
@@ -753,7 +753,7 @@ x-specModifications:
                   paramOrderingIndex: 3
                   $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   default: false
-                # ignoredArgs: {}
+                kwargs: {}
     StopProfiling:
       parameters:
         taskparams:
@@ -784,7 +784,7 @@ x-specModifications:
                   default: false
                 toolname:
                   paramOrderingIndex: 5
-                # ignoredArgs: {}
+                kwargs: {}
     GetTimeToRunDynamicsIdentificationTest:
       parameters:
         taskparams:
@@ -801,7 +801,7 @@ x-specModifications:
                   paramOrderingIndex: 3
                 maxJointAngle:
                   paramOrderingIndex: 4
-                # ignoredArgs: {}
+                kwargs: {}
     MoveJointsToPositionConfiguration:
       parameters:
         taskparams:
@@ -830,7 +830,7 @@ x-specModifications:
                   paramOrderingIndex: 8
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     SetRobotBridgeResume:
       parameters:
         taskparams:
@@ -841,7 +841,7 @@ x-specModifications:
                   paramOrderingIndex: 0
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     ReloadModule:
       parameters:
         taskparams:
@@ -852,7 +852,7 @@ x-specModifications:
                   paramOrderingIndex: 0
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     GetTransform:
       parameters:
         taskparams:
@@ -875,7 +875,7 @@ x-specModifications:
                   paramOrderingIndex: 6
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     GetOBB:
       parameters:
         taskparams:
@@ -892,7 +892,7 @@ x-specModifications:
                   default: 10
                 linkname:
                   paramOrderingIndex: 3
-                # ignoredArgs: {}
+                kwargs: {}
     ResetCacheTemplates:
       parameters:
         taskparams:
@@ -907,7 +907,7 @@ x-specModifications:
                   paramOrderingIndex: 2
                   $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   default: false
-                # ignoredArgs: {}
+                kwargs: {}
     UnchuckGripper:
       parameters:
         taskparams:
@@ -930,7 +930,7 @@ x-specModifications:
                   paramOrderingIndex: 6
                 deletetarget:
                   paramOrderingIndex: 7
-                # ignoredArgs: {}
+                kwargs: {}
     EnsureSyncWithRobotBridge:
       parameters:
         taskparams:
@@ -947,7 +947,7 @@ x-specModifications:
                   paramOrderingIndex: 3
                   $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   type: boolean
-                # ignoredArgs: {}
+                kwargs: {}
     ShutdownRobotBridge:
       parameters:
         taskparams:
@@ -958,7 +958,7 @@ x-specModifications:
                   paramOrderingIndex: 0
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     GetInnerEmptyRegionOBB:
       parameters:
         taskparams:
@@ -975,7 +975,7 @@ x-specModifications:
                   paramOrderingIndex: 3
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     ResetCachedRobotConfigurationState:
       parameters:
         taskparams:
@@ -989,7 +989,7 @@ x-specModifications:
                 fireandforget:
                   paramOrderingIndex: 2
                   $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
-                # ignoredArgs: {}
+                kwargs: {}
     SetRobotBridgeServoOn:
       parameters:
         taskparams:
@@ -1009,7 +1009,7 @@ x-specModifications:
                   paramOrderingIndex: 3
                   $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   default: false
-                # ignoredArgs: {}
+                kwargs: {}
     RunMotorControlTuningDecayingChirp:
       parameters:
         taskparams:
@@ -1026,7 +1026,7 @@ x-specModifications:
                   paramOrderingIndex: 3
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 120
-                # ignoredArgs: {}
+                kwargs: {}
     ResetLocationTracking:
       parameters:
         taskparams:
@@ -1049,7 +1049,7 @@ x-specModifications:
                   paramOrderingIndex: 5
                 checkIdAndResetLocationName:
                   paramOrderingIndex: 6
-                # ignoredArgs: {}
+                kwargs: {}
       returns:
         returnPayloadField: clearedLocationNames
     RunMotorControlTuningMaximulLengthSequence:
@@ -1066,7 +1066,7 @@ x-specModifications:
                   paramOrderingIndex: 2
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     Release:
       parameters:
         taskparams:
@@ -1079,7 +1079,7 @@ x-specModifications:
                   paramOrderingIndex: 1
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     Grab:
       parameters:
         taskparams:
@@ -1094,7 +1094,7 @@ x-specModifications:
                   paramOrderingIndex: 2
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     GetTrajectoryLog:
       parameters:
         taskparams:
@@ -1111,7 +1111,7 @@ x-specModifications:
                   paramOrderingIndex: 2
                 includejointvalues:
                   paramOrderingIndex: 3
-                # ignoredArgs: {}
+                kwargs: {}
     RunMotorControlTuningGaussianImpulse:
       parameters:
         taskparams:
@@ -1126,7 +1126,7 @@ x-specModifications:
                   paramOrderingIndex: 2
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 20
-                # ignoredArgs: {}
+                kwargs: {}
     GetGrabbed:
       parameters:
         taskparams:
@@ -1137,7 +1137,7 @@ x-specModifications:
                   paramOrderingIndex: 0
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     GetRobotBridgeState:
       parameters:
         taskparams:
@@ -1148,7 +1148,7 @@ x-specModifications:
                   paramOrderingIndex: 0
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     UpdateLocationContainerIdType:
       parameters:
         taskparams:
@@ -1175,7 +1175,7 @@ x-specModifications:
                   default: false
                 unit:
                   paramOrderingIndex: 9
-                # ignoredArgs: {}
+                kwargs: {}
     GetState:
       parameters:
         taskparams:
@@ -1189,7 +1189,7 @@ x-specModifications:
                 fireandforget:
                   paramOrderingIndex: 2
                   $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
-                # ignoredArgs: {}
+                kwargs: {}
     ChuckGripper:
       parameters:
         taskparams:
@@ -1206,7 +1206,7 @@ x-specModifications:
                   default: 10
                 toolname:
                   paramOrderingIndex: 4
-                # ignoredArgs: {}
+                kwargs: {}
     ResetLocationTrackingContainerId:
       parameters:
         taskparams:
@@ -1225,7 +1225,7 @@ x-specModifications:
                   paramOrderingIndex: 4
                   $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   default: false
-                # ignoredArgs: {}
+                kwargs: {}
     ResetSafetyFault:
       parameters:
         taskparams:
@@ -1240,7 +1240,7 @@ x-specModifications:
                   paramOrderingIndex: 1
                   $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   default: false
-                # ignoredArgs: {}
+                kwargs: {}
     SetRobotBridgeLockMode:
       parameters:
         taskparams:
@@ -1259,7 +1259,7 @@ x-specModifications:
                   paramOrderingIndex: 3
                   $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   default: false
-                # ignoredArgs: {}
+                kwargs: {}
     StartProfiling:
       parameters:
         taskparams:
@@ -1284,7 +1284,7 @@ x-specModifications:
                   paramOrderingIndex: 1
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
     EndJogMode:
       parameters:
         taskparams:
@@ -1299,7 +1299,7 @@ x-specModifications:
                   paramOrderingIndex: 2
                   $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   default: false
-                # ignoredArgs: {}
+                kwargs: {}
     ReplaceBodies:
       parameters:
         taskparams:
@@ -1327,7 +1327,7 @@ x-specModifications:
                   paramOrderingIndex: 7
                 unit:
                   paramOrderingIndex: 8
-                # ignoredArgs: {}
+                kwargs: {}
     RunDynamicsIdentificationTest:
       parameters:
         taskparams:
@@ -1338,7 +1338,7 @@ x-specModifications:
                   paramOrderingIndex: 0
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   required: true
-                # ignoredArgs: {}
+                kwargs: {}
     MoveGripper:
       parameters:
         taskparams:
@@ -1361,7 +1361,7 @@ x-specModifications:
                   default: false
                 toolname:
                   paramOrderingIndex: 6
-                # ignoredArgs: {}
+                kwargs: {}
     MoveToolLinear:
       parameters:
         taskparams:
@@ -1402,7 +1402,7 @@ x-specModifications:
                   paramOrderingIndex: 14
                 workignorefirstcollision:
                   paramOrderingIndex: 15
-                # ignoredArgs: {}
+                kwargs: {}
     RestoreSceneInitialState:
       parameters:
         taskparams:
@@ -1416,7 +1416,7 @@ x-specModifications:
                 preserverobotdofvalues:
                   paramOrderingIndex: 3
                   default: 1
-                # ignoredArgs: {}
+                kwargs: {}
     GetLocationTrackingInfos:
       parameters:
         taskparams:
@@ -1431,7 +1431,7 @@ x-specModifications:
                   paramOrderingIndex: 2
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}
       returns:
         returnPayloadField: activeLocationTrackingInfos
     SetMotorControlParameter:
@@ -1450,4 +1450,4 @@ x-specModifications:
                   paramOrderingIndex: 3
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                # ignoredArgs: {}
+                kwargs: {}

@@ -386,7 +386,7 @@ services:
         properties:
           taskparameters:
             properties:
-              instobjecturi:
+              objecturi:
                 type: string
               unit:
                 $merge: '#/components/unit'
@@ -740,7 +740,7 @@ services:
               - '#/components/moveJointsParameters'
               - '#/components/Internal_MoveCommandDecoratorParameters'
               - '#/components/Internal_SetRobotClientParameters'
-              jointConfigurationStates:
+              goalJointConfigurationStates:
                 required: true
               robotname:
                 $merge: '#/components/robotname'
