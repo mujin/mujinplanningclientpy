@@ -3,7 +3,7 @@ clientType: binpicking
 templateArgs:  # Strings are added to client_template.py.mako
   tasktype: binpicking
   clientTaskName: Binpicking
-  parentClassFile: realtimerobotclient
+  parentClassFile: realtimerobotplanningclient
   parentClassName: RealtimeRobotPlanningClient
   extraSuperConstructorArgs: robotname=robotname, robotspeed=robotspeed, robotaccelmult=robotaccelmult, envclearance=envclearance, robotBridgeConnectionInfo=robotBridgeConnectionInfo, 
   extraConstructorArgs: |

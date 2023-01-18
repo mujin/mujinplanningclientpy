@@ -1,0 +1,8 @@
+# Components from `binpickingplanningclient.py`
+include:
+- components_realtimerobot.yaml
+- mujinrepo:mujinbinpickingmanager.schema.binpickingparametersschema
+components:
+  regionname:
+    type: string
+    description: name of the region of the objects
