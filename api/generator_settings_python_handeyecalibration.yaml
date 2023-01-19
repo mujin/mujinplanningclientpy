@@ -15,14 +15,14 @@ templateArgs:  # Strings that are added to client_template.py.mako
     self.robot = robot
   extraClientContent: |
     def ReloadModule(self, **kwargs):
-      return self.ExecuteCommand({
+        return self.ExecuteCommand({
             'command': 'ReloadModule',
-      }, **kwargs)
+        }, **kwargs)
   extraClientStaticFunctions: |
     def ExecuteCommand(self, taskparameters, **kwargs):
-      if 'robot' not in taskparameters:
-        taskparameters['robot'] = self.robot
-      super(HandEyeCalibrationPlanningClient, self).ExecuteCommand(taskparameters=taskparameters, **kwargs)
+        if 'robot' not in taskparameters:
+            taskparameters['robot'] = self.robot
+        super(HandEyeCalibrationPlanningClient, self).ExecuteCommand(taskparameters=taskparameters, **kwargs)
 generatorSettingsComponents:
   timeout:
     default: 3000.0
