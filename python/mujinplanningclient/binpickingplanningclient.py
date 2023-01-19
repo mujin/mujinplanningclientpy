@@ -94,7 +94,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         destikparamnames=None,
         leaveoffsetintool=None,
         graspsetname=None,
-        **kwargs,
+        **kwargs
     ):
         """Picks up an object with the targetnamepattern and places it down at one of the goals. First computes the entire plan from robot moving to a grasp and then moving to its destination, then runs it on the real robot. Task finishes once the real robot is at the destination.
 
@@ -187,7 +187,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         useworkspaceplanner=None,
         forceStartRobotValues=None,
         initiallyDisableRobotBridge=None,
-        **kwargs,
+        **kwargs
     ):
         """Start a background loop to continuously pick up objects with the targetnamepattern and place them down at the goals. The loop will check new objects arriving in and move the robot as soon as it finds a feasible grasp. The thread can be quit with StopPickPlaceThread.
 

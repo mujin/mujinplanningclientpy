@@ -233,7 +233,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         ikparamname=None,
         execute=None,
         moveStraightParams=None,
-        **kwargs,
+        **kwargs
     ):
         """Moves the tool linearly in cartesian (3D) space.
 
@@ -347,7 +347,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         pathPlannerParameters=None,
         smootherParameters=None,
         moveStraightParams=None,
-        **kwargs,
+        **kwargs
     ):
         """Computes the inverse kinematics and moves the manipulator to any one of the goals specified.
 
@@ -457,7 +457,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         cropContainerMarginsXYZXYZ=None,
         ioSignalsInfo=None,
         addPointOffsetInfo=None,
-        **kwargs,
+        **kwargs
     ):
         """Updates objects in the scene with the envstate
 
@@ -1334,7 +1334,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         debuglevel=None,
         jittererParameters=None,
         gripperInfo=None,
-        **kwargs,
+        **kwargs
     ):
         """Moves the robot to desired joint angles specified in jointStates
 
@@ -1532,7 +1532,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         debuglevel=None,
         jittererParameters=None,
         gripperInfo=None,
-        **kwargs,
+        **kwargs
     ):
         """Moves the robot to desired joint angles specified in jointvalues
 
@@ -1735,7 +1735,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         gripperInfo=None,
         startJointConfigurationStates=None,
         robotProgramName=None,
-        **kwargs,
+        **kwargs
     ):
         """Moves the robot to desired position configuration specified in positionConfigurationName
 
@@ -2016,7 +2016,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         filteroptionslist=None,
         filteroptions=None,
         robotname=None,
-        **kwargs,
+        **kwargs
     ):
         """
 
