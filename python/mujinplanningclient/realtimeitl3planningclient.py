@@ -29,7 +29,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
         controllerusername='',
         controllerpassword='',
         controllerurl='',
-        tasktype='realtimeitl3',
+        tasktype='realtimeitlplanning3',
         slaverequestid=None,
         taskzmqport=7110,
         taskheartbeatport=7111,
@@ -51,7 +51,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             controllerusername (str): Username for the Mujin controller, e.g. testuser
             controllerpassword (str): Password for the Mujin controller
             controllerurl (str, optional): (Deprecated. Use controllerip instead) URL of the mujin controller, e.g. http://controller14.
-            tasktype (str, optional): Type of the task, e.g. 'binpicking', 'handeyecalibration', 'itlrealtimeplanning3'. Default: realtimeitl3
+            tasktype (str, optional): Type of the task, e.g. 'binpicking', 'handeyecalibration', 'itlrealtimeplanning3'. Default: realtimeitlplanning3
             taskzmqport (int, optional): Port of the task's ZMQ server, e.g. 7110
             taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher, e.g. 7111
             taskheartbeattimeout (float, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7

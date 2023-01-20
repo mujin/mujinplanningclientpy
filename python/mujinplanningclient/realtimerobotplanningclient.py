@@ -2929,6 +2929,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if doRemoveOnlyDynamic is not None:
             taskparameters['doRemoveOnlyDynamic'] = doRemoveOnlyDynamic
         taskparameters.update(kwargs)
+        taskparameters['bodieslist'] = bodieslist  # for back compatibility for now
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     def GetState(self, timeout=10.0, fireandforget=False, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, **kwargs):
