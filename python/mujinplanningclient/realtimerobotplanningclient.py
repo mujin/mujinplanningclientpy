@@ -986,7 +986,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             canJogInCheckMode: if true, then allow jogging even if in check mode. By default it is false.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 1)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
-            jogtype (str): One of 'joints', 'world', 'robot', 'tool'
+            jogtype (str): One of 'Joints', 'WorldFrame', 'RobotBaseFrame', 'ToolFrame'
             checkSelfCollisionWhileJogging (bool, optional):
             force (bool, optional): If true, forces the velocities to be set.
         """
