@@ -239,8 +239,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'Grab',
             'targetname': targetname,
         }
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     def Release(self, targetname, timeout=10, **kwargs):
         """Releases a grabbed object.
@@ -284,18 +286,22 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
 
         Returns:
-            dict: Transform of the object in a json dictionary, e.g. {'translation': [100,200,300], 'rotationmat': [[1,0,0],[0,1,0],[0,0,1]], 'quaternion': [1,0,0,0]}
+            dict: Transform of the object in a JSON dictionary, e.g. {'translation': [100,200,300], 'rotationmat': [[1,0,0],[0,1,0],[0,0,1]], 'quaternion': [1,0,0,0]}
 
         """
         taskparameters = {
             'command': 'GetTransform',
             'targetname': targetname,
-            'connectedBodyName': connectedBodyName,
-            'linkName': linkName,
-            'geometryName': geometryName,
-            'geometryPk': geometryPk,
             'unit': unit,
         }
+        if connectedBodyName is not None:
+            taskparameters['connectedBodyName'] = connectedBodyName
+        if linkName is not None:
+            taskparameters['linkName'] = linkName
+        if geometryName is not None:
+            taskparameters['geometryName'] = geometryName
+        if geometryPk is not None:
+            taskparameters['geometryPk'] = geometryPk
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
@@ -316,17 +322,17 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'translation': translation,
             'unit': unit,
         }
-        taskparameters.update(kwargs)
         if rotationmat is not None:
             taskparameters['rotationmat'] = rotationmat
         if quaternion is not None:
             taskparameters['quaternion'] = quaternion
+        taskparameters.update(kwargs)
         if rotationmat is None and quaternion is None:
             taskparameters['quaternion'] = [1, 0, 0, 0]
-            log.warn('no rotation is specified, using identity quaternion')
+            log.warn('No rotation is specified. Using identity quaternion.')
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetOBB(self, targetname, unit='mm', timeout=10, **kwargs):
+    def GetOBB(self, targetname, unit='mm', timeout=10, linkname=None, **kwargs):
         """Get the oriented bounding box (OBB) of object.
 
         Args:
@@ -336,16 +342,19 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             linkname (str, optional): Name of link to use for OBB. If not specified, uses entire target.
 
         Returns:
-            dict: A dict describing the OBB of the object with keys: extents, boxLocalTranslation, originalBodyTranslation, quaternion, rotationmat, translation
+            dict: A dictionary describing the OBB of the object with keys: extents, boxLocalTranslation, originalBodyTranslation, quaternion, rotationmat, translation
+
         """
         taskparameters = {
             'command': 'GetOBB',
             'targetname': targetname,
             'unit': unit,
         }
+        if linkname is not None:
+            taskparameters['linkname'] = linkname
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-    
+
     def GetInnerEmptyRegionOBB(self, targetname, linkname=None, unit='mm', timeout=10, **kwargs):
         """Get the inner empty oriented bounding box (OBB) of a container.
 
@@ -357,6 +366,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
         Returns:
             dict: A dict describing the OBB of the object with keys: extents, boxLocalTranslation, originalBodyTranslation, quaternion, rotationmat, translation
+
         """
         taskparameters = {
             'command': 'GetInnerEmptyRegionOBB',
@@ -372,8 +382,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """Returns information about the inst objects and sensors that are a part of those inst objects.
 
         Args:
-            instobjectnames (list, optional):
-            sensornames (list, optional):
+            instobjectnames (list[str], optional):
+            sensornames (list[str], optional):
             unit (str, optional): The unit of the given values. (Default: 'mm')
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
         """
@@ -404,8 +414,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['objecturi'] = instobjecturi
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-    
-    def GetAABB(self, targetname, unit='mm', timeout=10, **kwargs):
+
+    def GetAABB(self, targetname, unit='mm', timeout=10, linkname=None, **kwargs):
         """Gets the axis-aligned bounding box (AABB) of an object.
 
         Args:
@@ -416,12 +426,15 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
         Returns:
             dict: AABB of the object, e.g. {'pos': [1000,400,100], 'extents': [100,200,50]}
+
         """
         taskparameters = {
             'command': 'GetAABB',
             'targetname': targetname,
             'unit': unit,
         }
+        if linkname is not None:
+            taskparameters['linkname'] = linkname
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
     
@@ -454,7 +467,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             checkIdAndResetLocationName: (locationName, containerId) - only reset the location if the container id matches
 
         Returns:
-            clearedLocationNames
+            dict: clearedLocationNames
+
         """
         taskparameters = {
             'command': 'ResetLocationTracking',
@@ -502,7 +516,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['trackingCycleIndex'] = trackingCycleIndex
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-    
+
     def ResetLocationTrackingContainerId(self, locationName, checkContainerId, timeout=10, fireandforget=False, **kwargs):
         """Resets the containerId of self._activeLocationTrackingInfos if it matches checkContainerId.
 
@@ -684,11 +698,12 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             filename (str, optional): e.g. /tmp/testscene.mujin.dae, if not specified, it will be saved with an auto-generated filename
             preserveexternalrefs (bool, optional): If True, any bodies that are currently being externally referenced from the environment will be saved as external references.
             externalref (str, optional): If '*', then each of the objects will be saved as externally referencing their original filename. Otherwise will force saving specific bodies as external references.
-            saveclone: If 1, will save the scenes for all the cloned environments
+            saveclone: (DEPRECATED) If 1, will save the scenes for all the cloned environments
             saveReferenceUriAsHint (bool, optional): If True, use save the reference uris as referenceUriHint so that webstack does not get confused and deletes content
 
         Returns:
             dict: The filename the scene is saved to, in a json dictionary, e.g. {'filename': '2013-11-01-17-10-00-UTC.dae'}
+
         """
         taskparameters = {
             'command': 'SaveScene',
@@ -1082,7 +1097,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'SetRobotBridgeExternalIOPublishing',
-            'enable': bool(enable)
+            'enable': bool(enable),
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
