@@ -605,8 +605,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'ChuckGripper',
             'grippername': grippername,
         }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     def UnchuckGripper(self, robotname=None, grippername=None, timeout=10, **kwargs):
         """Unchucks the manipulator and releases the target
@@ -621,8 +623,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'UnchuckGripper',
             'grippername': grippername,
         }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     def CalibrateGripper(self, robotname=None, grippername=None, timeout=10, fireandforget=False, **kwargs):
         """Goes through the gripper calibration procedure
@@ -637,8 +641,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'CalibrateGripper',
             'grippername': grippername,
         }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout, fireandforget=fireandforget)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
     def StopGripper(self, robotname=None, grippername=None, timeout=10, fireandforget=False, **kwargs):
         """
@@ -653,8 +659,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'StopGripper',
             'grippername': grippername,
         }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout, fireandforget=fireandforget)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
     
     def MoveGripper(self, grippervalues, robotname=None, grippername=None, timeout=10, fireandforget=False, **kwargs):
         """Moves the chuck of the manipulator to a given value.
@@ -671,8 +679,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'grippername': grippername,
             'grippervalues': grippervalues,
         }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout, fireandforget=fireandforget)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
     
     def ExecuteRobotProgram(self, robotProgramName, robotname=None, timeout=10, fireandforget=False, **kwargs):
         """Execute a robot specific program by name
@@ -687,8 +697,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'ExecuteRobotProgram',
             'robotProgramName': robotProgramName,
         }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout, fireandforget=fireandforget)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
     def SaveScene(self, timeout=10, **kwargs):
         """Saves the current scene to file
@@ -723,8 +735,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'SaveGripper',
         }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     def MoveJointsToJointConfigurationStates(self, jointConfigurationStates, robotname=None, robotspeed=None, robotaccelmult=None, execute=1, startJointConfigurationStates=None, envclearance=None, timeout=10, **kwargs):
         """Moves the robot to desired joint angles specified in jointStates
@@ -746,6 +760,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'goalJointConfigurationStates': jointConfigurationStates,
             'execute': execute,
         }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
 
         if envclearance is not None:
             taskparameters['envclearance'] = envclearance
@@ -754,7 +770,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['startJointConfigurationStates'] = startJointConfigurationStates
 
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
 
     def MoveJoints(self, jointvalues, jointindices=None, robotname=None, robotspeed=None, robotaccelmult=None, execute=1, startvalues=None, envclearance=None, timeout=10, **kwargs):
         """Moves the robot to desired joint angles specified in jointvalues
@@ -780,14 +796,16 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'jointindices': list(jointindices),
             'execute': execute,
         }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+
         if envclearance is not None:
             taskparameters['envclearance'] = envclearance
 
         if startvalues is not None:
             taskparameters['startvalues'] = list(startvalues)
-
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
     
     def MoveJointsToPositionConfiguration(self, positionConfigurationName=None, positionConfigurationCandidateNames=None, robotname=None, robotspeed=None, robotaccelmult=None, execute=1, startvalues=None, envclearance=None, timeout=10, **kwargs):
         """Moves the robot to desired position configuration specified in positionConfigurationName
@@ -810,6 +828,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'MoveJointsToPositionConfiguration',
             'execute': execute,
         }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if positionConfigurationName:
             taskparameters['positionConfigurationName'] = positionConfigurationName
         if positionConfigurationCandidateNames:
@@ -819,7 +839,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if startvalues is not None:
             taskparameters['startvalues'] = list(startvalues)
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
     
     def GetRobotBridgeIOVariables(self, ioname=None, ionames=None, robotname=None, timeout=10, **kwargs):
         """Returns the data of the IO in ascii hex as a string
@@ -833,13 +853,15 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'GetRobotBridgeIOVariables',
         }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+
         if ioname is not None and len(ioname) > 0:
             taskparameters['ioname'] = ioname
         if ionames is not None and len(ionames) > 0:
             taskparameters['ionames'] = ionames
-
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
     
     def SetRobotBridgeIOVariables(self, iovalues, robotname=None, timeout=10, **kwargs):
         """Sets a set of IO variables in the robot bridge.
@@ -855,8 +877,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'SetRobotBridgeIOVariables',
             'iovalues': list(iovalues)
         }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
     
     def ComputeIkParamPosition(self, name, robotname=None, timeout=10, **kwargs):
         """Given the name of a Kinbody, computes the manipulator (TCP) position in the Kinbody frame to generate values for an IKParameterization.
@@ -876,8 +900,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'ComputeIkParamPosition',
             'name': name,
         }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     def ComputeIKFromParameters(self, toolname=None, timeout=10, **kwargs):
         """
@@ -998,7 +1024,9 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'SetRobotBridgeServoOn',
             'isservoon': servoon
         }
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout, fireandforget=fireandforget)
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
     def SetRobotBridgeLockMode(self, islockmode, robotname=None, timeout=3, fireandforget=False):
         """
@@ -1013,7 +1041,9 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'SetRobotBridgeLockMode',
             'islockmode': islockmode,
         }
-        return self.ExecuteCommand(taskparameters, robotname=robotname, timeout=timeout, fireandforget=fireandforget)
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
     def ResetSafetyFault(self, timeout=3, fireandforget=False):
         """
@@ -1069,10 +1099,12 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'targetname': targetname,
             'graspname': graspname
         }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
         if unit is not None:
             taskparameters['unit'] = unit
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotname=robotname, toolname=toolname, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
 
     def ResetCacheTemplates(self, timeout=1, fireandforget=False, **kwargs):
         """Resets any cached templates
