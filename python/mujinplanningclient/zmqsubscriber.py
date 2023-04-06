@@ -37,10 +37,14 @@ class ZmqSubscription(object):
 
     @property
     def endpoint(self):
+        """Endpoint string for the subscription
+        """
         return self._endpoint
 
     @property
     def message(self):
+        """Last received message, only available if callbackFn is not defined.
+        """
         return self._message
 
     def _EnsureSocket(self, ctx, now):
@@ -127,7 +131,7 @@ class ZmqSubscriber(object):
 
         Args:
             endpoint: the zmq endpoint string to subscribe to
-            callbackFn: the function to call when subscription receives latest message, it is up to the caller to decode the raw zmq message received, the arguments for the callback function are (ZmqSubscription, rawMessage)
+            callbackFn: the function to call when subscription receives latest message, it is up to the caller to decode the raw zmq message received, the arguments for the callback function are (ZmqSubscription, rawMessage), if the callback function is not supplied, last received message will be set on ZmqSubscription.message instead
             timeout: number of seconds, after this duration, the subscription socket is considered dead and will be recreated automatically to handle network changes (Default: 4.0)
 
         Returns:
@@ -196,7 +200,11 @@ class ZmqSubscriber(object):
 
             # check for timeout
             if now - starttime > timeout:
-                raise TimeoutError(_('Timed out waiting for subscriptions'))
+                timeoutEndpoints = []
+                for subscription in subscriptions:
+                    if subscription:
+                        timeoutEndpoints.append('"%s"' % subscription.endpoint)
+                raise TimeoutError(_('Timed out waiting to receive message from subscriptions to %s after %0.3f seconds') % (', '.join(timeoutEndpoints), now - starttime))
             if checkpreemptfn:
                 checkpreemptfn()
 
