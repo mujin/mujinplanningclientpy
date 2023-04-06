@@ -12,6 +12,8 @@ import logging
 log = logging.getLogger(__name__)
 
 class ZmqSubscription(object):
+    """Subscription handle holding an active ongoing subscription. Call `ZmqSubscriber.Subscribe()` to get an instance.
+    """
 
     _subscriber = None # weakref to ZmqSubscriber
     _socket = None # zmq socket
@@ -77,6 +79,8 @@ class ZmqSubscription(object):
         return False
 
 class ZmqSubscriber(object):
+    """Subscriber that can handle multiple ongoing subscriptions.
+    """
 
     _ctx = None # zmq context
     _ctxown = None # created zmq context
@@ -111,7 +115,15 @@ class ZmqSubscriber(object):
         self._ctx = None
 
     def Subscribe(self, endpoint, callbackFn, timeout=4.0):
-        """Subscribe to zmq endpoint
+        """Subscribe to zmq endpoint.
+
+        Args:
+            endpoint: the zmq endpoint string to subscribe to
+            callbackFn: the function to call when subscription receives latest message, it is up to the caller to decode the raw zmq message received, the arguments for the callback function are (ZmqSubscription, rawMessage)
+            timeout: number of seconds, after this duration, the subscription socket is considered dead and will be recreated automatically to handle network changes (Default: 4.0)
+
+        Returns:
+            ZmqSubscription: call ZmqSubscription.Unsubscribe() to stop the subscription
         """
         subscription = ZmqSubscription()
         subscription._timeout = timeout
@@ -123,6 +135,9 @@ class ZmqSubscriber(object):
 
     def Unsubscribe(self, subscription):
         """Stop a subscription.
+
+        Args:
+            subscription: the ZmqSubscription instance to stop subscribing
         """
         if subscription in self._subscriptions:
             self._subscriptions.remove(subscription)
@@ -131,6 +146,10 @@ class ZmqSubscriber(object):
 
     def SpinOnce(self, timeout=None, checkpreemptfn=None):
         """Spin all subscription once, ensure that each subscription is received at least once. Block up to supplied timeout duration. If timeout is None, then receive what we can receive without blocking or raising any timeout error.
+
+        Args:
+            timeout: If not None, will raise TimeoutError if not all subscriptions can be handled in time. If None, then receive what we can receive without blocking or raising TimeoutError.
+            checkpreemptfn: The function that for checking for preemptions
         """
         starttime = GetMonotonicTime()
 
