@@ -81,7 +81,6 @@ class PlanningClient(object):
     scenepk = None  # The scenepk this controller is configured for
     _ctx = None  # zmq context shared among all clients
     _ctxown = None  # zmq context owned by this class
-    _taskstate = None  # Latest task status from heartbeat message
     _commandsocket = None  # zmq client to the command port
     _configsocket = None  # zmq client to the config port
     taskheartbeatport = None  # Port of the task's zmq server's heartbeat publisher, e.g. 7111
@@ -202,15 +201,10 @@ class PlanningClient(object):
         """
         if self._subscriber is None:
             self._subscriber = zmqsubscriber.ZmqSubscriber(self._ctx)
-
         if self._subscription is None:
-
-            def _HandleMessage(subscrption, message):
-                self._taskstate = json.loads(message)
-
-            self._subscription = self._subscriber.Subscribe('tcp://%s:%d' % (self.controllerIp, self.taskheartbeatport), _HandleMessage)
+            self._subscription = self._subscriber.Subscribe('tcp://%s:%d' % (self.controllerIp, self.taskheartbeatport or (self.taskzmqport + 1)))
         self._subscriber.SpinOnce(timeout=timeout)
-        return self._taskstate
+        return json.loads(self._subscription.message)
     
     def SetScenePrimaryKey(self, scenepk):
         self.scenepk = scenepk

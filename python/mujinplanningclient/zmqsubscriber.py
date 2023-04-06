@@ -18,10 +18,11 @@ class ZmqSubscription(object):
     _subscriber = None # weakref to ZmqSubscriber
     _socket = None # zmq socket
     _lastReceivedTimestamp = 0 # when message was last received on this subscription
+    _timeout = 4.0 # beyond this number of seconds, the socket is considered dead and should be recreated
 
     _endpoint = None # zmq subscription endpoint
     _callbackFn = None # function to call back when new message is received on the subscription socket
-    _timeout = 4.0 # beyond this number of seconds, the socket is considered dead and should be recreated
+    _message = None # last received message if _callbackFn is None
 
     def __del__(self):
         self.Unsubscribe()
@@ -37,6 +38,10 @@ class ZmqSubscription(object):
     @property
     def endpoint(self):
         return self._endpoint
+
+    @property
+    def message(self):
+        return self._message
 
     def _EnsureSocket(self, ctx, now):
         if self._socket:
@@ -74,7 +79,10 @@ class ZmqSubscription(object):
                 break # got EAGAIN, so break
         if message is not None:
             self._lastReceivedTimestamp = now
-            self._callbackFn(self, message)
+            if self._callbackFn:
+                self._callbackFn(self, message)
+            else:
+                self._message = message
             return True
         return False
 
@@ -114,7 +122,7 @@ class ZmqSubscriber(object):
             self._ctxown = None
         self._ctx = None
 
-    def Subscribe(self, endpoint, callbackFn, timeout=4.0):
+    def Subscribe(self, endpoint, callbackFn=None, timeout=4.0):
         """Subscribe to zmq endpoint.
 
         Args:
@@ -158,6 +166,8 @@ class ZmqSubscriber(object):
         for subscription in subscriptions:
             subscription._EnsureSocket(self._ctx, starttime)
 
+        handledSubscriptions = []
+
         while True:
             now = GetMonotonicTime()
 
@@ -165,6 +175,7 @@ class ZmqSubscriber(object):
             for index, subscription in enumerate(subscriptions):
                 if subscription is not None:
                     if subscription._TryReceiveOnce(now):
+                        handledSubscriptions.append(subscription)
                         subscriptions[index] = None # already done
 
             # re-create timed out sockets
@@ -180,12 +191,7 @@ class ZmqSubscriber(object):
                 return
 
             # check if all subscriptions have received at least once
-            hasPendingSubscription = False
-            for subscription in subscriptions:
-                if subscription is not None:
-                    hasPendingSubscription = True
-                    break
-            if not hasPendingSubscription:
+            if len(handledSubscriptions) == len(subscriptions):
                 return
 
             # check for timeout
@@ -204,3 +210,5 @@ class ZmqSubscriber(object):
                 for subscription in subscriptions:
                     if subscription is not None:
                         self._poller.unregister(subscription._socket)
+
+        return handledSubscriptions
