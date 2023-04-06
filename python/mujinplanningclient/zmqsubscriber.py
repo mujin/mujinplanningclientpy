@@ -197,10 +197,10 @@ class ZmqSubscriber(object):
             # poll what is left
             try:
                 for subscription in subscriptions:
-                    if subscription is not None and subscription._socket is not None:
+                    if subscription is not None:
                         self._poller.register(subscription._socket, zmq.POLLIN)
                 self._poller.poll(20) # poll a little and try again
             finally:
                 for subscription in subscriptions:
-                    if subscription is not None and subscription._socket is not None:
+                    if subscription is not None:
                         self._poller.unregister(subscription._socket)
