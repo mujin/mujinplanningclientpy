@@ -5,8 +5,6 @@ Client to connect to Mujin Controller's planning server.
 """
 
 # System imports
-import threading
-import weakref
 import os
 import time
 
@@ -15,9 +13,10 @@ from mujinwebstackclient import APIServerError
 from mujinwebstackclient import urlparse
 from mujinwebstackclient.webstackclient import GetURIFromPrimaryKey, GetFilenameFromURI
 
-from . import GetMonotonicTime
 from . import zmqclient
+from . import zmqsubscriber
 from . import zmq
+from . import json
 
 # Logging
 import logging
@@ -82,14 +81,14 @@ class PlanningClient(object):
     scenepk = None  # The scenepk this controller is configured for
     _ctx = None  # zmq context shared among all clients
     _ctxown = None  # zmq context owned by this class
-    _isok = False  # If False, client is about to be destroyed
-    _heartbeatthread = None  # Thread for monitoring controller heartbeat
-    _isokheartbeat = False  # If False, then stop heartbeat monitor
     _taskstate = None  # Latest task status from heartbeat message
     _commandsocket = None  # zmq client to the command port
     _configsocket = None  # zmq client to the config port
     taskheartbeatport = None  # Port of the task's zmq server's heartbeat publisher, e.g. 7111
     taskheartbeattimeout = None  # Seconds until reinitializing task's zmq server if no heartbeat is received, e.g. 7
+
+    _subscriber = None # an instance of ZmqSubscriber
+    _subscription = None # the active subscription to taskheartbeatport
 
     def __init__(
         self,
@@ -121,13 +120,12 @@ class PlanningClient(object):
         """
         self._slaverequestid = slaverequestid
         self._sceneparams = {}
-        self._isok = True
 
         # Task
         self.tasktype = tasktype
 
         if controllerip:
-            self.contrllerIp = controllerip
+            self.controllerIp = controllerip
             self.controllerusername = controllerusername
             self.controllerpassword = controllerpassword
         else:
@@ -153,10 +151,6 @@ class PlanningClient(object):
 
             self.taskheartbeatport = taskheartbeatport
             self.taskheartbeattimeout = taskheartbeattimeout
-            if self.taskheartbeatport is not None:
-                self._isokheartbeat = True
-                self._heartbeatthread = threading.Thread(target=weakref.proxy(self)._RunHeartbeatMonitorThread)
-                self._heartbeatthread.start()
 
         self.SetScenePrimaryKey(scenepk)
 
@@ -165,11 +159,12 @@ class PlanningClient(object):
 
     def Destroy(self):
         self.SetDestroy()
-
-        if self._heartbeatthread is not None:
-            self._isokheartbeat = False
-            self._heartbeatthread.join()
-            self._heartbeatthread = None
+        if self._subscription is not None:
+            self._subscription.Unsubscribe()
+            self._subscription = None
+        if self._subscriber is not None:
+            self._subscriber.Destroy()
+            self._subscriber = None
         if self._commandsocket is not None:
             self._commandsocket.Destroy()
             self._commandsocket = None
@@ -184,8 +179,6 @@ class PlanningClient(object):
             self._ctxown = None
 
     def SetDestroy(self):
-        self._isok = False
-        self._isokheartbeat = False
         commandsocket = self._commandsocket
         if commandsocket is not None:
             commandsocket.SetDestroy()
@@ -204,40 +197,19 @@ class PlanningClient(object):
         if self._configsocket is not None:
             self.SendConfig({'command': 'cancel'}, slaverequestid=self._slaverequestid, timeout=timeout, fireandforget=False)
 
-    def _RunHeartbeatMonitorThread(self):
-        while self._isok and self._isokheartbeat:
-            log.info(u'subscribing to %s:%s' % (self.controllerIp, self.taskheartbeatport))
-            socket = self._ctx.socket(zmq.SUB)
-            socket.setsockopt(zmq.TCP_KEEPALIVE, 1) # turn on tcp keepalive, do these configuration before connect
-            socket.setsockopt(zmq.TCP_KEEPALIVE_IDLE, 2) # the interval between the last data packet sent (simple ACKs are not considered data) and the first keepalive probe; after the connection is marked to need keepalive, this counter is not used any further
-            socket.setsockopt(zmq.TCP_KEEPALIVE_INTVL, 2) # the interval between subsequential keepalive probes, regardless of what the connection has exchanged in the meantime
-            socket.setsockopt(zmq.TCP_KEEPALIVE_CNT, 2) # the number of unacknowledged probes to send before considering the connection dead and notifying the application layer
-            socket.connect('tcp://%s:%s' % (self.controllerIp, self.taskheartbeatport))
-            socket.setsockopt(zmq.SUBSCRIBE, b'')
-            poller = zmq.Poller()
-            poller.register(socket, zmq.POLLIN)
-            
-            lastheartbeatts = GetMonotonicTime()
-            while self._isokheartbeat and GetMonotonicTime() - lastheartbeatts < self.taskheartbeattimeout:
-                socks = dict(poller.poll(50))
-                if socket in socks and socks.get(socket) == zmq.POLLIN:
-                    try:
-                        reply = socket.recv_json(zmq.NOBLOCK)
-                        if 'slavestates' in reply:
-                            self._taskstate = reply.get('slavestates', {}).get('slaverequestid-%s'%self._slaverequestid, None)
-                            lastheartbeatts = GetMonotonicTime()
-                        else:
-                            self._taskstate = None
-                    except zmq.ZMQError as e:
-                        log.exception('failed to receive from publisher: %s', e)
-            if self._isokheartbeat:
-                log.warn('%f secs since last heartbeat from controller' % (GetMonotonicTime() - lastheartbeatts))
-    
-    def GetPublishedTaskState(self):
+    def GetPublishedTaskState(self, timeout=2.0):
         """Return most recent published state. If publishing is disabled, then will return None
         """
-        if self._heartbeatthread is None or not self._isokheartbeat:
-            log.warn('Heartbeat thread not running taskheartbeatport=%s, so cannot get latest taskstate', self.taskheartbeatport)
+        if self._subscriber is None:
+            self._subscriber = zmqsubscriber.ZmqSubscriber(self._ctx)
+
+        if self._subscription is None:
+
+            def _HandleMessage(subscrption, message):
+                self._taskstate = json.loads(message)
+
+            self._subscription = self._subscriber.Subscribe('tcp://%s:%d' % (self.controllerIp, self.taskheartbeatport), _HandleMessage)
+        self._subscriber.SpinOnce(timeout=timeout)
         return self._taskstate
     
     def SetScenePrimaryKey(self, scenepk):
