@@ -87,7 +87,6 @@ class PlanningClient(object):
     taskheartbeattimeout = None  # Seconds until reinitializing task's zmq server if no heartbeat is received, e.g. 7
 
     _subscriber = None # an instance of ZmqSubscriber
-    _subscription = None # the active subscription to taskheartbeatport
 
     def __init__(
         self,
