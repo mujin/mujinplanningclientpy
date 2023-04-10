@@ -190,7 +190,7 @@ class PlanningClient(object):
     def DeleteJobs(self, timeout=5):
         """Cancels all jobs"""
         if self._configsocket is not None:
-            self.SendConfig({'command': 'cancel'}, slaverequestid=self._slaverequestid, timeout=timeout, fireandforget=False)
+            self.SendConfig({'command': 'cancel'}, timeout=timeout, fireandforget=False)
 
     def GetPublishedTaskState(self, timeout=2.0):
         """Return most recent published state. If publishing is disabled, then will return None
@@ -262,7 +262,7 @@ class PlanningClient(object):
     # Config
     #
 
-    def Configure(self, configuration, timeout=None, fireandforget=None):
+    def Configure(self, configuration, timeout=None, fireandforget=None, slaverequestid=None):
         """Send a 'configure' command to the configsocket.
 
         Args:
@@ -274,9 +274,9 @@ class PlanningClient(object):
             dict: The 'output' field of the server response.
         """
         configuration['command'] = 'configure'
-        return self.SendConfig(configuration, timeout=timeout, fireandforget=fireandforget)
+        return self.SendConfig(configuration, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
-    def SetLogLevel(self, componentLevels, fireandforget=None, timeout=5):
+    def SetLogLevel(self, componentLevels, fireandforget=None, slaverequestid=None, timeout=5):
         """Set planning log level.
 
         Args:
@@ -289,7 +289,7 @@ class PlanningClient(object):
             'command': 'setloglevel',
             'componentLevels': componentLevels
         }
-        return self.SendConfig(configuration, timeout=timeout, fireandforget=fireandforget)
+        return self.SendConfig(configuration, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
     def SendConfig(self, command, slaverequestid=None, timeout=None, fireandforget=None, checkpreempt=True):
         """Sends a config command via ZMQ to the planning server.
@@ -312,11 +312,11 @@ class PlanningClient(object):
     # Viewer Parameters Related
     #
 
-    def SetViewerFromParameters(self, viewerparameters, timeout=10, fireandforget=True, **kwargs):
+    def SetViewerFromParameters(self, viewerparameters, timeout=10, fireandforget=True, slaverequestid=None, **kwargs):
         viewerparameters.update(kwargs)
-        return self.Configure({'viewerparameters': viewerparameters}, timeout=timeout, fireandforget=fireandforget)
+        return self.Configure({'viewerparameters': viewerparameters}, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
-    def MoveCameraZoomOut(self, zoommult=0.9, zoomdelta=20, timeout=10, fireandforget=True, ispan=True, **kwargs):
+    def MoveCameraZoomOut(self, zoommult=0.9, zoomdelta=20, timeout=10, fireandforget=True, ispan=True, slaverequestid=None, **kwargs):
         viewercommand = {
             'command': 'MoveCameraZoomOut',
             'zoomdelta': float(zoomdelta),
@@ -324,9 +324,9 @@ class PlanningClient(object):
             'ispan': bool(ispan)
         }
         viewercommand.update(kwargs)
-        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget)
+        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
-    def MoveCameraZoomIn(self, zoommult=0.9, zoomdelta=20, timeout=10, fireandforget=True, ispan=True, **kwargs):
+    def MoveCameraZoomIn(self, zoommult=0.9, zoomdelta=20, timeout=10, fireandforget=True, slaverequestid=None, ispan=True, **kwargs):
         viewercommand = {
             'command': 'MoveCameraZoomIn',
             'zoomdelta': float(zoomdelta),
@@ -334,9 +334,9 @@ class PlanningClient(object):
             'ispan': bool(ispan)
         }
         viewercommand.update(kwargs)
-        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget)
+        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
-    def MoveCameraLeft(self, ispan=True, panangle=5.0, pandelta=0.04, timeout=10, fireandforget=True, **kwargs):
+    def MoveCameraLeft(self, ispan=True, panangle=5.0, pandelta=0.04, timeout=10, fireandforget=True, slaverequestid=None, **kwargs):
         viewercommand = {
             'command': 'MoveCameraLeft',
             'pandelta': float(pandelta),
@@ -344,9 +344,9 @@ class PlanningClient(object):
             'ispan': bool(ispan),
         }
         viewercommand.update(kwargs)
-        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget)
+        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
-    def MoveCameraRight(self, ispan=True, panangle=5.0, pandelta=0.04, timeout=10, fireandforget=True, **kwargs):
+    def MoveCameraRight(self, ispan=True, panangle=5.0, pandelta=0.04, timeout=10, fireandforget=True, slaverequestid=None, **kwargs):
         viewercommand = {
             'command': 'MoveCameraRight',
             'pandelta': float(pandelta),
@@ -354,9 +354,9 @@ class PlanningClient(object):
             'ispan': bool(ispan),
         }
         viewercommand.update(kwargs)
-        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget)
+        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
-    def MoveCameraUp(self, ispan=True, angledelta=3.0, pandelta=0.04, timeout=10, fireandforget=True, **kwargs):
+    def MoveCameraUp(self, ispan=True, angledelta=3.0, pandelta=0.04, timeout=10, fireandforget=True, slaverequestid=None, **kwargs):
         viewercommand = {
             'command': 'MoveCameraUp',
             'pandelta': float(pandelta),
@@ -364,9 +364,9 @@ class PlanningClient(object):
             'ispan': bool(ispan),
         }
         viewercommand.update(kwargs)
-        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget)
+        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
-    def MoveCameraDown(self, ispan=True, angledelta=3.0, pandelta=0.04, timeout=10, fireandforget=True, **kwargs):
+    def MoveCameraDown(self, ispan=True, angledelta=3.0, pandelta=0.04, timeout=10, fireandforget=True, slaverequestid=None, **kwargs):
         viewercommand = {
             'command': 'MoveCameraDown',
             'pandelta': float(pandelta),
@@ -374,9 +374,9 @@ class PlanningClient(object):
             'ispan': bool(ispan),
         }
         viewercommand.update(kwargs)
-        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget)
+        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
-    def MoveCameraPointOfView(self, pointOfViewName, timeout=10, fireandforget=True, **kwargs):
+    def MoveCameraPointOfView(self, pointOfViewName, timeout=10, fireandforget=True, slaverequestid=None, **kwargs):
         """
         Sends a command that moves the camera to one of the following point of view names:
         +x, -x, +y, -y, +z, -z.
@@ -387,9 +387,9 @@ class PlanningClient(object):
             'command': 'MoveCameraPointOfView',
             'axis': pointOfViewName,
         }
-        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget)
+        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
-    def SetCameraTransform(self, pose=None, transform=None, distanceToFocus=0.0, timeout=10, fireandforget=True, **kwargs):
+    def SetCameraTransform(self, pose=None, transform=None, distanceToFocus=0.0, timeout=10, fireandforget=True, slaverequestid=None, **kwargs):
         """Sets the camera transform
         
         Args:
@@ -404,14 +404,14 @@ class PlanningClient(object):
         if pose is not None:
             viewercommand['pose'] = [float(f) for f in pose]
         viewercommand.update(kwargs)
-        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget)
+        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
-    def StartIPython(self, timeout=1, fireandforget=True, **kwargs):
+    def StartIPython(self, timeout=1, fireandforget=True, slaverequestid=None, **kwargs):
         configuration = {'startipython': True}
         configuration.update(kwargs)
-        return self.Configure(configuration, timeout=timeout, fireandforget=fireandforget)
+        return self.Configure(configuration, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
-    def StartRemotePDB(self, timeout=1, fireandforget=True, **kwargs):
+    def StartRemotePDB(self, timeout=1, fireandforget=True, slaverequestid=None, **kwargs):
         configuration = {'startremotepdb': True}
         configuration.update(kwargs)
-        return self.Configure(configuration, timeout=timeout, fireandforget=fireandforget)
+        return self.Configure(configuration, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
