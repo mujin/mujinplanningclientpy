@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2012-2023 MUJIN Inc
 
-import weakref
+import threading
 
 from . import _
 from . import zmq
 from . import GetMonotonicTime
-from . import TimeoutError
+from . import TimeoutError, UserInterrupt
 
 import logging
 log = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ class ZmqSubscriber(object):
 
         Args:
             endpoint: the zmq endpoint string to subscribe to, or a thread-safe function that returns such string
-            callbackFn: the function to call when subscription receives latest message, it is up to the caller to decode the raw zmq message received, the arguments for the callback function are (ZmqSubscription, rawMessage), if the callback function is not supplied, last received message will be set on ZmqSubscription.message instead
+            callbackFn: the function to call when subscription receives latest message, it is up to the caller to decode the raw zmq message received, the argument for the callback is the received raw message
             timeout: number of seconds, after this duration, the subscription socket is considered dead and will be recreated automatically to handle network changes (Default: 4.0)
             checkpreemptfn: The function for checking for preemptions
         """
@@ -43,7 +43,6 @@ class ZmqSubscriber(object):
         else:
             self._endpoint = endpoint
         self._callbackFn = callbackFn
-        self._subscriber = weakref.proxy(self)
 
         self._ctx = ctx
         if self._ctx is None:
@@ -71,6 +70,15 @@ class ZmqSubscriber(object):
                 log.exception('caught exception when destroying zmq context: %s', e)
             self._ctxown = None
         self._ctx = None
+
+    def _HandleReceivedMessage(self, message):
+        if self._callbackFn:
+            self._callbackFn(message)
+
+    def _HandleTimeout(self, elapsedTime):
+        if self._callbackFn:
+            self._callbackFn(None)
+        raise TimeoutError(_('Timed out waiting to receive message from subscription to "%s" after %0.3f seconds') % (self._endpoint, elapsedTime))
 
     def _OpenSocket(self):
         # close previous socket just in case
@@ -101,6 +109,9 @@ class ZmqSubscriber(object):
         Args:
             timeout: If not None, will raise TimeoutError if not all subscriptions can be handled in time. If None, then receive what we can receive without blocking or raising TimeoutError.
             checkpreemptfn: The function for checking for preemptions
+
+        Return:
+            Raw message received
         """
         checkpreemptfn = checkpreemptfn or self._checkpreemptfn
         starttime = GetMonotonicTime()
@@ -122,8 +133,8 @@ class ZmqSubscriber(object):
         while True:
             now = GetMonotonicTime()
 
-            message = None
             # loop to get all received message and only process the last one
+            message = None
             while True:
                 try:
                     message = self._socket.recv(zmq.NOBLOCK)
@@ -135,8 +146,7 @@ class ZmqSubscriber(object):
                     break # got EAGAIN, so break
             if message is not None:
                 self._lastReceivedTimestamp = now
-                if self._callbackFn:
-                    self._callbackFn(self, message)
+                self._HandleReceivedMessage(message)
                 return message
 
             if now - self._lastReceivedTimestamp > self._timeout:
@@ -149,9 +159,69 @@ class ZmqSubscriber(object):
 
             # check for timeout
             if now - starttime > timeout:
-                raise TimeoutError(_('Timed out waiting to receive message from subscription to "%s" after %0.3f seconds') % (self._endpoint, now - starttime))
+                self._HandleTimeout(now - starttime)
+                return None
+
+            # check preempt
             if checkpreemptfn:
                 checkpreemptfn()
 
             # poll
             self._socket.poll(20) # poll a little and try again
+
+
+class ZmqThreadedSubscriber(ZmqSubscriber):
+    """A threaded version of ZmqSubscriber.
+    """
+
+    _threadName = None # thread name for the background thread
+    _thread = None # a background thread for handling subscription
+    _stopThread = False # flag to preempt the background thread
+
+    def __init__(self, endpoint, callbackFn=None, timeout=4.0, ctx=None, checkpreemptfn=None, threadName='zmqSubscriber'):
+        self._threadName = threadName
+        super(ZmqThreadedSubscriber, self).__init__(endpoint, callbackFn=callbackFn, timeout=timeout, ctx=ctx, checkpreemptfn=checkpreemptfn)
+
+        self._StartSubscriberThread()
+
+    def Destroy(self):
+        self._StopSubscriberThread()
+
+        super(ZmqThreadedSubscriber, self).Destroy()
+
+    def _StartSubscriberThread(self):
+        self._StopSubscriberThread()
+
+        self._stopThread = False
+        self._thread = threading.Thread(name=self._threadName, target=self._RunSubscriberThread)
+        self._thread.start()
+
+    def _StopSubscriberThread(self):
+        self._stopThread = True
+        if self._thread is not None:
+            self._thread.join()
+            self._thread = None
+
+    def _CheckPreempt(self):
+        if self._stopThread:
+            raise UserInterrupt
+        if self._checkpreemptfn is not None:
+            self._checkpreemptfn()
+
+    def _RunSubscriberThread(self):
+        loggedTimeoutError = False # whether time out error has been logged once already
+        try:
+            while not self._stopThread:
+                try:
+                    self.SpinOnce(timeout=self._timeout, checkpreemptfn=self._CheckPreempt)
+                    loggedTimeoutError = False
+                except UserInterrupt:
+                    break # preempted
+                except TimeoutError as e:
+                    if not loggedTimeoutError:
+                        log.exception('timed out in subscriber thread: %s', e)
+                        loggedTimeoutError = True
+                except Exception as e:
+                    log.exception('exception caught in subscriber thread: %s', e)
+        except Exception as e:
+            log.exception('exception caught in subscriber thread: %s', e)
