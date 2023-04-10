@@ -11,29 +11,50 @@ from . import TimeoutError
 import logging
 log = logging.getLogger(__name__)
 
-class ZmqSubscription(object):
-    """Subscription handle holding an active ongoing subscription. Call `ZmqSubscriber.Subscribe()` to get an instance.
+
+class ZmqSubscriber(object):
+    """Subscriber that can handle ongoing subscriptions and automatic socket recreation.
     """
 
-    _subscriber = None # weakref to ZmqSubscriber
+    _ctx = None # zmq context
+    _ctxown = None # created zmq context
+
+    _endpoint = None # zmq subscription endpoint
+    _endpointFn = None # function that returns the endpoint string to subscribe to, must be thread-safe
+    _callbackFn = None # function to call back when new message is received on the subscription socket
+
     _socket = None # zmq socket
     _lastReceivedTimestamp = 0 # when message was last received on this subscription
     _timeout = 4.0 # beyond this number of seconds, the socket is considered dead and should be recreated
+    _checkpreemptfn = None # function for checking for preemptions
 
-    _endpoint = None # zmq subscription endpoint
-    _callbackFn = None # function to call back when new message is received on the subscription socket
-    _message = None # last received message if _callbackFn is None
+    def __init__(self, endpoint, callbackFn=None, timeout=4.0, ctx=None, checkpreemptfn=None):
+        """Subscribe to zmq endpoint.
+
+        Args:
+            endpoint: the zmq endpoint string to subscribe to, or a thread-safe function that returns such string
+            callbackFn: the function to call when subscription receives latest message, it is up to the caller to decode the raw zmq message received, the arguments for the callback function are (ZmqSubscription, rawMessage), if the callback function is not supplied, last received message will be set on ZmqSubscription.message instead
+            timeout: number of seconds, after this duration, the subscription socket is considered dead and will be recreated automatically to handle network changes (Default: 4.0)
+            checkpreemptfn: The function for checking for preemptions
+        """
+        self._timeout = timeout
+        if callable(endpoint):
+            self._endpointFn = endpoint
+        else:
+            self._endpoint = endpoint
+        self._callbackFn = callbackFn
+        self._subscriber = weakref.proxy(self)
+
+        self._ctx = ctx
+        if self._ctx is None:
+            self._ctxown = zmq.Context()
+            self._ctx = self._ctxown
 
     def __del__(self):
-        self.Unsubscribe()
+        self.Destroy()
 
-    def Unsubscribe(self):
-        """Stop the subscription.
-        """
-        if self._subscriber:
-            self._subscriber.Unsubscribe(self)
-            self._subscriber = None
-        self._CloseSocket()
+    def __repr__(self):
+        return '<%s(endpoint=%r)>' % (self.__class__.__name__, self.endpoint)
 
     @property
     def endpoint(self):
@@ -41,16 +62,22 @@ class ZmqSubscription(object):
         """
         return self._endpoint
 
-    @property
-    def message(self):
-        """Last received message, only available if callbackFn is not defined.
-        """
-        return self._message
+    def Destroy(self):
+        self._CloseSocket()
+        if self._ctxown is not None:
+            try:
+                self._ctxown.destroy()
+            except Exception as e:
+                log.exception('caught exception when destroying zmq context: %s', e)
+            self._ctxown = None
+        self._ctx = None
 
-    def _EnsureSocket(self, ctx, now):
-        if self._socket:
-            return
-        socket = ctx.socket(zmq.SUB)
+    def _OpenSocket(self):
+        # close previous socket just in case
+        self._CloseSocket()
+
+        # create new subscription socket with new endpoint
+        socket = self._ctx.socket(zmq.SUB)
         socket.setsockopt(zmq.CONFLATE, 1) # store only newest message. have to call this before connect
         socket.setsockopt(zmq.TCP_KEEPALIVE, 1) # turn on tcp keepalive, do these configuration before connect
         socket.setsockopt(zmq.TCP_KEEPALIVE_IDLE, 2) # the interval between the last data packet sent (simple ACKs are not considered data) and the first keepalive probe; after the connection is marked to need keepalive, this counter is not used any further
@@ -59,7 +86,6 @@ class ZmqSubscription(object):
         socket.connect(self._endpoint)
         socket.setsockopt(zmq.SUBSCRIBE, b'') # have to use b'' to make python3 compatible
         self._socket = socket
-        self._lastReceivedTimestamp = now
 
     def _CloseSocket(self):
         if self._socket:
@@ -69,154 +95,63 @@ class ZmqSubscription(object):
                 log.exception('failed to close subscription socket for endpoint "%s": %s', self._endpoint, e)
         self._socket = None
 
-    def _TryReceiveOnce(self, now):
-        message = None
-        # loop to get all received message and only process the last one
-        while True:
-            try:
-                message = self._socket.recv(zmq.NOBLOCK)
-            except zmq.ZMQError as e:
-                if e.errno != zmq.EAGAIN:
-                    log.exception('caught exception while trying to receive from subscription socket for endpoint "%s": %s', self._endpoint, e)
-                    self._CloseSocket()
-                    raise
-                break # got EAGAIN, so break
-        if message is not None:
-            self._lastReceivedTimestamp = now
-            if self._callbackFn:
-                self._callbackFn(self, message)
-            else:
-                self._message = message
-            return True
-        return False
-
-class ZmqSubscriber(object):
-    """Subscriber that can handle multiple ongoing subscriptions.
-    """
-
-    _ctx = None # zmq context
-    _ctxown = None # created zmq context
-    _poller = None # zmq poller
-
-    _subscriptions = None # a list of ZmqSubscription
-
-    def __init__(self, ctx=None):
-        self._subscriptions = []
-
-        self._ctx = ctx
-        if self._ctx is None:
-            self._ctxown = zmq.Context()
-            self._ctx = self._ctxown
-
-        self._poller = zmq.Poller()
-
-    def __del__(self):
-        self.Destroy()
-
-    def Destroy(self):
-        for subscription in self._subscriptions:
-            subscription._subscriber = None
-            subscription._CloseSocket()
-        self._subscriptions = []
-        if self._ctxown is not None:
-            try:
-                self._ctxown.destroy()
-            except Exception as e:
-                log.exception('caught exception when destroying zmq context: %s', e)
-            self._ctxown = None
-        self._ctx = None
-
-    def Subscribe(self, endpoint, callbackFn=None, timeout=4.0):
-        """Subscribe to zmq endpoint.
-
-        Args:
-            endpoint: the zmq endpoint string to subscribe to
-            callbackFn: the function to call when subscription receives latest message, it is up to the caller to decode the raw zmq message received, the arguments for the callback function are (ZmqSubscription, rawMessage), if the callback function is not supplied, last received message will be set on ZmqSubscription.message instead
-            timeout: number of seconds, after this duration, the subscription socket is considered dead and will be recreated automatically to handle network changes (Default: 4.0)
-
-        Returns:
-            ZmqSubscription: call ZmqSubscription.Unsubscribe() to stop the subscription
-        """
-        subscription = ZmqSubscription()
-        subscription._timeout = timeout
-        subscription._endpoint = endpoint
-        subscription._callbackFn = callbackFn
-        subscription._subscriber = weakref.proxy(self)
-        self._subscriptions.append(subscription)
-        return subscription
-
-    def Unsubscribe(self, subscription):
-        """Stop a subscription.
-
-        Args:
-            subscription: the ZmqSubscription instance to stop subscribing
-        """
-        if subscription in self._subscriptions:
-            self._subscriptions.remove(subscription)
-        subscription._subscriber = None
-        subscription._CloseSocket()
-
     def SpinOnce(self, timeout=None, checkpreemptfn=None):
-        """Spin all subscription once, ensure that each subscription is received at least once. Block up to supplied timeout duration. If timeout is None, then receive what we can receive without blocking or raising any timeout error.
+        """Spin subscription once, ensure that each subscription is received at least once. Block up to supplied timeout duration. If timeout is None, then receive what we can receive without blocking or raising any timeout error.
 
         Args:
             timeout: If not None, will raise TimeoutError if not all subscriptions can be handled in time. If None, then receive what we can receive without blocking or raising TimeoutError.
-            checkpreemptfn: The function that for checking for preemptions
+            checkpreemptfn: The function for checking for preemptions
         """
+        checkpreemptfn = checkpreemptfn or self._checkpreemptfn
         starttime = GetMonotonicTime()
 
-        # make a list of the subscriptions, we will mark them done as we receive messages on them
-        subscriptions = list(self._subscriptions)
-        for subscription in subscriptions:
-            subscription._EnsureSocket(self._ctx, starttime)
+        # check and see if endpoint has changed
+        endpoint = self._endpoint
+        if self._endpointFn is not None:
+            endpoint = self._endpointFn()
+        if self._endpoint != endpoint:
+            if self._socket is not None:
+                log.debug('subscription endpoint changed "%s" -> "%s", so closing previous subscription socket', self._endpoint, endpoint)
+            self._CloseSocket()
+            self._endpoint = endpoint
 
-        handledSubscriptions = []
+        if self._socket is None:
+            self._OpenSocket()
+            self._lastReceivedTimestamp = starttime
 
         while True:
             now = GetMonotonicTime()
 
-            # try receive for each subscription
-            for index, subscription in enumerate(subscriptions):
-                if subscription is not None:
-                    if subscription._TryReceiveOnce(now):
-                        handledSubscriptions.append(subscription)
-                        subscriptions[index] = None # already done
+            message = None
+            # loop to get all received message and only process the last one
+            while True:
+                try:
+                    message = self._socket.recv(zmq.NOBLOCK)
+                except zmq.ZMQError as e:
+                    if e.errno != zmq.EAGAIN:
+                        log.exception('caught exception while trying to receive from subscription socket for endpoint "%s": %s', self._endpoint, e)
+                        self._CloseSocket()
+                        raise
+                    break # got EAGAIN, so break
+            if message is not None:
+                self._lastReceivedTimestamp = now
+                if self._callbackFn:
+                    self._callbackFn(self, message)
+                return message
 
-            # re-create timed out sockets
-            for subscription in subscriptions:
-                if subscription:
-                    if now - subscription._lastReceivedTimestamp > subscription._timeout:
-                        subscription._CloseSocket()
-            for subscription in subscriptions:
-                if subscription:
-                    subscription._EnsureSocket(self._ctx, now)
+            if now - self._lastReceivedTimestamp > self._timeout:
+                self._CloseSocket()
+                self._OpenSocket()
+                self._lastReceivedTimestamp = now
 
             if timeout is None:
-                return
-
-            # check if all subscriptions have received at least once
-            if len(handledSubscriptions) == len(subscriptions):
-                return
+                return None
 
             # check for timeout
             if now - starttime > timeout:
-                timeoutEndpoints = []
-                for subscription in subscriptions:
-                    if subscription:
-                        timeoutEndpoints.append('"%s"' % subscription.endpoint)
-                raise TimeoutError(_('Timed out waiting to receive message from subscriptions to %s after %0.3f seconds') % (', '.join(timeoutEndpoints), now - starttime))
+                raise TimeoutError(_('Timed out waiting to receive message from subscription to "%s" after %0.3f seconds') % (self._endpoint, now - starttime))
             if checkpreemptfn:
                 checkpreemptfn()
 
-            # poll what is left
-            try:
-                for subscription in subscriptions:
-                    if subscription is not None:
-                        self._poller.register(subscription._socket, zmq.POLLIN)
-                self._poller.poll(20) # poll a little and try again
-            finally:
-                for subscription in subscriptions:
-                    if subscription is not None:
-                        self._poller.unregister(subscription._socket)
-
-        return handledSubscriptions
+            # poll
+            self._socket.poll(20) # poll a little and try again

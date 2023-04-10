@@ -158,9 +158,6 @@ class PlanningClient(object):
 
     def Destroy(self):
         self.SetDestroy()
-        if self._subscription is not None:
-            self._subscription.Unsubscribe()
-            self._subscription = None
         if self._subscriber is not None:
             self._subscriber.Destroy()
             self._subscriber = None
@@ -200,11 +197,8 @@ class PlanningClient(object):
         """Return most recent published state. If publishing is disabled, then will return None
         """
         if self._subscriber is None:
-            self._subscriber = zmqsubscriber.ZmqSubscriber(self._ctx)
-        if self._subscription is None:
-            self._subscription = self._subscriber.Subscribe('tcp://%s:%d' % (self.controllerIp, self.taskheartbeatport or (self.taskzmqport + 1)))
-        self._subscriber.SpinOnce(timeout=timeout)
-        return json.loads(self._subscription.message)
+            self._subscriber = zmqsubscriber.ZmqSubscriber('tcp://%s:%d' % (self.controllerIp, self.taskheartbeatport or (self.taskzmqport + 1)), ctx=self._ctx)
+        return json.loads(self._subscriber.SpinOnce(timeout=timeout))
     
     def SetScenePrimaryKey(self, scenepk):
         self.scenepk = scenepk
