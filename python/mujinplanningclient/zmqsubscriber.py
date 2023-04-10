@@ -200,9 +200,9 @@ class ZmqThreadedSubscriber(ZmqSubscriber):
     _thread = None # a background thread for handling subscription
     _stopThread = False # flag to preempt the background thread
 
-    def __init__(self, endpoint, callbackFn=None, timeout=4.0, ctx=None, checkpreemptfn=None, threadName='zmqSubscriber'):
+    def __init__(self, endpoint=None, getEndpointFn=None, callbackFn=None, timeout=4.0, ctx=None, checkpreemptfn=None, threadName='zmqSubscriber'):
         self._threadName = threadName
-        super(ZmqThreadedSubscriber, self).__init__(endpoint, callbackFn=callbackFn, timeout=timeout, ctx=ctx, checkpreemptfn=checkpreemptfn)
+        super(ZmqThreadedSubscriber, self).__init__(endpoint=endpoint, getEndpointFn=getEndpointFn, callbackFn=callbackFn, timeout=timeout, ctx=ctx, checkpreemptfn=checkpreemptfn)
 
         self._StartSubscriberThread()
 
