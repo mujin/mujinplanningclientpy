@@ -192,12 +192,20 @@ class PlanningClient(object):
         if self._configsocket is not None:
             self.SendConfig({'command': 'cancel'}, timeout=timeout, fireandforget=False)
 
-    def GetPublishedTaskState(self, timeout=2.0):
+    def GetPublishedServerState(self, timeout=2.0):
         """Return most recent published state. If publishing is disabled, then will return None
         """
         if self._subscriber is None:
             self._subscriber = zmqsubscriber.ZmqSubscriber('tcp://%s:%d' % (self.controllerIp, self.taskheartbeatport or (self.taskzmqport + 1)), ctx=self._ctx)
         return json.loads(self._subscriber.SpinOnce(timeout=timeout))
+
+    def GetPublishedTaskState(self, timeout=2.0):
+        """Return most recent published state. If publishing is disabled, then will return None
+        """
+        serverState = self.GetPublishedServerState(timeout=timeout)
+        if 'slavestates' in serverState:
+            return serverState['slavestates'].get('slaverequestid-%s' % self._slaverequestid)
+        return None
     
     def SetScenePrimaryKey(self, scenepk):
         self.scenepk = scenepk
