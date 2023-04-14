@@ -197,13 +197,16 @@ class PlanningClient(object):
         """
         if self._subscriber is None:
             self._subscriber = zmqsubscriber.ZmqSubscriber('tcp://%s:%d' % (self.controllerIp, self.taskheartbeatport or (self.taskzmqport + 1)), ctx=self._ctx)
-        return json.loads(self._subscriber.SpinOnce(timeout=timeout))
+        rawServerState = self._subscriber.SpinOnce(timeout=timeout)
+        if rawServerState is not None:
+            return json.loads(rawServerState)
+        return None
 
     def GetPublishedTaskState(self, timeout=2.0):
         """Return most recent published state. If publishing is disabled, then will return None
         """
         serverState = self.GetPublishedServerState(timeout=timeout)
-        if 'slavestates' in serverState:
+        if serverState is not None and 'slavestates' in serverState:
             return serverState['slavestates'].get('slaverequestid-%s' % self._slaverequestid)
         return None
     
