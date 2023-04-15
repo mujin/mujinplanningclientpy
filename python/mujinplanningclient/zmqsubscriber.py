@@ -73,14 +73,20 @@ class ZmqSubscriber(object):
         self._ctx = None
 
     def _HandleReceivedMessage(self, message, endpoint, elapsedTime):
+        """Call the user callback when message is received.
+        """
         if self._callbackFn:
             self._callbackFn(message=message, endpoint=endpoint, elapsedTime=elapsedTime)
 
     def _HandleTimeout(self, endpoint, elapsedTime):
+        """Call the user callback when subscription timed out.
+        """
         if self._callbackFn:
             self._callbackFn(message=None, endpoint=endpoint, elapsedTime=elapsedTime)
 
     def _HandleNotConfigured(self):
+        """Call the user callback when getEndpointFn() returns None, disabling the subscription temporarily.
+        """
         if self._callbackFn:
             self._callbackFn(message=None, endpoint=None, elapsedTime=0)
 
