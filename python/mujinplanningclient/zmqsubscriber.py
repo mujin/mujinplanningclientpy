@@ -29,8 +29,9 @@ class ZmqSubscriber(object):
     _lastReceivedTimestamp = 0 # when message was last received on this subscription
     _timeout = 4.0 # beyond this number of seconds, the socket is considered dead and should be recreated
     _checkpreemptfn = None # function for checking for preemptions
+    _conflate = True # whether to conflate received messages to avoid parsing stale message
 
-    def __init__(self, endpoint=None, getEndpointFn=None, callbackFn=None, timeout=4.0, ctx=None, checkpreemptfn=None):
+    def __init__(self, endpoint=None, getEndpointFn=None, callbackFn=None, timeout=4.0, ctx=None, checkpreemptfn=None, conflate=True):
         """Subscribe to zmq endpoint.
 
         Args:
@@ -39,6 +40,7 @@ class ZmqSubscriber(object):
             callbackFn: the function to call when subscription receives latest message, it is up to the caller to decode the raw zmq message received, the keyword arguments for the callback are: 1. message: the received raw message, 2. endpoint: the current subscription endpoint, 3: elapsedTime: the time in seconds taken since last message received or socket creation. When the subscription timed out, message will be None during callback
             timeout: number of seconds, after this duration, the subscription socket is considered dead and will be recreated automatically to handle network changes (Default: 4.0)
             checkpreemptfn: The function for checking for preemptions
+            conflate: whether to conflate received messages to avoid parsing stale message
         """
         self._timeout = timeout
         self._endpoint = endpoint
@@ -49,6 +51,9 @@ class ZmqSubscriber(object):
         if self._ctx is None:
             self._ctxown = zmq.Context()
             self._ctx = self._ctxown
+
+        self._checkpreemptfn = checkpreemptfn
+        self._conflate = conflate
 
     def __del__(self):
         self.Destroy()
@@ -96,7 +101,8 @@ class ZmqSubscriber(object):
 
         # create new subscription socket with new endpoint
         socket = self._ctx.socket(zmq.SUB)
-        socket.setsockopt(zmq.CONFLATE, 1) # store only newest message. have to call this before connect
+        if self._conflate:
+            socket.setsockopt(zmq.CONFLATE, 1) # store only newest message. have to call this before connect
         socket.setsockopt(zmq.TCP_KEEPALIVE, 1) # turn on tcp keepalive, do these configuration before connect
         socket.setsockopt(zmq.TCP_KEEPALIVE_IDLE, 2) # the interval between the last data packet sent (simple ACKs are not considered data) and the first keepalive probe; after the connection is marked to need keepalive, this counter is not used any further
         socket.setsockopt(zmq.TCP_KEEPALIVE_INTVL, 2) # the interval between subsequential keepalive probes, regardless of what the connection has exchanged in the meantime
@@ -202,13 +208,15 @@ class ZmqThreadedSubscriber(ZmqSubscriber):
     """A threaded version of ZmqSubscriber.
     """
 
+    _threadInterval = None # thread spin interval in number of seconds, used to limit the rate of subscription if set
     _threadName = None # thread name for the background thread
     _thread = None # a background thread for handling subscription
     _stopThread = False # flag to preempt the background thread
 
-    def __init__(self, endpoint=None, getEndpointFn=None, callbackFn=None, timeout=4.0, ctx=None, checkpreemptfn=None, threadName='zmqSubscriber'):
+    def __init__(self, threadName='zmqSubscriber', threadInterval=None, **kwargs):
         self._threadName = threadName
-        super(ZmqThreadedSubscriber, self).__init__(endpoint=endpoint, getEndpointFn=getEndpointFn, callbackFn=callbackFn, timeout=timeout, ctx=ctx, checkpreemptfn=checkpreemptfn)
+        self._threadInterval = threadInterval
+        super(ZmqThreadedSubscriber, self).__init__(**kwargs)
 
         self._StartSubscriberThread()
 
@@ -241,6 +249,7 @@ class ZmqThreadedSubscriber(ZmqSubscriber):
         loggedTimeoutError = False # whether time out error has been logged once already
         try:
             while not self._stopThread:
+                starttime = GetMonotonicTime()
                 try:
                     self.SpinOnce(timeout=self._timeout, checkpreemptfn=self._CheckPreempt)
                     loggedTimeoutError = False
@@ -253,6 +262,13 @@ class ZmqThreadedSubscriber(ZmqSubscriber):
                         loggedTimeoutError = True
                 except Exception as e:
                     log.exception('exception caught in subscriber thread "%s": %s', self._threadName, e)
+                # rate limit the loop if desired
+                if self._threadInterval is None:
+                    continue
+                elapsedTime = GetMonotonicTime() - starttime
+                if elapsedTime > self._threadInterval:
+                    continue
+                time.sleep(self._threadInterval - elapsedTime)
         except Exception as e:
             log.exception('exception caught in subscriber thread "%s": %s', self._threadName, e)
         finally:
