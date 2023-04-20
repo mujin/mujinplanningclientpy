@@ -87,6 +87,7 @@ class PlanningClient(object):
     taskheartbeattimeout = None  # Seconds until reinitializing task's zmq server if no heartbeat is received, e.g. 7
 
     _subscriber = None # an instance of ZmqSubscriber
+    _callerid = None # caller identification string to be sent with every command
 
     def __init__(
         self,
@@ -101,6 +102,7 @@ class PlanningClient(object):
         controllerurl='http://127.0.0.1',
         controllerusername='',
         controllerpassword='',
+        callerid=None,
         **ignoredArgs  # Other keyword args are not used, but extra arguments is allowed for easy initialization from a dictionary
     ):
         """Logs into the Mujin controller and initializes the connection to the planning server (using ZMQ).
@@ -115,6 +117,7 @@ class PlanningClient(object):
             controllerurl (str, optional): (Deprecated; use controllerip instead) URL of the mujin controller, e.g. http://controller14.
             controllerusername (str, optional): Username for the Mujin controller, e.g. testuser
             controllerpassword (str, optional): Password for the Mujin controller
+            callerid (str, optional): Caller identifier to send to server on every command
         """
         self._slaverequestid = slaverequestid
         self._sceneparams = {}
@@ -151,6 +154,8 @@ class PlanningClient(object):
             self.taskheartbeattimeout = taskheartbeattimeout
 
         self.SetScenePrimaryKey(scenepk)
+
+        self._callerid = callerid
 
     def __del__(self):
         self.Destroy()
@@ -251,6 +256,10 @@ class PlanningClient(object):
             'stamp': time.time(),
             'respawnopts': respawnopts,
         }
+        if self._callerid is not None:
+            command['callerid'] = self._callerid
+            if 'callerid' not in taskparameters:
+                taskparameters['callerid'] = self._callerid
         if self.tasktype == 'binpicking':
             command['fnname'] = '%s.%s' % (self.tasktype, command['fnname'])
         response = self._commandsocket.SendCommand(command, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
@@ -309,6 +318,8 @@ class PlanningClient(object):
             slaverequestid = self._slaverequestid
             
         command['slaverequestid'] = slaverequestid
+        if self._callerid is not None:
+            command['callerid'] = self._callerid
         response = self._configsocket.SendCommand(command, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
         if fireandforget:
             # For fire and forget commands, no response will be available
