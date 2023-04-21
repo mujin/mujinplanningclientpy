@@ -217,7 +217,7 @@ services:
                 description: If clampcontainer is True, this is used for filtering.
                 type: boolean
               cropContainerMarginsXYZXYZ:
-                $merge: '#/mujinbinpickingmanager.schema.containerschema/cropContainerMarginsXYZXYZ'
+                $merge: '#/mujinbinpickingmanager.schema.containerschema/cropContainerMarginsXYZXYZSchema'
               ioSignalsInfo:
                 $merge: '#/components/ioSignalsInfo'
               addPointOffsetInfo:
