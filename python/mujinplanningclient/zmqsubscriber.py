@@ -67,6 +67,11 @@ class ZmqSubscriber(object):
         """
         return self._endpoint
 
+    def SetEndpoint(self, endpoint):
+        """Update endpoint for subscription
+        """
+        self._endpoint = endpoint
+
     def Destroy(self):
         self._CloseSocket()
         if self._ctxown is not None:
@@ -126,8 +131,10 @@ class ZmqSubscriber(object):
         # check and see if endpoint has changed
         if self._getEndpointFn is not None:
             self._endpoint = self._getEndpointFn()
-        if self._socket is not None and self._socketEndpoint != self._endpoint:
-            log.debug('subscription endpoint changed "%s" -> "%s", so closing previous subscription socket', self._socketEndpoint, self._endpoint)
+
+        endpoint = self._endpoint
+        if self._socket is not None and self._socketEndpoint != endpoint:
+            log.debug('subscription endpoint changed "%s" -> "%s", so closing previous subscription socket', self._socketEndpoint, endpoint)
             self._CloseSocket()
 
     def SpinOnce(self, timeout=None, checkpreemptfn=None):
@@ -149,8 +156,9 @@ class ZmqSubscriber(object):
             now = GetMonotonicTime()
 
             # ensure socket
-            if self._endpoint is not None and self._socket is None:
-                self._OpenSocket(self._endpoint)
+            endpoint = self._endpoint
+            if endpoint is not None and self._socket is None:
+                self._OpenSocket(endpoint)
                 self._lastReceivedTimestamp = starttime
 
             # loop to get all received message and only process the last one
@@ -173,8 +181,9 @@ class ZmqSubscriber(object):
                 if now - self._lastReceivedTimestamp > self._timeout:
                     log.debug('have not received message on subscription socket for endpoint "%s" in %.03f seconds, closing socket and re-creating', self._socketEndpoint, now - self._lastReceivedTimestamp)
                     self._CloseSocket()
-                    if self._endpoint is not None:
-                        self._OpenSocket(self._endpoint)
+                    endpoint = self._endpoint
+                    if endpoint is not None:
+                        self._OpenSocket(endpoint)
                         self._lastReceivedTimestamp = now
 
             if timeout is None:
