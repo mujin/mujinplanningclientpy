@@ -227,7 +227,7 @@ class PlanningClient(object):
     # Tasks related
     #
 
-    def ExecuteCommand(self, taskparameters, slaverequestid=None, timeout=None, fireandforget=None, respawnopts=None, checkpreempt=True):
+    def ExecuteCommand(self, taskparameters, slaverequestid=None, timeout=None, fireandforget=None, respawnopts=None, checkpreempt=True, forcereload=False):
         """Executes command with taskparameters via ZMQ.
 
         Args:
@@ -235,7 +235,8 @@ class PlanningClient(object):
             timeout (float): Timeout in seconds
             fireandforget (bool): Whether we should return immediately after sending the command. If True, return value is None.
             checkpreempt (bool): If a preempt function should be checked during execution.
-
+            forcereload (bool): If True, then force re-load the scene before executing the task
+        
         Returns:
             dict: Server response in JSON format. If fireandforget is True, then None.
         """
@@ -250,6 +251,7 @@ class PlanningClient(object):
                 'tasktype': self.tasktype,
                 'sceneparams': self._sceneparams,
                 'taskparameters': taskparameters,
+                'forcereload':forcereload,
             },
             'userinfo': self._userinfo,
             'slaverequestid': slaverequestid,
