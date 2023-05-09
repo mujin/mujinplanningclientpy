@@ -3,6 +3,7 @@
 
 import threading
 import six
+import typing
 
 from . import zmq
 from . import TimeoutError, UserInterrupt, GetMonotonicTime
@@ -316,20 +317,32 @@ class ZmqClient(object):
     def SetPreemptFn(self, checkpreemptfn):
         self._checkpreemptfn = checkpreemptfn
     
-    def SendCommand(self, command, timeout=10.0, blockwait=True, fireandforget=False, sendjson=True, recvjson=True, sendmultipart=False, recvmultipart=False, checkpreempt=None):
+    def SendCommand(self,
+        command,  # type: typing.Dict[str, typing.Any]
+        timeout=10.0,  # type: float
+        blockwait=True,  # type: bool
+        fireandforget=False,  # type: bool
+        sendjson=True,  # type: bool
+        recvjson=True,  # type: bool
+        sendmultipart=False,  # type: bool
+        recvmultipart=False,  # type: bool
+        checkpreempt=None,  # type: typing.Optional[bool]
+    ):  # type: (...) -> typing.Optional[typing.Dict]
         """Sends command via established zmq socket
 
-        :param command: Command in json format
-        :param timeout: If None, block. If >= 0, use as timeout. Default: 10.0
-        :param blockwait: If True (default), will call receive also, otherwise, caller needs to call ReceiveCommand later
-        :param fireandforget: If True, will send command and immediately return without trying to receive, and blockwait will be set to False. Default: False
-        :param sendjson: If True (default), will send data as json
-        :param recvjson: If True (default), will parse received data as json
-        :param sendmultipart: if True, will send multipart
-        :param recvmultipart: if True, will receive multipart
-        :param checkpreempt: (required) If True, calls the preempt function after each send.
+        Args:
+            command (dict): Command in json format
+            timeout (float): If None, block. If >= 0, use as timeout. Default: 10.0
+            blockwait (bool): If True (default), will call receive also, otherwise, caller needs to call ReceiveCommand later
+            fireandforget (bool): If True, will send command and immediately return without trying to receive, and blockwait will be set to False. Default: False
+            sendjson (bool): If True (default), will send data as json
+            recvjson (bool): If True (default), will parse received data as json
+            sendmultipart (bool): if True, will send multipart
+            recvmultipart (bool): if True, will receive multipart
+            checkpreempt (typing.Optional[bool]): (required) If True, calls the preempt function after each send.
 
-        :return: Returns the response from the zmq server in json format if blockwait is True
+        Returns:
+            dict or None: Returns the response from the zmq server in json format if blockwait is True
         """
         # log.debug('Sending command via ZMQ: %s', command)
         if checkpreempt is None:
@@ -398,6 +411,7 @@ class ZmqClient(object):
         return self._socket is not None
 
     def ReceiveCommand(self, timeout=10.0, recvjson=True, recvmultipart=False, checkpreempt=True):
+        # type: (typing.Optional[float], bool, bool, bool) -> typing.Optional[typing.Dict]
         """Receive response to a previous SendCommand call. SendCommand must be called with blockwait=False and fireandforget=False
 
         :param timeout: If None, block. If >= 0, use as timeout. Default: 10.0
