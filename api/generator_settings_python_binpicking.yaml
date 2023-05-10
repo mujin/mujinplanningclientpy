@@ -198,7 +198,7 @@ x-specModifications:
               properties:
                 toolname:
                   paramOrderingIndex: 0
-                  required: False
+                  isRequired: False
                 timeout: 
                   $merge: '#/generatorSettingsComponents/timeout'
                   paramOrderingIndex: 1

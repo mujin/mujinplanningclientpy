@@ -13,7 +13,7 @@ services:
             properties:
               jointvalues:
                 $merge: "#/components/jointvalues"
-                required: true
+                isRequired: true
               robotname:
                 $merge: "#/components/robotname"
   GetITLState:
@@ -33,9 +33,9 @@ services:
           taskparameters:
             properties:
               identifier:
-                required: true
+                isRequired: true
               trajectories:
-                required: true
+                isRequired: true
               statevalues:
               stepping:
                 default: False
@@ -88,7 +88,7 @@ services:
           taskparameters:
             properties:
               executiongraph:
-                required: true
+                isRequired: true
               commandindex:
                 default: 0
   ComputeRobotJointValuesForCommandVisualization:
@@ -99,7 +99,7 @@ services:
           taskparameters:
             properties:
               program:
-                required: true
+                isRequired: true
               commandindex:
                 default: 0
   PlotProgramWaypoints:
@@ -117,7 +117,7 @@ services:
           taskparameters:
             properties:
               programName:
-                required: true
+                isRequired: true
               robotspeed:
               robotaccelmult:
   StopITLProgram:
@@ -137,7 +137,7 @@ services:
           taskparameters:
             properties:
               programName:
-                required: true
+                isRequired: true
               commandTimeout:
                 default: 0.2
               totalTimeout:
@@ -161,10 +161,10 @@ services:
           taskparameters:
             properties:
               locationName:
-                required: true
+                isRequired: true
               populateTargetUri:
-                required: true
+                isRequired: true
               populateFnName:
-                required: true
+                isRequired: true
               containerMetaData:
                 type: object

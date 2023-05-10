@@ -55,20 +55,20 @@ services:  # The API of the calibration task
             properties:
               cameracontainername:
                 $merge: '#/components/cameracontainername'
-                required: true
+                isRequired: true
               primarysensorname:
                 $merge: '#/components/primarysensorname'
-                required: true
+                isRequired: true
               secondarysensornames:
                 $merge: '#/components/secondarysensornames'
-                required: true
+                isRequired: true
               numsamples:
                 description: Number of samples to take. A reasonable number is often between 5 and 25.
                 type: integer
-                required: true
+                isRequired: true
               calibboardvisibility:
                 $merge: '#/components/calibboardvisibility'
-                required: true
+                isRequired: true
               calibboardLinkName:
                 $merge: '#/components/calibboardLinkName'
               calibboardGeomName:
@@ -85,19 +85,19 @@ services:  # The API of the calibration task
             properties:
               cameracontainername: 
                 $merge: '#/components/cameracontainername'
-                required: true
+                isRequired: true
               primarysensorname: 
                 $merge: '#/components/primarysensorname'
-                required: true
+                isRequired: true
               secondarysensornames: 
                 $merge: '#/components/secondarysensornames'
-                required: true
+                isRequired: true
               gridindex:
                 $merge: '#/components/gridindex'
-                required: true
+                isRequired: true
               calibboardvisibility: 
                 $merge: '#/components/calibboardvisibility'
-                required: true
+                isRequired: true
               calibboardLinkName: 
                 $merge: '#/components/calibboardLinkName'
               calibboardGeomName: 

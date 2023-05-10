@@ -50,7 +50,7 @@ x-specModifications:  # These fields add/overwrite spec content. Only the leaf i
                   paramOrderingIndex: 3
                 calibboardvisibility:
                   paramOrderingIndex: 4
-                  required: true
+                  isRequired: true
                 calibboardLinkName:
                   paramOrderingIndex: 5
                 calibboardGeomName:
@@ -72,19 +72,19 @@ x-specModifications:  # These fields add/overwrite spec content. Only the leaf i
               properties:
                 cameracontainername:
                   paramOrderingIndex: 0
-                  required: true
+                  isRequired: true
                 primarysensorname:
                   paramOrderingIndex: 1
-                  required: true
+                  isRequired: true
                 secondarysensornames:
                   paramOrderingIndex: 2
-                  required: true
+                  isRequired: true
                 gridindex:
                   paramOrderingIndex: 3
-                  required: true
+                  isRequired: true
                 calibboardvisibility:
                   paramOrderingIndex: 4
-                  required: true
+                  isRequired: true
                 calibboardLinkName:
                   paramOrderingIndex: 5
                 calibboardGeomName:
