@@ -730,7 +730,7 @@ x-specModifications:
                   description: "(DEPRECATED. Use goaljoints) List of joint values to move to."
                   forceCast: list
                   x-SpecialCase: true
-                  required: true
+                  isRequired: true
                   type: array
                   items:
                     type: number
@@ -1337,7 +1337,7 @@ x-specModifications:
                 timeout:
                   paramOrderingIndex: 0
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
-                  required: true
+                  isRequired: true
                 kwargs: {}
     MoveGripper:
       parameters:

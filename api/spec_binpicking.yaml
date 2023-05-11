@@ -16,11 +16,11 @@ services:
             properties:
               goaltype:
                 description: (DEPRECATED) type of the goal, e.g. translationdirection5d or transform6d
-                required: true
+                isRequired: true
                 type: string
               goals:
                 description: "(DEPRECATED) flat list of goals, e.g. two 5d ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]"
-                required: true
+                isRequired: true
                 type: string
               cameranames:
                 type: array
@@ -271,7 +271,7 @@ services:
           taskparameters:
             properties:
               dropOffInfo:
-                required: true
+                isRequired: true
               robotname:
                 $merge: '#/components/robotname'
               execute:
@@ -295,10 +295,10 @@ services:
           taskparameters:
             properties:
               bodyname:
-                required: true
+                isRequired: true
                 description: Name of the object
               cameraname:
-                required: true
+                isRequired: true
                 description: Name of the camera
     returns:
       description: 'The occlusion state in a json dictionary, e.g. {''occluded'': 0}'
@@ -357,7 +357,7 @@ services:
           taskparameters:
             properties:
               stateTrigger:
-                required: true
+                isRequired: true
                 type: string
                 description: a string that represents a unique trigger
   GetBinpickingState: {}
@@ -386,10 +386,10 @@ services:
           taskparameters:
             properties:
               trajectory:
-                required: true
+                isRequired: true
                 type: string
               numparts:
-                required: true
+                isRequired: true
                 type: integer
               toolname:
                 $merge: '#/components/toolname'
@@ -405,14 +405,14 @@ services:
           taskparameters:
             properties:
               targeturi:
-                required: true
+                isRequired: true
                 type: string
                 description: uri of target scene, e.g. '4902201402644.mujin.dae'
               toolname:
-                required: true
+                isRequired: true
                 $merge: '#/components/toolname'
               graspsetname:
-                required: true
+                isRequired: true
                 $merge: '#/components/graspsetname'
               robotname:
                 $merge: '#/components/robotname'
@@ -425,13 +425,13 @@ services:
           taskparameters:
             properties:
               targeturi:
-                required: true
+                isRequired: true
                 description: str. uri of target scene like 'mujin:4902201402644.mujin.dae'
               toolname:
-                required: true
+                isRequired: true
                 $merge: '#/components/toolname'
               graspsetname:
-                required: true
+                isRequired: true
                 $merge: '#/components/graspsetname'
               ikparamnames:
                 type: array
@@ -444,15 +444,15 @@ services:
           taskparameters:
             properties:
               containername:
-                required: true
+                isRequired: true
                 type: string
               containerLayoutSize:
-                required: true
+                isRequired: true
               destObstacleName:
-                required: true
+                isRequired: true
                 type: string
               ioVariableName:
-                required: true
+                isRequired: true
                 type: string
   ClearVisualization:
     description: Clears visualization.
@@ -467,7 +467,7 @@ services:
           taskparameters:
             properties:
               doUpdate:
-                required: true
+                isRequired: true
                 description: If True then currentLayoutData will be send on every ObjectUpdate, else currentLayoutDataSendOnObjectUpdate structure is reset
               containername:
                 type: string
@@ -535,7 +535,7 @@ services:
           taskparameters:
             properties:
               packFormationResultList:
-                required: true
+                isRequired: true
     returns:
       description: "{'validatedPackFormationResultList':[{'validationStatus', 'errorCode', 'errorDesc', (optional)'packFormationResult'}]}"
       type: object
