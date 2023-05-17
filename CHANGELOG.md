@@ -1,3 +1,7 @@
+# 0.1.6 (2023-05-17)
+
+- Pass webstack password to planning server.
+
 # 0.1.4 (2023-04-06)
 
 - Add `ZmqSubscriber`
