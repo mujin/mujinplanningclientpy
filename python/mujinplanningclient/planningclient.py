@@ -430,6 +430,46 @@ class PlanningClient(object):
         viewercommand.update(kwargs)
         return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
+    #
+    # Crop-margin related
+    # 
+
+    def SetCropMarginVisible(self, name=None, visible=False, timeout=10, fireandforget=True, slaverequestid=None):
+        """
+        Sets the crop margin visualzation to be on or off
+
+        Args:
+            name: name of the kinbody
+            visible: boolean value setting the visibility of the crop margin visualization
+        """
+        if name is None:
+            return
+
+        viewercommand = {
+            'command': 'SetCropMarginVisible',
+            'name': name,
+            'visible': visible,
+        }
+        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
+
+    def SetCropEmptyMarginVisible(self, name=None, visible=False, timeout=10, fireandforget=True, slaverequestid=None):
+        """
+        Sets the crop empty margin visualzation to be on or off
+
+        Args:
+            name: name of the kinbody
+            visible: boolean value setting the visibility of the crop empty margin visualization
+        """
+        if name is None:
+            return
+
+        viewercommand = {
+            'command': 'SetCropEmptyMarginVisible',
+            'name': name,
+            'visible': visible,
+        }
+        return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
+
     def StartIPython(self, timeout=1, fireandforget=True, slaverequestid=None, **kwargs):
         configuration = {'startipython': True}
         configuration.update(kwargs)
