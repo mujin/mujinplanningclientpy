@@ -434,39 +434,35 @@ class PlanningClient(object):
     # Crop-margin related
     # 
 
-    def SetCropMarginVisible(self, name=None, visible=False, timeout=10, fireandforget=True, slaverequestid=None):
+    def ToggleCropMarginVisible(self, name=None, timeout=10, fireandforget=True, slaverequestid=None):
         """
-        Sets the crop margin visualzation to be on or off
+        Toggles the visibility of the crop margin visualzation
 
         Args:
             name: name of the kinbody
-            visible: boolean value setting the visibility of the crop margin visualization
         """
         if name is None:
             return
 
         viewercommand = {
-            'command': 'SetCropMarginVisible',
+            'command': 'ToggleCropMarginVisible',
             'name': name,
-            'visible': visible,
         }
         return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
-    def SetCropEmptyMarginVisible(self, name=None, visible=False, timeout=10, fireandforget=True, slaverequestid=None):
+    def ToggleCropEmptyMarginVisible(self, name=None, timeout=10, fireandforget=True, slaverequestid=None):
         """
-        Sets the crop empty margin visualzation to be on or off
+        Toggles the visibility of the crop empty margin visualzation
 
         Args:
             name: name of the kinbody
-            visible: boolean value setting the visibility of the crop empty margin visualization
         """
         if name is None:
             return
 
         viewercommand = {
-            'command': 'SetCropEmptyMarginVisible',
+            'command': 'ToggleCropEmptyMarginVisible',
             'name': name,
-            'visible': visible,
         }
         return self.Configure({'viewercommand': viewercommand}, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
