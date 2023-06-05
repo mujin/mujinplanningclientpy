@@ -434,12 +434,13 @@ class PlanningClient(object):
     # Crop-margin related
     # 
 
-    def SetCropMarginVisible(self, bodyName, cropMarginType, visible, timeout=10, fireandforget=True, slaverequestid=None):
-        """
-        Sets the crop margin visualzation to be on or off
+    def SetCropMarginVisible(self, bodyName, linkName, geometryName, cropMarginType, visible, timeout=10, fireandforget=True, slaverequestid=None):
+        """Sets the crop margin visualzation for a geometry to be on or off
 
         Args:
-            bodyName (str): Name of the Kinbody
+            bodyName (str): Name of the Kinbody that the geometry belongs to
+            linkName (str): Name of the link that the geometry belongs to
+            geometryName (str): Name of the geometry
             cropMarginType (str): If 'cropContainerMargin', set the visulization for crop container margins
                 If 'cropContainerEmptyMargin', set the visulization for crop container empty margins
             visible (bool): If False, the crop margin is not visualized.
@@ -448,6 +449,8 @@ class PlanningClient(object):
         viewercommand = {
             'command': 'SetCropMarginVisible',
             'bodyName': bodyName,
+            'linkName': linkName,
+            'geometryName': geometryName,
             'cropMarginType': cropMarginType,
             'visible': visible,
         }
