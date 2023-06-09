@@ -347,8 +347,10 @@ services:
               cameranames:
                 type: array
                 description: The names of the cameras to avoid occlusions with the robot
-  PausePickPlace: {}
-  ResumePickPlace: {}
+  PausePickPlace:
+    parameters: {}
+  ResumePickPlace:
+    parameters: {}
   SendStateTrigger:
     parameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
@@ -360,7 +362,8 @@ services:
                 isRequired: true
                 type: string
                 description: a string that represents a unique trigger
-  GetBinpickingState: {}
+  GetBinpickingState:
+    parameters: {}
   SetStopPickPlaceAfterExecutionCycle:
     description: 'Sets the cycle for stopping after the current pick cycle finishes.
 
@@ -502,7 +505,8 @@ services:
                 description: Reset camera position
   GetPackFormationSolution:
     description: Stops the packing computation thread thread started with StartPackFormationComputationThread
-  GetPackItemPoseInWorld: {}
+  GetPackItemPoseInWorld:
+    parameters: {}
   ManuallyPlacePackItem:
     description: Places an item according to the pack formation assuming the item is placed manually and updates robotbridge state
     parameters:

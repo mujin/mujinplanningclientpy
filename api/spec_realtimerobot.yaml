@@ -2,7 +2,7 @@ include:
 - components_realtimerobot.yaml
 - mujinrepo:mujinbinpickingmanager.schema.binpickingparametersschema
 - mujinrepo:mujinbinpickingmanager.schema.containerschema
-info: null
+info: " "
 description: The RealtimeRobot API of the Mujin Planning Server.
 mujinapi: 0.0.1
 services:
@@ -216,8 +216,10 @@ services:
               useEmptyRegionForCropping:
                 description: If clampcontainer is True, this is used for filtering.
                 type: boolean
-              cropContainerMarginsXYZXYZ:
-                $merge: '#/mujinbinpickingmanager.schema.containerschema/cropContainerMarginsXYZXYZSchema'
+              # cropContainerMarginsXYZXYZ:
+
+                # TODO(felixvd): IIRC this is deprecated. Follow up.
+                # $merge: '#/mujinbinpickingmanager.schema.containerschema/cropContainerMarginsXYZXYZSchema'
               ioSignalsInfo:
                 $merge: '#/components/ioSignalsInfo'
               addPointOffsetInfo:
@@ -1123,7 +1125,7 @@ services:
               departoffsetdir:
                 $merge: '#/components/moveJointsParameters/departOffsetDir'
               departoffsetintool:
-                description: null
+                description: " "
                 type: array
                 items:
                   type: number
