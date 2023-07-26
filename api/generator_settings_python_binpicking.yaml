@@ -5,23 +5,17 @@ templateArgs:  # Strings are added to client_template.py.mako
   clientTaskName: Binpicking
   parentClassFile: realtimerobotplanningclient
   parentClassName: RealtimeRobotPlanningClient
-  extraSuperConstructorArgs: robotname=robotname, robotspeed=robotspeed, robotaccelmult=robotaccelmult, envclearance=envclearance, robotBridgeConnectionInfo=robotBridgeConnectionInfo, 
-  extraConstructorArgs: |
-    regionname=None,
-    robotname='',
-    robotspeed=None,
-    robotaccelmult=None,
-    envclearance=10.0,
-    robotBridgeConnectionInfo=None,
-  # extraClassAttributes: ''
-  ### robotname, robotspeed etc. are for passing to realtimerobotclient
+  extraSuperConstructorArgs: |
+    robotname=robotname,
+    robotspeed=robotspeed,
+    robotaccelmult=robotaccelmult,
+    envclearance=envclearance,
+    robotBridgeConnectionInfo=robotBridgeConnectionInfo, 
+    targetname=targetname,
+    toolname=toolname,
+  extraConstructorArgs: regionname=None, robotname='', robotspeed=None, robotaccelmult=None, envclearance=10.0, robotBridgeConnectionInfo=None, targetname=None, toolname=None,
   extraClassAttributes: |
     regionname = None  # The default region for Pick/Place calls
-    _robotname = None  # Optional name of the robot selected
-    _robotspeed = None  # Speed of the robot, e.g. 0.4
-    _robotaccelmult = None  # Current robot accel mult
-    _envclearance = None  # Environment clearance in millimeters, e.g. 20
-    _robotBridgeConnectionInfo = None  # dict holding the connection info for the robot bridge.
   extraConstructorArgsDocstringLines: |
     regionname (str, optional): Name of the bin, e.g. container1
     robotname (str, optional): Name of the robot, e.g. VP-5243I
@@ -29,19 +23,23 @@ templateArgs:  # Strings are added to client_template.py.mako
     robotaccelmult (float, optional): Optional multiplier for the robot acceleration.
     envclearance (str, optional): Environment clearance in millimeter, e.g. 20
     robotBridgeConnectionInfo (str, optional): dict holding the connection info for the robot bridge.
+    targetname (str, optional): Name of the target, e.g. plasticnut-center
+    toolname (str, optional): Name of the manipulator, e.g. 2BaseZ
   extraConstructorContent: |
-    self.regionname = regionname
+    self._regionname = regionname
+  extraClientStaticFunctions: |
+    def _PrepareCommand(self, commandName):
+        """Adds common parameters to the command sent to the server 
+
+        Args:
+            commandName (str):
+        """
+        command = super(BinpickingPlanningClient, self)._PrepareCommand(commandName)
+        # regionname always maps to containername for the BinpickingPlanning.
+        if self._regionname is not None:
+            command['containername'] = self._regionname
+        return command
   extraClientContent: 
-  extraClientStaticFunctions: 
-generatorSettingsComponents:
-  timeout:
-    x-doNotAddToPayload: true
-    type: number
-    default: 10
-  fireandforget:
-    x-doNotAddToPayload: true
-    type: boolean
-    default: false
 include:
 - components_realtimerobot.yaml
 x-specModifications:
@@ -96,7 +94,7 @@ x-specModifications:
                 robotspeed: 
                   paramOrderingIndex: 16
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 1000
                   paramOrderingIndex: 17
                 # leaveoffsetintool:
@@ -152,7 +150,7 @@ x-specModifications:
                 robotspeed: 
                   paramOrderingIndex: 14
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 15
                 kwargs: {}
     StopPickPlaceThread:
@@ -171,10 +169,10 @@ x-specModifications:
                 finishCode:
                   paramOrderingIndex: 2
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 3
                 fireandforget: 
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   default: False
                   paramOrderingIndex: 4
                 kwargs: {}
@@ -185,7 +183,7 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -200,7 +198,7 @@ x-specModifications:
                   paramOrderingIndex: 0
                   isRequired: False
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 1
                 direction:
                   paramOrderingIndex: 5
@@ -229,7 +227,7 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 targeturi:
                   paramOrderingIndex: 1
@@ -253,7 +251,7 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 99
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -267,7 +265,7 @@ x-specModifications:
                 toolname:
                   paramOrderingIndex: 0
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 1
                 targetname:
                   paramOrderingIndex: 2
@@ -312,7 +310,7 @@ x-specModifications:
                 envclearance:
                   paramOrderingIndex: 6
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 7
                 kwargs: {}
     IsRobotOccludingBody:
@@ -327,7 +325,7 @@ x-specModifications:
                 cameraname:
                   paramOrderingIndex: 1
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 2
                 kwargs: {}
     GetPickedPositions:
@@ -341,7 +339,7 @@ x-specModifications:
                   default: 'm'
                   paramOrderingIndex: 0
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 1
                 kwargs: {}
     GetPickAndPlaceLog:
@@ -352,7 +350,7 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 startindex:
                   paramOrderingIndex: 2
@@ -373,7 +371,7 @@ x-specModifications:
                 toolname:
                   paramOrderingIndex: 2
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 3
                 cameranames:
                   paramOrderingIndex: 4
@@ -385,7 +383,7 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -396,7 +394,7 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -410,10 +408,10 @@ x-specModifications:
                 stateTrigger:
                   paramOrderingIndex: 0
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 1
                 fireandforget: 
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   paramOrderingIndex: 2
                 kwargs: {}
     GetBinpickingState:
@@ -423,10 +421,10 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 fireandforget: 
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   paramOrderingIndex: 1
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -438,7 +436,7 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 kwargs: {}
     PutPartsBack:
@@ -458,7 +456,7 @@ x-specModifications:
                   paramOrderingIndex: 3
                 timeout: 
                   default: 100
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 4
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -478,7 +476,7 @@ x-specModifications:
                 robotname:
                   paramOrderingIndex: 3
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 4
                 kwargs: {}
     CheckGraspModelIk:
@@ -497,7 +495,7 @@ x-specModifications:
                 ikparamnames:
                   paramOrderingIndex: 3
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 4
                 kwargs: {}
     SetCurrentLayoutDataFromPLC:
@@ -515,7 +513,7 @@ x-specModifications:
                 ioVariableName:
                   paramOrderingIndex: 3
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 4
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -526,10 +524,10 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 fireandforget: 
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   paramOrderingIndex: 1
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -540,10 +538,10 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 fireandforget: 
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   paramOrderingIndex: 1
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -564,7 +562,7 @@ x-specModifications:
                   paramOrderingIndex: 3
                 fireandforget: 
                   default: true
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   paramOrderingIndex: 4
                 kwargs: {}
     StartPackFormationComputationThread:
@@ -574,7 +572,7 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 debuglevel:
                   default: 4
@@ -590,10 +588,10 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 fireandforget: 
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   paramOrderingIndex: 1
                 # debuglevel:
                 #   paramOrderingIndex: 1
@@ -608,10 +606,10 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 fireandforget: 
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   paramOrderingIndex: 1
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -623,10 +621,10 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 fireandforget: 
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   paramOrderingIndex: 1
                 initializeCameraPosition:
                   paramOrderingIndex: 2
@@ -637,10 +635,10 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 fireandforget: 
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   paramOrderingIndex: 1
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -651,10 +649,10 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 fireandforget: 
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   paramOrderingIndex: 1
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -672,16 +670,18 @@ x-specModifications:
                   paramOrderingIndex: 2
                 placedTargetPrefix:
                   paramOrderingIndex: 3
-                orderNumber:
+                dynamicGoalsGeneratorParameters:
                   paramOrderingIndex: 4
-                numLeftToPick:
+                orderNumber:
                   paramOrderingIndex: 5
-                timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                numLeftToPick:
                   paramOrderingIndex: 6
-                fireandforget: 
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                timeout: 
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 7
+                fireandforget: 
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
+                  paramOrderingIndex: 8
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
     SendPackFormationComputationResult:
@@ -691,10 +691,10 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 fireandforget: 
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   paramOrderingIndex: 1
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -705,10 +705,10 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 fireandforget: 
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   paramOrderingIndex: 1
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -719,10 +719,10 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                 fireandforget: 
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   paramOrderingIndex: 1
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -735,10 +735,10 @@ x-specModifications:
                 packFormationResultList:
                   paramOrderingIndex: 0
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 1
                 fireandforget: 
-                  $merge: '#/generatorSettingsComponents/fireandforget'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/fireandforget'
                   paramOrderingIndex: 2
                 kwargs: {}
       TODO_FELIX_CONFIRM_BACKEND: ''
@@ -749,7 +749,19 @@ x-specModifications:
             taskparameters:
               properties:
                 timeout: 
-                  $merge: '#/generatorSettingsComponents/timeout'
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  paramOrderingIndex: 0
+                  default: 100
+                kwargs: {}
+      TODO_FELIX_CONFIRM_BACKEND: ''
+    HasDetectionObstacles:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                timeout: 
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   paramOrderingIndex: 0
                   default: 100
                 kwargs: {}

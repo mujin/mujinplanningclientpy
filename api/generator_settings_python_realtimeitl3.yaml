@@ -5,46 +5,29 @@ templateArgs: # Strings are added to client_template.py.mako
   clientTaskName: RealtimeITL3
   parentClassFile: realtimerobotplanningclient
   parentClassName: RealtimeRobotPlanningClient
-  extraSuperConstructorArgs: robotname=robotname, robotspeed=robotspeed, robotaccelmult=robotaccelmult, envclearance=envclearance, robotBridgeConnectionInfo=robotBridgeConnectionInfo,
-  extraConstructorArgs: |
-    robotname='',
-    robotspeed=None,
-    robotaccelmult=None,
-    envclearance=10.0,
-    robotBridgeConnectionInfo=None,
-  # extraClassAttributes: ''
-  ### robotname, robotspeed etc. are for passing to realtimerobotclient
-  extraClassAttributes: |
-    _robotname = None  # Optional name of the robot selected
-    _robotspeed = None  # Speed of the robot, e.g. 0.4
-    _robotaccelmult = None  # Current robot accel mult
-    _envclearance = None  # Environment clearance in millimeters, e.g. 20
-    _robotBridgeConnectionInfo = None  # dict holding the connection info for the robot bridge.
+  extraSuperConstructorArgs: |
+    robotname=robotname,
+    robotspeed=robotspeed,
+    robotaccelmult=robotaccelmult,
+    envclearance=envclearance,
+    robotBridgeConnectionInfo=robotBridgeConnectionInfo,
+  extraConstructorArgs: robotname='', robotspeed=None, robotaccelmult=None, envclearance=10.0, robotBridgeConnectionInfo=None,
+  extraClassAttributes:
   extraConstructorArgsDocstringLines: |
     robotname (str, optional): Name of the robot, e.g. VP-5243I
     robotspeed (float, optional): Speed of the robot, e.g. 0.4
     robotaccelmult (float, optional): Optional multiplier for the robot acceleration.
     envclearance (str, optional): Environment clearance in millimeter, e.g. 20
     robotBridgeConnectionInfo (str, optional): dict holding the connection info for the robot bridge.
-  extraConstructorContent: ""
+  extraConstructorContent:
   extraClientContent:
   extraClientStaticFunctions:
-generatorSettingsComponents:
-  timeout:
-    x-doNotAddToPayload: true
-    type: number
-    default: 10
-  fireandforget:
-    x-doNotAddToPayload: true
-    type: boolean
-    default: false
 include:
   - components_realtimerobot.yaml
 x-specModifications:
   services:
     SetJointValues:
       parameters:
-        $merge: "#/components/StandardPlanningServerRequestParameters"
         taskparams:
           properties:
             taskparameters:
@@ -54,12 +37,11 @@ x-specModifications:
                 robotname:
                   paramOrderingIndex: 1
                 timeout:
-                  $merge: "#/generatorSettingsComponents/timeout"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/timeout"
                   paramOrderingIndex: 2
                 kwargs: {}
     GetITLState:
       parameters:
-        $merge: "#/components/StandardPlanningServerRequestParameters"
         taskparams:
           properties:
             taskparameters:
@@ -67,15 +49,14 @@ x-specModifications:
                 robotname:
                   paramOrderingIndex: 0
                 timeout:
-                  $merge: "#/generatorSettingsComponents/timeout"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/timeout"
                   paramOrderingIndex: 1
                 fireandforget:
-                  $merge: "#/generatorSettingsComponents/fireandforget"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/fireandforget"
                   paramOrderingIndex: 2
                 kwargs: {}
     ExecuteTrajectory:
       parameters:
-        $merge: "#/components/StandardPlanningServerRequestParameters"
         taskparams:
           properties:
             taskparameters:
@@ -101,14 +82,13 @@ x-specModifications:
                 robotaccelmult:
                   paramOrderingIndex: 9
                 timeout:
-                  $merge: "#/generatorSettingsComponents/timeout"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/timeout"
                   paramOrderingIndex: 10
                 fireandforget:
-                  $merge: "#/generatorSettingsComponents/fireandforget"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/fireandforget"
                   paramOrderingIndex: 11
     ExecuteTrajectoryStep:
       parameters:
-        $merge: "#/components/StandardPlanningServerRequestParameters"
         taskparams:
           properties:
             taskparameters:
@@ -122,40 +102,37 @@ x-specModifications:
                 robotaccelmult:
                   paramOrderingIndex: 3
                 timeout:
-                  $merge: "#/generatorSettingsComponents/timeout"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/timeout"
                   paramOrderingIndex: 4
                 fireandforget:
-                  $merge: "#/generatorSettingsComponents/fireandforget"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/fireandforget"
                   paramOrderingIndex: 5
     PauseExecuteTrajectory:
       parameters:
-        $merge: "#/components/StandardPlanningServerRequestParameters"
         taskparams:
           properties:
             taskparameters:
               properties:
                 timeout:
-                  $merge: "#/generatorSettingsComponents/timeout"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/timeout"
                   paramOrderingIndex: 0
                 fireandforget:
-                  $merge: "#/generatorSettingsComponents/fireandforget"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/fireandforget"
                   paramOrderingIndex: 1
     ResumeExecuteTrajectory:
       parameters:
-        $merge: "#/components/StandardPlanningServerRequestParameters"
         taskparams:
           properties:
             taskparameters:
               properties:
                 timeout:
-                  $merge: "#/generatorSettingsComponents/timeout"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/timeout"
                   paramOrderingIndex: 0
                 fireandforget:
-                  $merge: "#/generatorSettingsComponents/fireandforget"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/fireandforget"
                   paramOrderingIndex: 1
     ComputeRobotConfigsForCommandVisualization:
       parameters:
-        $merge: "#/components/StandardPlanningServerRequestParameters"
         taskparams:
           properties:
             taskparameters:
@@ -165,16 +142,15 @@ x-specModifications:
                 commandindex:
                   paramOrderingIndex: 1
                 timeout:
-                  $merge: "#/generatorSettingsComponents/timeout"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/timeout"
                   paramOrderingIndex: 2
                   default: 2
                 fireandforget:
-                  $merge: "#/generatorSettingsComponents/fireandforget"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/fireandforget"
                   paramOrderingIndex: 3
                 kwargs: {}
     ComputeRobotJointValuesForCommandVisualization:
       parameters:
-        $merge: "#/components/StandardPlanningServerRequestParameters"
         taskparams:
           properties:
             taskparameters:
@@ -184,32 +160,30 @@ x-specModifications:
                 commandindex:
                   paramOrderingIndex: 1
                 timeout:
-                  $merge: "#/generatorSettingsComponents/timeout"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/timeout"
                   paramOrderingIndex: 2
                   default: 2
                 fireandforget:
-                  $merge: "#/generatorSettingsComponents/fireandforget"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/fireandforget"
                   paramOrderingIndex: 3
                 kwargs: {}
     PlotProgramWaypoints:
       parameters:
-        $merge: "#/components/StandardPlanningServerRequestParameters"
         taskparams:
           properties:
             taskparameters:
               properties:
                 timeout:
-                  $merge: "#/generatorSettingsComponents/timeout"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/timeout"
                   paramOrderingIndex: 0
                   default: 1
                 fireandforget:
-                  $merge: "#/generatorSettingsComponents/fireandforget"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/fireandforget"
                   paramOrderingIndex: 1
                   default: true
                 kwargs: {}
     StartITLProgram:
       parameters:
-        $merge: "#/components/StandardPlanningServerRequestParameters"
         taskparams:
           properties:
             taskparameters:
@@ -221,33 +195,31 @@ x-specModifications:
                 robotaccelmult:
                   paramOrderingIndex: 2
                 timeout:
-                  $merge: "#/generatorSettingsComponents/timeout"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/timeout"
                   paramOrderingIndex: 3
                 fireandforget:
-                  $merge: "#/generatorSettingsComponents/fireandforget"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/fireandforget"
                   paramOrderingIndex: 4
                 kwargs: {}
     StopITLProgram:
       parameters:
-        $merge: "#/components/StandardPlanningServerRequestParameters"
         taskparams:
           properties:
             taskparameters:
               properties:
                 timeout:
-                  $merge: "#/generatorSettingsComponents/timeout"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/timeout"
                   paramOrderingIndex: 0
                 fireandforget:
-                  $merge: "#/generatorSettingsComponents/fireandforget"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/fireandforget"
                   paramOrderingIndex: 1
                 kwargs: {}
     GenerateExecutionGraph:
+      description: "Generates a list of commands for the ITL program."
       parameters:
-        $merge: "#/components/StandardPlanningServerRequestParameters"
         taskparams:
           properties:
             taskparameters:
-              description: "Generates a list of commands for the ITL program."
               properties:
                 programName:
                   paramOrderingIndex: 0
@@ -256,15 +228,14 @@ x-specModifications:
                 totalTimeout:
                   paramOrderingIndex: 2
                 timeout:
-                  $merge: "#/generatorSettingsComponents/timeout"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/timeout"
                   paramOrderingIndex: 3
                 fireandforget:
-                  $merge: "#/generatorSettingsComponents/fireandforget"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/fireandforget"
                   paramOrderingIndex: 4
                 kwargs: {}
     PlotContacts:
       parameters:
-        $merge: "#/components/StandardPlanningServerRequestParameters"
         taskparams:
           properties:
             taskparameters:
@@ -272,20 +243,19 @@ x-specModifications:
                 report:
                   paramOrderingIndex: 0
                 timeout:
-                  $merge: "#/generatorSettingsComponents/timeout"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/timeout"
                   paramOrderingIndex: 1
                   default: 1
                 fireandforget:
-                  $merge: "#/generatorSettingsComponents/fireandforget"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/fireandforget"
                   paramOrderingIndex: 2
                 kwargs: {}
     PopulateTargetInContainer:
+      description: "Populates targets in the container using populateFn."
       parameters:
-        $merge: "#/components/StandardPlanningServerRequestParameters"
         taskparams:
           properties:
             taskparameters:
-              description: "Populates targets in the container using populateFn."
               properties:
                 locationName:
                   paramOrderingIndex: 0
@@ -296,7 +266,7 @@ x-specModifications:
                 containerMetaData:
                   paramOrderingIndex: 3
                 timeout:
-                  $merge: "#/generatorSettingsComponents/timeout"
+                  $merge: "#/components/Internal_ExecuteCommandParameters/timeout"
                   paramOrderingIndex: 4
                   default: 20
                 kwargs: {}

@@ -3,18 +3,10 @@ include:
 - components.yaml
 - mujinrepo:mujinbinpickingmanager.schema.binpickingparametersschema
 components:
-  ### NOTE(felixvd): I considered adding these everywhere, but it doesn't seem to make sense.
-  # StandardRealtimeRobotServerRequestParameters:
-  #   $merge: '#/components/StandardPlanningServerRequestParameters'
-  #   taskparams:
-  #     properties:
-  #       taskparameters:
-  #         properties:
-  #           robotname:
-  #             $merge: '#/components/robotname'
-  #           toolname:
-  #             $merge: '#/components/toolname'
   Internal_TaskBaseInitParameters:
+    $merge:
+    - '#/components/pathPlannerParameters'
+    - '#/components/smootherParameters'
     slaverequestid:
       type: integer
       description: The requested planning slave
@@ -30,7 +22,6 @@ components:
     vrcExtraClearance:
       description: "The extra clearance that needs to be kept between VRC (Virtual Robot Controller) clearance and the simulated clearance. Depending on how well we can simulate robot maker controllers, this can be reduced. (Default: 0.02)"
       type: string
-    $merge: ['#/components/pathPlannerParameters', '#/components/smootherParameters']
   Internal_RealtimeRobotTaskInitParameters:  # Parameters in __init__ of realtimerobottask3.py
     setPlanningModels:
       description: "If True, then call setPlanningModels which will set the robot's weights and resolutions automatically. If False, then do not touch the robot values. (Default: True)"
@@ -60,7 +51,6 @@ components:
     capturelog:
       description: If True, will read very accurate values from the robot control log (this is slow)
       type: boolean
-      ###
     savetrajectorylog:
       description: If True, will save the commanded (input) trajectories before they are executed
       type: boolean
@@ -106,7 +96,9 @@ components:
   Internal_MoveCommandDecoratorParameters:
     robotspeed:
       $merge: '#/components/robotspeed'
-    # speed is an optional deprecated alternative to robotspeed
+    speed:
+      description: Use robotspeed instead.
+      deprecated: true
     robotaccelmult:
       $merge: '#/components/robotaccelmult'
     ionames:
@@ -152,11 +144,6 @@ components:
     steplength:
       description: "Maximum step length of the resulting trajectory."
       type: string
-  dynamicEnvironmentState:
-    object: The dynamic objects in the environment that is to be used for planning/executing the task. A list of bodies.
-    type: array
-    items:
-      type: object
   robotBridgeConnectionInfo:
     description: Information to set up a client to the robot bridge.
     type: object
@@ -269,7 +256,9 @@ components:
     debuglevel:
       $merge: '#/components/debuglevel'
     jittererParameters:
-      $merge: '#/components/jittererParameters'
+      type: object
+      properties:
+        $merge: '#/components/jittererParameters'
     ## Does this one even work??!
     gripperInfo:
       description: "TODO(felixvd): Check if this really propagates."
@@ -393,9 +382,6 @@ components:
     callerid:
       description: The name of the caller (only used internally)
       type: string
-  robot:
-    description: The name of the robot (modelName).
-    type: string
   robotname:
     description: Name of the robot
     type: string

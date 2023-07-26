@@ -6,12 +6,7 @@ templateArgs:  # Strings are added to client_template.py.mako
   parentClassFile: planningclient
   parentClassName: PlanningClient
   extraSuperConstructorArgs: ''
-  extraConstructorArgs: |
-    robotname='',
-    robotspeed=None,
-    robotaccelmult=None,
-    envclearance=10.0,
-    robotBridgeConnectionInfo=None,
+  extraConstructorArgs: robotname='', robotspeed=None, robotaccelmult=None, envclearance=10.0, robotBridgeConnectionInfo=None,
   extraClassAttributes: |
     _robotname = None  # Optional name of the robot selected
     _robotspeed = None  # Speed of the robot, e.g. 0.4
@@ -72,66 +67,26 @@ templateArgs:  # Strings are added to client_template.py.mako
         """
         self._robotaccelmult = robotaccelmult
 
-    def ExecuteCommand(self, taskparameters, robotname=None, toolname=None, robotspeed=None, robotaccelmult=None, envclearance=None, timeout=10, fireandforget=False, respawnopts=None):
-        """Wrapper to ExecuteCommand with robot info specified in taskparameters.
-
-        Executes a command in the task.
+    def _PrepareCommand(self, commandName):
+        """Adds common parameters to the command sent to the server 
 
         Args:
-            taskparameters (dict): Specifies the arguments of the task/command being called.
-            robotname (str, optional): Name of the robot
-            robotaccelmult (float, optional):
-            envclearance (float, optional):
-            respawnopts (optional):
-            toolname (str, optional): Name of the manipulator.
-            timeout (float, optional):  (Default: 10)
-            fireandforget (bool, optional):  (Default: False)
-            robotspeed (float, optional):
-
-        Returns:
-            dict: Contains:
-                - robottype (str): robot type
-                - currentjointvalues (list[float]): current joint values, vector length = DOF
-                - elapsedtime (float): elapsed time in seconds
-                - numpoints (int): the number of points
-                - error (dict): optional error info
-                - desc (str): error message
-                - type (str): error type
-                - errorcode (str): error code
+            commandName (str):
         """
-        if robotname is None:
-            robotname = self._robotname
+        command = {'command': commandName}
 
-        # caller wants to use a different tool
-        if toolname is not None:
-            # set at the first level
-            taskparameters['toolname'] = toolname
-
-        if robotname is not None:
-            taskparameters['robotname'] = robotname
-
-        if 'robotspeed' not in taskparameters:
-            if robotspeed is None:
-                robotspeed = self._robotspeed
-            if robotspeed is not None:
-                taskparameters['robotspeed'] = robotspeed
-
-        if 'robotaccelmult' not in taskparameters:
-            if robotaccelmult is None:
-                robotaccelmult = self._robotaccelmult
-            if robotaccelmult is not None:
-                taskparameters['robotaccelmult'] = robotaccelmult
-
+        if self._robotname is not None:
+            command['robotname'] = self._robotname
+        if self._robotspeed is not None:
+            command['robotspeed'] = self._robotspeed
+        if self._robotaccelmult is not None:
+            command['robotaccelmult'] = self._robotaccelmult
         if self._robotBridgeConnectionInfo is not None:
-            taskparameters['robotBridgeConnectionInfo'] = self._robotBridgeConnectionInfo
+            command['robotBridgeConnectionInfo'] = self._robotBridgeConnectionInfo
+        if self._envclearance is not None:
+            command['envclearance'] = self._envclearance
 
-        if 'envclearance' not in taskparameters or taskparameters['envclearance'] is None:
-            if envclearance is None:
-                envclearance = self._envclearance
-            if envclearance is not None:
-                taskparameters['envclearance'] = envclearance
-
-        return super(RealtimeRobotPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, respawnopts=respawnopts)
+        return command
 
 include:
 - components_realtimerobot.yaml
@@ -428,10 +383,6 @@ x-specModifications:
                   paramOrderingIndex: 0
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
-                executetimeout:
-                  paramOrderingIndex: 1
-                unit:
-                  paramOrderingIndex: 2
                 kwargs: {}
     SetRobotBridgePause:
       parameters:
@@ -555,6 +506,10 @@ x-specModifications:
                   default: 10
                 kwargs: {}
     SetTransform:
+      x-modifiedReturnStatement: |
+          if rotationmat is None and quaternion is None:
+              command['quaternion'] = [1, 0, 0, 0]
+              log.warn('No rotation is specified. Using identity quaternion.')
       parameters:
         taskparams:
           properties:
@@ -727,7 +682,8 @@ x-specModifications:
                 robotspeed:
                   paramOrderingIndex: 3
                 jointvalues:
-                  description: "(DEPRECATED. Use goaljoints) List of joint values to move to."
+                  description: List of joint values to move to. Use goaljoints instead.
+                  deprecated: true
                   forceCast: list
                   x-SpecialCase: true
                   isRequired: true
@@ -873,6 +829,23 @@ x-specModifications:
                   paramOrderingIndex: 5
                 timeout:
                   paramOrderingIndex: 6
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  default: 10
+                kwargs: {}
+    GetLinkParentInfo:
+      parameters:
+        taskparams:
+          properties:
+            taskparameters:
+              properties:
+                objectName:
+                  paramOrderingIndex: 0
+                linkName:
+                  paramOrderingIndex: 1
+                unit:
+                  paramOrderingIndex: 2
+                timeout:
+                  paramOrderingIndex: 3
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   default: 10
                 kwargs: {}
@@ -1308,6 +1281,10 @@ x-specModifications:
               properties:
                 bodieslist:
                   paramOrderingIndex: 0
+                  x-specialCase:
+                    content: |
+                      if 'replaceInfos' not in command:
+                          command['replaceInfos'] = bodieslist
                 timeout:
                   paramOrderingIndex: 1
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
@@ -1338,6 +1315,7 @@ x-specModifications:
                   paramOrderingIndex: 0
                   $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
                   isRequired: true
+                  default: 4
                 kwargs: {}
     MoveGripper:
       parameters:

@@ -6,3 +6,4 @@ components:
   regionname:
     type: string
     description: name of the region of the objects
+    mapsTo: containername

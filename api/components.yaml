@@ -1,14 +1,4 @@
 components:
-  Vector3Schema:
-    type: array
-    minItems: 3
-    maxItems: 3
-    additionalItems: False
-    items: [
-      {description: 'x', type: number},
-      {description: 'y', type: number},
-      {description: 'z', type: number},
-    ]
   StandardPlanningServerRequestParameters:
     fnname:
       type: string
@@ -16,7 +6,7 @@ components:
     userinfo:
       type: object
       description: An object storing user info such as the locale
-      items:
+      properties:
         username:
           type: string
           description: Username used for the controller
@@ -57,24 +47,14 @@ components:
               type: string
               description: The Scene's file name.
             scale:
-              type: array
-              minItems: 3
-              maxItems: 3
-              additionalItems: False
-              items: [
-                  {description: 'x', type: number, default: 1.0},
-                  {description: 'y', type: number, default: 1.0},
-                  {description: 'z', type: number, default: 1.0},
-                ]
+              $merge: '#/components/Vector3Schema'
+              description: Values of ['x', 'y', 'z'] correspondingly. Default values are 1.0.
         taskparameters:
           type: object
           # properties:  # This is the field that defines the actual command
-  robot:
-    description: The name of the robot (modelName).
-    type: string
   Internal_ExecuteCommandParameters:
     timeout:
-      default: 4.0
+      default: 10
       description: Time in seconds after which the command is assumed to have failed.
       type: number
       x-doNotAddToPayload: true  # Used only inside the client, not sent to the server
@@ -87,6 +67,7 @@ components:
       isRequired: False
       description: Settings to determine the respawning behavior of planning slaves. Restarts/respawns a planning slave if conditions are met.
       type: object
+      x-doNotAddToPayload: true
       properties:
         allowrespawn:
           type: boolean
@@ -100,3 +81,24 @@ components:
           type: float
           description: The amount of memory that the planning slave may occupy before it is respawned.
           default: 2*1024*1024*1024
+    forcereload:
+      isRequired: False
+      description: If True, then force re-load the scene before executing the task
+      type: bool
+      x-doNotAddToPayload: true
+  robot:
+    description: The name of the robot (modelName). If not specified - the value used for client initialization will be applied.
+    type: string
+  dynamicEnvironmentState:
+    description: The dynamic objects in the environment that is to be used for planning/executing the task. A list of bodies.
+    type: array
+    items:
+      type: object
+  Vector3Schema:
+    type: array
+    description: Values of ['x', 'y', 'z'] correspondingly.
+    minItems: 3
+    maxItems: 3
+    additionalItems: False
+    items:
+      type: number

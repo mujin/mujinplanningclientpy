@@ -4,25 +4,26 @@
 include:
 - components.yaml
 components:
-  cameracontainername: 
-    description: The name of the container that the camera is observing.
-    type: string
-  primarysensorname: 
-    description: Name of the primary sensor to be calibrated (attached to the robot)
-    type: string
-  secondarysensornames: 
-    description: Names of secondary sensors to be calibrated (assumed to be nearby the primary sensor)
+  primarySensorSelectionInfo:
+    type: object
+    description: Selects the primary camera that everything will be calibrated against.
+  secondarySensorSelectionInfos:
     type: array
+    description: Selects the secondary camera(s) (assumed to be nearby the primary sensor).
     items:
-      type: string
+      type: object
   gridindex:
     type: int
     description: The index of the voxel 
   calibboardvisibility:
-    type: boolean
+    type: object
+  toolname:
+    type: string
   calibboardLinkName:
     type: string
   calibboardGeomName:
+    type: string
+  calibboardObjectName:
     type: string
   minPatternTiltAngle:
     type: number
@@ -36,31 +37,19 @@ info:
   description: The API of the Planning Server for a Calibration task.
 mujinapi: 0.0.1
 services:  # The API of the calibration task
-  # NEW_FUNCTION:
-  #   description: TEST_DESCRIPTION
-  #   parameters: 
-  #     $merge: '#/components/StandardPlanningServerRequestParameters'
-  #     taskparams:
-  #       properties:
-  #         taskparameters:
-  #           properties:
-  #             # Fill args
   ComputeCalibrationPoses:
     description: "Compute a set of calibration poses that satisfy the angle constraints using latin hypercube sampling (or stratified sampling upon failure)"
-    parameters: 
+    parameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
-            properties:
-              cameracontainername:
-                $merge: '#/components/cameracontainername'
+            properties: 
+              primarySensorSelectionInfo:
+                $merge: '#/components/primarySensorSelectionInfo'
                 isRequired: true
-              primarysensorname:
-                $merge: '#/components/primarysensorname'
-                isRequired: true
-              secondarysensornames:
-                $merge: '#/components/secondarysensornames'
+              secondarySensorSelectionInfos:
+                $merge: '#/components/secondarySensorSelectionInfos'
                 isRequired: true
               numsamples:
                 description: Number of samples to take. A reasonable number is often between 5 and 25.
@@ -69,28 +58,37 @@ services:  # The API of the calibration task
               calibboardvisibility:
                 $merge: '#/components/calibboardvisibility'
                 isRequired: true
+              toolname:
+                $merge: '#/components/toolname'
+                isRequired: true
               calibboardLinkName:
                 $merge: '#/components/calibboardLinkName'
               calibboardGeomName:
                 $merge: '#/components/calibboardGeomName'
+              calibboardObjectName:
+                $merge: '#/components/calibboardObjectName'
+              minPatternTiltAngle: 
+                $merge: '#/components/minPatternTiltAngle'
+              maxPatternTiltAngle: 
+                $merge: '#/components/maxPatternTiltAngle'
+              dynamicEnvironmentState:
+                $merge: '#/components/dynamicEnvironmentState'
               robot:
                 $merge: '#/components/robot'
+    returns: {}
   SampleCalibrationConfiguration:
     description: Sample a valid calibration pose inside the given voxel and find a corresponding IK solution.
-    parameters: 
+    parameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
       taskparams:
         properties:
           taskparameters:
-            properties:
-              cameracontainername: 
-                $merge: '#/components/cameracontainername'
+            properties: 
+              primarySensorSelectionInfo:
+                $merge: '#/components/primarySensorSelectionInfo'
                 isRequired: true
-              primarysensorname: 
-                $merge: '#/components/primarysensorname'
-                isRequired: true
-              secondarysensornames: 
-                $merge: '#/components/secondarysensornames'
+              secondarySensorSelectionInfos:
+                $merge: '#/components/secondarySensorSelectionInfos'
                 isRequired: true
               gridindex:
                 $merge: '#/components/gridindex'
@@ -98,29 +96,28 @@ services:  # The API of the calibration task
               calibboardvisibility: 
                 $merge: '#/components/calibboardvisibility'
                 isRequired: true
+              toolname:
+                $merge: '#/components/toolname'
+                isRequired: true
               calibboardLinkName: 
                 $merge: '#/components/calibboardLinkName'
               calibboardGeomName: 
                 $merge: '#/components/calibboardGeomName'
+              calibboardObjectName:
+                $merge: '#/components/calibboardObjectName'
               minPatternTiltAngle: 
                 $merge: '#/components/minPatternTiltAngle'
               maxPatternTiltAngle: 
                 $merge: '#/components/maxPatternTiltAngle'
+              dynamicEnvironmentState:
+                $merge: '#/components/dynamicEnvironmentState'
               robot:
                 $merge: '#/components/robot'
     returns:
-      vConfig:
-        description: The IK solution (joint angles) for the sample.
-        type: array
-        items:
-          type: number
-  # ReloadModule:
-  #   description: Reloads the module without restarting the whole controller. For development.
-  #   parameters: 
-  #     $merge: '#/components/StandardPlanningServerRequestParameters'
-  #     taskparams:
-  #       properties:
-  #         taskparameters:
-  #           properties:
-  #             robot:
-  #               $merge: '#/components/robot'
+      type: object
+      properties:
+        vConfig:
+          description: The IK solution (joint angles) for the sample.
+          type: array
+          items:
+            type: number

@@ -6,32 +6,26 @@ templateArgs:  # Strings that are added to client_template.py.mako
   parentClassFile: planningclient
   parentClassName: PlanningClient
   extraSuperConstructorArgs: ''
-  extraConstructorArgs: |
-    robot,
+  extraConstructorArgs: robot,
   extraClassAttributes: "robot = None"
   extraConstructorArgsDocstringLines: |
     robot (str): Name of the robot, e.g. VP-5243I
   extraConstructorContent: |
     self.robot = robot
-  extraClientContent: |
-    def ReloadModule(self, **kwargs):
-      return self.ExecuteCommand({
-            'command': 'ReloadModule',
-      }, **kwargs)
+  extraClientContent: ''
   extraClientStaticFunctions: |
-    def ExecuteCommand(self, taskparameters, **kwargs):
-      if 'robot' not in taskparameters:
-        taskparameters['robot'] = self.robot
-      super(HandEyeCalibrationPlanningClient, self).ExecuteCommand(taskparameters=taskparameters, **kwargs)
-generatorSettingsComponents:
-  timeout:
-    default: 3000.0
-    description: Time in seconds after which the command is assumed to have failed.
-    type: number
-    x-doNotAddToPayload: true  # Used only inside the client, not sent to the server
-  ignoredArgsParam:
-    ignoredArgs:
-      description: These arguments may be passed to the method, but are ignored.
+    def _PrepareCommand(self, commandName):
+        """Adds common parameters to the command sent to the server 
+
+        Args:
+            commandName (str): 
+        """
+        command = {'command': commandName}
+        if self.robot is not None:
+          command['robot'] = self.robot
+        return command
+include:
+- components.yaml
 x-specModifications:  # These fields add/overwrite spec content. Only the leaf is overwritten. Parent fields are merged if possible.
   services:
     ComputeCalibrationPoses:
@@ -40,63 +34,68 @@ x-specModifications:  # These fields add/overwrite spec content. Only the leaf i
           properties:
             taskparameters:
               properties:
-                cameracontainername:
+                primarySensorSelectionInfo:
                   paramOrderingIndex: 0
-                primarysensorname:
+                secondarySensorSelectionInfos:
                   paramOrderingIndex: 1
-                secondarysensornames:
-                  paramOrderingIndex: 2
                 numsamples:
-                  paramOrderingIndex: 3
+                  paramOrderingIndex: 2
                 calibboardvisibility:
-                  paramOrderingIndex: 4
+                  paramOrderingIndex: 3
                   isRequired: true
+                toolname:
+                  paramOrderingIndex: 4
                 calibboardLinkName:
                   paramOrderingIndex: 5
                 calibboardGeomName:
                   paramOrderingIndex: 6
-                gridindex:  # TODO: Check server for this API
-                  paramOrderingIndex: 8
-                timeout:
+                calibboardObjectName:
                   paramOrderingIndex: 7
-                  $ref: '#/generatorSettingsComponents/timeout'
-                robot:
+                minPatternTiltAngle:
+                  paramOrderingIndex: 8
+                maxPatternTiltAngle:
                   paramOrderingIndex: 9
-                  fillFromClassMember: robot
-                $merge: '#/generatorSettingsComponents/ignoredArgsParam'
+                dynamicEnvironmentState:
+                  paramOrderingIndex: 10
+                robot:
+                  paramOrderingIndex: 11
+                timeout:
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  paramOrderingIndex: 12
+                  default: 3000.0
+                kwargs: {}
     SampleCalibrationConfiguration:
       parameters:
         taskparams:
           properties:
             taskparameters:
               properties:
-                cameracontainername:
+                primarySensorSelectionInfo:
                   paramOrderingIndex: 0
-                  isRequired: true
-                primarysensorname:
+                secondarySensorSelectionInfos:
                   paramOrderingIndex: 1
-                  isRequired: true
-                secondarysensornames:
-                  paramOrderingIndex: 2
-                  isRequired: true
                 gridindex:
-                  paramOrderingIndex: 3
-                  isRequired: true
+                  paramOrderingIndex: 2
                 calibboardvisibility:
+                  paramOrderingIndex: 3
+                toolname:
                   paramOrderingIndex: 4
-                  isRequired: true
                 calibboardLinkName:
                   paramOrderingIndex: 5
                 calibboardGeomName:
                   paramOrderingIndex: 6
-                minPatternTiltAngle:
+                calibboardObjectName:
                   paramOrderingIndex: 7
-                maxPatternTiltAngle:
+                minPatternTiltAngle:
                   paramOrderingIndex: 8
-                timeout:
+                maxPatternTiltAngle:
                   paramOrderingIndex: 9
-                  $merge: '#/generatorSettingsComponents/timeout'
+                dynamicEnvironmentState:
+                  paramOrderingIndex: 10
                 robot:
                   paramOrderingIndex: 10
-                  fillFromClassMember: robot  # Use class attribute of this name if not set explicitly
-                $merge: '#/generatorSettingsComponents/ignoredArgsParam'
+                timeout:
+                  $merge: '#/components/Internal_ExecuteCommandParameters/timeout'
+                  paramOrderingIndex: 12
+                  default: 3000.0
+                kwargs: {}

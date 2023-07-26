@@ -5,6 +5,11 @@ include:
 info: null
 description: The Binpicking API of the Mujin Planning Server.
 mujinapi: 0.0.1
+components:
+  initiallyDisableRobotBridge:
+    type: boolean
+    description: If True, stops any communication with the robotbridge until robot bridge is enabled.
+    default: false
 services:
   PickAndPlace:
     description: Picks up an object with the targetnamepattern and places it down at one of the goals. First computes the entire plan from robot moving to a grasp and then moving to its destination, then runs it on the real robot. Task finishes once the real robot is at the destination.
@@ -15,13 +20,15 @@ services:
           taskparameters:
             properties:
               goaltype:
-                description: (DEPRECATED) type of the goal, e.g. translationdirection5d or transform6d
+                description: Type of the goal, e.g. translationdirection5d or transform6d
                 isRequired: true
                 type: string
+                deprecated: true
               goals:
-                description: "(DEPRECATED) flat list of goals, e.g. two 5d ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]"
+                description: 'Flat list of goals, e.g. two 5d ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]'
                 isRequired: true
                 type: string
+                deprecated: true
               cameranames:
                 type: array
                 description: The names of the cameras to avoid occlusions with the robot
@@ -74,6 +81,7 @@ services:
                 type: string
               robotspeed: 
                 $merge: '#/components/robotspeed'
+    returns: {}
   StartPickAndPlaceThread:
     description: Start a background loop to continuously pick up objects with the targetnamepattern and place them down at the goals. The loop will check new objects arriving in and move the robot as soon as it finds a feasible grasp. The thread can be quit with StopPickPlaceThread.
     parameters:
@@ -87,7 +95,7 @@ services:
                 type: string
               goals:
                 description: "flat list of goals, e.g. two 5d ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]"
-                type: list
+                type: array
               cameranames:
                 type: array
                 description: the names of the cameras to avoid occlusions with the robot
@@ -141,12 +149,14 @@ services:
                 type: integer
               forceStartRobotValues:
                 description: planning loop should always start from these values rather than reading from robot
-                type: list[number]
+                type: array
+                items:
+                  type: number
               initiallyDisableRobotBridge:
-                description: if True, stops any communication with the robotbridge until robot bridge is enabled
-                type: boolean
+                $merge: '#/components/initiallyDisableRobotBridge'
               robotspeed: 
                 $merge: '#/components/robotspeed'
+    returns: {}
   StopPickPlaceThread:
     description: stops the pick and place thread started with StartPickAndPlaceThread
     parameters:
@@ -160,7 +170,7 @@ services:
                 description: optional finish code to end the cycle with (if it doesn't end with something else beforehand)
               resetStatusPickPlace:
                 type: bool
-                description: if True, then reset the statusPickPlace field of hte planning slave. By default False.
+                description: if True, then reset the statusPickPlace field of hte planning slave.
               resetExecutionState:
                 type: bool
                 description: if True, then reset the order state variables. By default True
@@ -226,6 +236,7 @@ services:
               regionname:
                 $merge: '#/components/regionname'
                 description: The container name to drop the parts into.
+    returns: {}
   StopPhysicsThread:
     description: stops the physics simulation started with InitializePartsWithPhysics
   JitterPartUntilValidGrasp:
@@ -261,7 +272,16 @@ services:
               destdepartoffsetdir:
                 description: the direction and distance in mm to move away from the object after it is placed, e.g. [0,0,30]. Depending on leaveoffsetintool parameter, this can in the global coordinate system or tool coordinate system.
     returns:
-      description: "If failed, an empty dictionary. If succeeded, a dictionary with the following keys:\n    - translation: the new translation of the target part\n    - quaternion: the new quaternion of the target part\n    - jointvalues: robot joint values that are grasping the part (fingers are at their preshape).\n    - graspname: the grasp name used for jointvalues. If empty, then no grasp was found.\n    - destikname: the name of the destination ikparam that was chosen with the grasp\n    - destjointvalues: robot joint values at one of the specified destinations (fingers are at their final positions).\n    - desttranslation: the new translation of the target part\n    - destquaternion: the new quaternion of the target part"
+      description: |
+        If failed, an empty dictionary. If succeeded, a dictionary with the following keys:
+        - translation: the new translation of the target part
+        - quaternion: the new quaternion of the target part
+        - jointvalues: robot joint values that are grasping the part (fingers are at their preshape).
+        - graspname: the grasp name used for jointvalues. If empty, then no grasp was found.
+        - destikname: the name of the destination ikparam that was chosen with the grasp
+        - destjointvalues: robot joint values at one of the specified destinations (fingers are at their final positions).
+        - desttranslation: the new translation of the target part
+        - destquaternion: the new quaternion of the target part
   MoveToDropOff:
     description: Moves the robot to desired joint angles.
     parameters:
@@ -281,11 +301,9 @@ services:
                 $merge: '#/components/robotaccelmult'
               envclearance:
                 $merge: '#/components/envclearance'
-              timeout:
-                default: 10
-                type: number
               robotspeed:
                 $merge: '#/components/robotspeed'
+    returns: {}
   IsRobotOccludingBody:
     description: returns if the robot is occluding body in the view of the specified camera
     parameters:
@@ -313,7 +331,8 @@ services:
               unit:
                 $merge: '#/components/unit'
     returns:
-      description: '[[1,0,0,0,100,200,300,1389774818.8366449],[1,0,0,0,200,200,300,1389774828.8366449]]}'
+      description: |
+        The positions and the timestamps of the picked objects in a json dictionary, info of each object has the format of quaternion (w,x,y,z) followed by x,y,z translation (in mm) followed by timestamp in milisecond e.g. {'positions': [[1,0,0,0,100,200,300,1389774818.8366449],[1,0,0,0,200,200,300,1389774828.8366449]]}
   GetPickAndPlaceLog:
     description: Gets the recent pick-and-place log executed on the binpicking server. The internal server keeps the log around until the next Pick-and-place command is executed.
     parameters:
@@ -329,7 +348,22 @@ services:
                 type: integer
                 description: Number of trajectories from startindex to return. If 0 will return all the trajectories starting from startindex
     returns:
-      description: "10\n    messages: [\n    {\n    \"message\":\"message1\",\n    \"type\":\"\",\n    \"level\":0,\n    \"data\": {\n        \"jointvalues\":[0,0,0,0,0,0]\n    }\n    },\n    ]"
+      description: |
+        A dictionary with keys, for example:
+        {
+            total: 10
+            messages: [
+                {
+                    "message":"message1",
+                    "type":"",
+                    "level":0,
+                    "data": {
+                        "jointvalues":[0,0,0,0,0,0]
+                    }
+                },
+                ...
+            ]
+        }
   MoveRobotOutOfCameraOcclusion:
     description: Moves the robot out of camera occlusion and deletes targets if it was in occlusion.
     parameters:
@@ -347,10 +381,23 @@ services:
               cameranames:
                 type: array
                 description: The names of the cameras to avoid occlusions with the robot
+    returns: {}
   PausePickPlace:
-    parameters: {}
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+    returns: {}
   ResumePickPlace:
-    parameters: {}
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+    returns: {}
   SendStateTrigger:
     parameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
@@ -362,8 +409,15 @@ services:
                 isRequired: true
                 type: string
                 description: a string that represents a unique trigger
+    returns: {}
   GetBinpickingState:
-    parameters: {}
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+    returns: {}
   SetStopPickPlaceAfterExecutionCycle:
     description: 'Sets the cycle for stopping after the current pick cycle finishes.
 
@@ -379,6 +433,7 @@ services:
             properties:
               finishCode:
                 description: The finish code to end with. If not specified, will be 'FinishedCycleStopped'
+    returns: {}
   PutPartsBack:
     # TODO(felixvd): Is this even used anymore?
     description: Runs saved planningresult trajectories.
@@ -399,6 +454,7 @@ services:
                 type: string
               grippervalues:
                 type: array
+    returns: {}
   GenerateGraspModelFromIkParams:
     description: Generates grasp model IK for given setup.
     parameters:
@@ -419,6 +475,7 @@ services:
                 $merge: '#/components/graspsetname'
               robotname:
                 $merge: '#/components/robotname'
+    returns: {}
   CheckGraspModelIk:
     description: Checks if grasp model is generated for given setup.
     parameters:
@@ -438,6 +495,7 @@ services:
                 $merge: '#/components/graspsetname'
               ikparamnames:
                 type: array
+    returns: {}
   SetCurrentLayoutDataFromPLC:
     description: Sets current layout from PLC.
     parameters:
@@ -457,10 +515,13 @@ services:
               ioVariableName:
                 isRequired: true
                 type: string
+    returns: {}
   ClearVisualization:
     description: Clears visualization.
+    returns: {}
   GetPlanStatistics:
     description: Gets plan and execute statistics of the last pick and place
+    returns: {}
   SetCurrentLayoutDataSendOnObjectUpdateData:
     description: Sets currentLayoutDataSendOnObjectUpdateData structure
     parameters:
@@ -474,8 +535,9 @@ services:
                 description: If True then currentLayoutData will be send on every ObjectUpdate, else currentLayoutDataSendOnObjectUpdate structure is reset
               containername:
                 type: string
-              containerLayoutSize:
-              ioVariableName:
+              containerLayoutSize: {}
+              ioVariableName: {}
+    returns: {}
   StartPackFormationComputationThread:
     description: Starts a background loop to copmute packing formation.
     parameters:
@@ -488,10 +550,13 @@ services:
                 $merge: '#/components/debuglevel'
               toolname:
                 $merge: '#/components/toolname'
+    returns: {}
   StopPackFormationComputationThread:
     description: Stops the packing computation thread thread started with StartPackFormationComputationThread
+    returns: {}
   VisualizePackingState:
     description: Stops the packing computation thread thread started with StartPackFormationComputationThread
+    returns: {}
   VisualizePackFormationResult:
     description: Stops the packing computation thread thread started with StartPackFormationComputationThread
     parameters:
@@ -503,10 +568,18 @@ services:
               initializeCameraPosition:
                 type: bool
                 description: Reset camera position
+    returns: {}
   GetPackFormationSolution:
     description: Stops the packing computation thread thread started with StartPackFormationComputationThread
+    returns: {}
   GetPackItemPoseInWorld:
-    parameters: {}
+    parameters:
+      $merge: '#/components/StandardPlanningServerRequestParameters'
+      taskparams:
+        properties:
+          taskparameters:
+            properties: {}
+    returns: {}
   ManuallyPlacePackItem:
     description: Places an item according to the pack formation assuming the item is placed manually and updates robotbridge state
     parameters:
@@ -519,18 +592,22 @@ services:
               inputPartIndex: {}
               placeLocationNames: {}
               placedTargetPrefix: {}
+              dynamicGoalsGeneratorParameters: {}
               orderNumber: {}
               numLeftToPick: {}
+    returns: {}
   SendPackFormationComputationResult:
     description: Stops the packing computation thread thread started with StartPackFormationComputationThread
+    returns: {}
   GetLatestPackFormationResultList:
     description: Gets latest pack formation computation result
+    returns: {}
   ClearPackingStateVisualization:
     description: Clears packing visualization
+    returns: {}
   ValidatePackFormationResultList:
     description: |
         Validates pack formation result list and compute info (fillRatio, packageDimensions, packedItemsInfo, etc) about it.
-
         kwargs should be packing parameters'
     parameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
@@ -541,7 +618,20 @@ services:
               packFormationResultList:
                 isRequired: true
     returns:
-      description: "{'validatedPackFormationResultList':[{'validationStatus', 'errorCode', 'errorDesc', (optional)'packFormationResult'}]}"
       type: object
+      properties:
+        validatedPackFormationResultList:
+          type: array
+          items:
+            type: object
+            properties:
+              validationStatus: {}
+              errorCode: {}
+              errorDesc: {}
+              packFormationResult:
+                description: Optional.
   ComputeSamePartPackResultBySimulation:
     description: Computes pack formation for single part type.
+  HasDetectionObstacles:
+    description: Checks to see if the detection obstacles have all arrived.
+    returns: {}
