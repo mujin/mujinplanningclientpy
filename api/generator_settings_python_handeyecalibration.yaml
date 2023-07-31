@@ -22,7 +22,7 @@ templateArgs:  # Strings that are added to client_template.py.mako
         """
         command = {'command': commandName}
         if self.robot is not None:
-          command['robot'] = self.robot
+            command['robot'] = self.robot
         return command
 include:
 - components.yaml

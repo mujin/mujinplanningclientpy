@@ -16,6 +16,7 @@ services:
                 isRequired: true
               robotname:
                 $merge: "#/components/robotname"
+    returns: {}
   GetITLState:
     parameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
@@ -25,6 +26,7 @@ services:
             properties:
               robotname:
                 $merge: "#/components/robotname"
+    returns: {}
   ExecuteTrajectory:
     parameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
@@ -50,6 +52,7 @@ services:
                 $merge: "#/components/robotspeed"
               robotaccelmult:
                 $merge: "#/components/robotaccelmult"
+    returns: {}
   ExecuteTrajectoryStep:
     parameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
@@ -68,6 +71,7 @@ services:
                 $merge: "#/components/robotspeed"
               robotaccelmult:
                 $merge: "#/components/robotaccelmult"
+    returns: {}
   PauseExecuteTrajectory:
     parameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
@@ -75,6 +79,7 @@ services:
         properties:
           taskparameters:
             properties: {}
+    returns: {}
   ResumeExecuteTrajectory:
     parameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
@@ -82,6 +87,7 @@ services:
         properties:
           taskparameters:
             properties: {}
+    returns: {}
   ComputeRobotConfigsForCommandVisualization:
     parameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
@@ -93,6 +99,7 @@ services:
                 isRequired: true
               commandindex:
                 default: 0
+    returns: {}
   ComputeRobotJointValuesForCommandVisualization:
     parameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
@@ -104,6 +111,7 @@ services:
                 isRequired: true
               commandindex:
                 default: 0
+    returns: {}
   PlotProgramWaypoints:
     parameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
@@ -111,6 +119,7 @@ services:
         properties:
           taskparameters:
             properties: {}
+    returns: {}
   StartITLProgram:
     parameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
@@ -122,6 +131,7 @@ services:
                 isRequired: true
               robotspeed: {}
               robotaccelmult: {}
+    returns: {}
   StopITLProgram:
     description: "Stops the ITL program"
     parameters:
@@ -130,6 +140,7 @@ services:
         properties:
           taskparameters:
             properties: {}
+    returns: {}
   GenerateExecutionGraph:
     description: "Generates a list of commands for the ITL program."
     parameters:
@@ -144,6 +155,7 @@ services:
                 default: 0.2
               totalTimeout:
                 default: 1.0
+    returns: {}
   PlotContacts:
     parameters:
       $merge: '#/components/StandardPlanningServerRequestParameters'
@@ -154,6 +166,7 @@ services:
               report:
                 type: object
                 # default: {}
+    returns: {}
   PopulateTargetInContainer:
     description: "Populates targets in container using populateFn."
     parameters:
@@ -170,3 +183,4 @@ services:
                 isRequired: true
               containerMetaData:
                 type: object
+    returns: {}
