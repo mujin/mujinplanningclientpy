@@ -2,29 +2,40 @@
 # Copyright (C) 2013-2015 MUJIN Inc.
 # Mujin controller client for bin picking task
 
-# System imports
-
-# Mujin imports
+# mujin imports
 from . import planningclient
 
-# Logging
+# logging
 import logging
 log = logging.getLogger(__name__)
 
 
 class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
-    """Mujin planning client for the hand-eye calibration task
-    """
+    """Mujin planning client for the HandEyeCalibration task"""
     tasktype = 'handeyecalibration'
+
+    robot = None
+
+    _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
 
     def __init__(self, robot, **kwargs):
         """Logs into the mujin controller, initializes hand eye calibration task, and sets up parameters
 
         Args:
-            controllerurl (str): URL of the mujin controller, e.g. http://controller14
+            robot (str): Name of the robot, e.g. VP-5243I
+            taskzmqport (int, optional): Port of the task's ZMQ server. Default: 11000
+            taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher. Default: 11001
+            taskheartbeattimeout (float, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
+            tasktype (str, optional): Type of the task, e.g. 'binpicking', 'handeyecalibration', 'itlrealtimeplanning3'. Default: handeyecalibration
+            ctx (zmq.Context, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
+            slaverequestid:
+            controllerip (str): IP or hostname of the mujin controller, e.g. 172.17.0.2 or controller123
+            controllerurl (str, optional): (Deprecated. Use controllerip instead) URL of the mujin controller, e.g. http://controller14.
             controllerusername (str): Username for the Mujin controller, e.g. testuser
             controllerpassword (str): Password for the Mujin controller
             scenepk (str, optional): Primary key (pk) of the scene, e.g. irex_demo.mujin.dae
+            callerid (str, optional): Caller identifier to send to server on every command
+            ignoredArgs: Additional keyword args are not used, but allowed for easy initialization from a dictionary
         """
         super(HandEyeCalibrationPlanningClient, self).__init__(tasktype=self.tasktype, **kwargs)
         self.robot = robot
@@ -36,11 +47,17 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
             primarySensorSelectionInfo (dict): Selects the primary camera that everything will be calibrated against.
             secondarySensorSelectionInfos (list[dict]): Selects the secondary camera(s) (assumed to be nearby the primary sensor).
             numsamples (int): Number of samples to take. A reasonable number is often between 5 and 25.
-            calibboardvisibility (bool):
+            calibboardvisibility (dict):
             calibboardLinkName (str, optional):
             calibboardGeomName (str, optional):
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 3000)
-            gridindex:
+            gridindex (int, optional): The index of the voxel
+            toolname (str, optional):
+            calibboardObjectName (str, optional):
+            minPatternTiltAngle (float, optional): The minimum tilt of the pattern in degrees. Default: 10 degrees
+            maxPatternTiltAngle (float, optional): The maximum tilt of the pattern in degrees. Default: 30 degrees
+            dynamicEnvironmentState (list[dict], optional): The dynamic objects in the environment that is to be used for planning/executing the task. A list of bodies.
+            robot (str, optional): The name of the robot (modelName). If not specified - the value used for client initialization will be applied.
         """
         taskparameters = {
             'command': 'ComputeCalibrationPoses',
@@ -67,12 +84,21 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
             primarySensorSelectionInfo (dict): Selects the primary camera that everything will be calibrated against.
             secondarySensorSelectionInfos (list[dict]): Selects the secondary camera(s) (assumed to be nearby the primary sensor).
             gridindex (int): The index of the voxel
-            calibboardvisibility (bool):
+            calibboardvisibility (dict):
             calibboardLinkName (str, optional):
             calibboardGeomName (str, optional):
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 3000)
             minPatternTiltAngle (float, optional): The minimum tilt of the pattern in degrees. Default: 10 degrees
             maxPatternTiltAngle (float, optional): The maximum tilt of the pattern in degrees. Default: 30 degrees
+            toolname (str, optional):
+            calibboardObjectName (str, optional):
+            dynamicEnvironmentState (list[dict], optional): The dynamic objects in the environment that is to be used for planning/executing the task. A list of bodies.
+            robot (str, optional): The name of the robot (modelName). If not specified - the value used for client initialization will be applied.
+
+        Returns:
+            dict: A dictionary with the structure:
+
+                - vConfig (list[float]): The IK solution (joint angles) for the sample.
         """
         taskparameters = {
             'command': 'SampleCalibrationConfiguration',
