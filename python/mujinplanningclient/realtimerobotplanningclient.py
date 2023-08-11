@@ -22,15 +22,16 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
     _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
 
     def __init__(self, robotname='', robotspeed=None, robotaccelmult=None, envclearance=10.0, robotBridgeConnectionInfo=None, **kwargs):
-        """
+        """Connects to the Mujin controller, initializes RealtimeRobot task and sets up parameters
+
         Args:
             robotname (str, optional): Name of the robot, e.g. VP-5243I
             robotspeed (float, optional): Speed of the robot, e.g. 0.4
             robotaccelmult (float, optional): Optional multiplier for the robot acceleration.
-            envclearance (str, optional): Environment clearance in millimeter, e.g. 20
+            envclearance (float, optional): Environment clearance in millimeter, e.g. 20
             robotBridgeConnectionInfo (str, optional): dict holding the connection info for the robot bridge.
-            taskzmqport (int, optional): Port of the task's ZMQ server. Default: 11000
-            taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher. Default: 11001
+            taskzmqport (int, optional): Port of the task's ZMQ server, e.g. 7110. (Default: 11000)
+            taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher, e.g. 7111. (Default: 11001)
             taskheartbeattimeout (float, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
             tasktype (str, optional): Type of the task, e.g. 'binpicking', 'handeyecalibration', 'itlrealtimeplanning3'. Default: realtimerobot
             ctx (zmq.Context, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
@@ -56,7 +57,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
     def SetRobotConnectionInfo(self, robotBridgeConnectionInfo):
         """
-
         Args:
             robotBridgeConnectionInfo:
         """
@@ -68,7 +68,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
     def SetRobotName(self, robotname):
         """
-
         Args:
             robotname (str):
         """
@@ -76,7 +75,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
     def SetRobotSpeed(self, robotspeed):
         """
-
         Args:
             robotspeed:
         """
@@ -84,7 +82,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
     def SetRobotAccelMult(self, robotaccelmult):
         """
-
         Args:
             robotaccelmult:
         """
@@ -152,6 +149,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
         return super(RealtimeRobotPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, respawnopts=respawnopts, forcereload=forcereload)
 
+    #
+    # Commands
+    #
+
     def GetJointValues(self, timeout=10, **kwargs):
         """Gets the current robot joint values
 
@@ -189,7 +190,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         Args:
             goaltype (str): Type of the goal, e.g. translationdirection5d
             goals (list[float]): Flat list of goals, e.g. two 5D ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]
-            toolname (str, optional): Tool name(s)
+            toolname (str, optional): Name of the manipulator. Default: self.toolname
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             workmaxdeviationangle (float, optional): How much the tool tip can rotationally deviate from the linear path. In deg.
@@ -197,9 +198,9 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             workaccel (list[float], optional): [angleaccel, transaccel] in deg/s^2 and mm/s^2
             worksteplength (float, optional): Discretization for planning MoveHandStraight, in seconds.
             plannername (str, optional):
+            numspeedcandidates (int, optional): If speed/accel are not specified, the number of candiates to consider
             workminimumcompletetime (float, optional): **deprecated** Unused. Set to trajduration - 0.016s. EMU_MUJIN example requires at least this much
             workminimumcompleteratio (float, optional): **deprecated** Unused. In case the duration of the trajectory is now known, can specify in terms of [0,1]. 1 is complete everything.
-            numspeedcandidates (int, optional): If speed/accel are not specified, the number of candiates to consider
             workignorefirstcollisionee (float, optional): time, necessary in case initial is in collision, has to be multiples of step length?
             workignorelastcollisionee (float, optional): time, necessary in case goal is in collision, has to be multiples of step length?
             workignorefirstcollision (float, optional):
@@ -244,7 +245,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             goals (list[float]): Flat list of goals, e.g. two 5d ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]
             toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
             envclearance (float, optional): Environment clearance in millimeters.
-            closegripper (bool, optional): Whether to close gripper once the goal is reached. (Default: 0)
+            closegripper (int, optional): Whether to close gripper once the goal is reached. Boolean value represented by 0 or 1. (Default: 0)
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
@@ -307,7 +308,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         envstate,
         targetname=None,
         state=None,
-        unit="mm",
+        unit='mm',
         timeout=10,
         **kwargs
     ):
@@ -320,7 +321,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             unit (str, optional): The unit of the given values. (Default: 'mm')
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             locationName (str, optional): Name of the location to update.
-            locationContainerId (None, optional):
+            locationContainerId:
             imageStartTimeStampMS (int, optional):
             callerid (str, optional): The name of the caller (only used internally)
             object_uri (str, optional): Same as objectname, but in a Mujin URI format, e.g.: mujin:/OBJECTNAME.mujin.dae
@@ -657,7 +658,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
             resetAllLocations (bool, optional): If True, then will reset all the locations
             resetLocationName (str, optional): Resets only the location with matching name
             resetLocationNames (list[str], optional): Resets only locations with matching name
@@ -679,7 +680,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
 
         Returns:
             dict: activeLocationTrackingInfos
@@ -702,7 +703,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             containerType (str): Type of the container
             trackingCycleIndex: If specified, then the cycle with same cycleIndex will update location tracking in the same call.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
             unit (str, optional): The unit of the given values. (Default: 'mm')
         """
         taskparameters = {
@@ -724,7 +725,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             locationName (str): The name of the location that may be reset.
             checkContainerId: If checkContainerId is specified and not empty and it matches the current containerId of the tracking location, then reset the current tracking location
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'ResetLocationTrackingContainerId',
@@ -741,11 +742,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             prefix (str, optional): **deprecated**
             removeNamePrefixes (list[str], optional): Names of prefixes to match with when removing items
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
             removeLocationNames (list[str], optional):
             doRemoveOnlyDynamic (bool, optional): If True, removes objects that were added through dynamic means such as UpdateObjects/UpdateEnvironmentState. Default: False
             locationName (str, optional): Name of the location to update.
-            locationContainerId (None, optional):
+            locationContainerId:
             imageStartTimeStampMS (int, optional):
             callerid (str, optional): The name of the caller (only used internally)
 
@@ -774,7 +775,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             startindex (int, optional): Start of the trajectory to get. If negative, will start counting from the end. For example, -1 is the last element, -2 is the second to last. Default: 0
             num (int, optional): Number of trajectories from startindex to return. If 0, will return all the trajectories starting from startindex. Default: 0
-            includejointvalues (bool, optional): If True, will include timedjointvalues. If False, will just give back the trajectories.
+            includejointvalues (bool, optional): If True, will include timedjointvalues. If False, will just give back the trajectories. (Default: False)
             saverawtrajectories (bool, optional): If True, will save the raw trajectories.
 
         Returns:
@@ -852,7 +853,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             robotname (str, optional): Name of the robot
             grippername (str, optional): Name of the gripper.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
             toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             speed: **deprecated** Use robotspeed instead.
@@ -874,7 +875,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             robotname (str, optional): Name of the robot
             grippername (str, optional): Name of the gripper.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
             toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             speed: **deprecated** Use robotspeed instead.
@@ -898,7 +899,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             robotname (str, optional): Name of the robot
             grippername (str, optional): Name of the gripper.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
             toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
             unit (str, optional): The unit of the given values. (Default: 'mm')
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
@@ -925,7 +926,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             robotProgramName (str):
             robotname (str, optional): Name of the robot
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
             unit (str, optional): The unit of the given values. (Default: 'mm')
             toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
             robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
@@ -1007,7 +1008,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
             execute (int, optional): If 1, execute the motion. (Default: 1)
-            startJointConfigurationStates (, optional):
+            startJointConfigurationStates:
             envclearance (float, optional): Environment clearance in millimeters.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             jointStates (list, optional): List[{'jointName':str, 'jointValue':float}]
@@ -1239,7 +1240,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
 
     def GetRobotBridgeIOVariables(self, ioname=None, ionames=None, robotname=None, timeout=10, **kwargs):
-        """Returns the data of the IO in ascii hex as a string
+        """Returns the data of the IO in ASCII hex as a string
 
         Args:
             ioname (str, optional): One IO name to read
@@ -1350,9 +1351,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             robotname (str, optional): Name of the robot
 
         Returns:
-            A dictionary with field 'solutions': array of IK solutions (each of which is an array of DOF values), sorted by minimum travel distance and truncated to match the limit
+            dict: A dictionary with the structure:
 
-                If no solutions found, the field 'errors' will contain reasons for the failure.
+                - solutions (list[dict]): Array of IK solutions (each of which is an array of DOF values), sorted by minimum travel distance and truncated to match the limit
+                - errors (list[dict]): If no solutions found, the field 'errors' will contain reasons for the failure.
         """
         taskparameters = {
             'command': 'ComputeIKFromParameters',
@@ -1457,92 +1459,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetJogModeVelocities(self, movejointsigns, robotname=None, toolname=None, robotspeed=None, robotaccelmult=None, canJogInCheckMode=None, timeout=1, fireandforget=False, jogtype=_deprecated, checkSelfCollisionWhileJogging=None, force=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotJogParameters=None, simulationtimestep=None, plotDirection=None, **kwargs):
-        """
-        Args:
-            movejointsigns (list[float]): Joint signs used for jogging. If less than the number of joints, will be padded with zeros.
-            robotname (str, optional): Name of the robot
-            toolname (str, optional): Name of the manipulator.
-            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
-            robotaccelmult (float, optional): Value in (0,1] setting the percentage of robot acceleration to move at
-            canJogInCheckMode (bool, optional): If True, then allow jogging even if in check mode. (Default: False)
-            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 1)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
-            jogtype (str, optional): **deprecated** One of 'joints', 'world', 'robot', 'tool'. Recommended to set this as a field in robotJogParameters instead.
-            checkSelfCollisionWhileJogging (bool, optional):
-            force (bool, optional): If true, forces the velocities to be set.
-            unit (str, optional): The unit of the given values. (Default: 'mm')
-            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
-            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
-            robotJogParameters (dict, optional): A dictionary. Includes field 'jogtype' (One of 'joints', 'world', 'robot', 'tool').
-            simulationtimestep (float, optional): Time step of the simulation.
-            plotDirection (bool, optional): If True, plot the direction.
-        """
-        taskparameters = {
-            'command': 'SetJogModeVelocities',
-            'unit': unit,
-            'movejointsigns': movejointsigns,
-        }
-        if robotname is not None:
-            taskparameters['robotname'] = robotname
-        if toolname is not None:
-            taskparameters['toolname'] = toolname
-        if robotBridgeConnectionInfo is not None:
-            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
-        if locationCollisionInfos is not None:
-            taskparameters['locationCollisionInfos'] = locationCollisionInfos
-        if robotJogParameters is not None:
-            taskparameters['robotJogParameters'] = robotJogParameters
-        if simulationtimestep is not None:
-            taskparameters['simulationtimestep'] = simulationtimestep
-        if plotDirection is not None:
-            taskparameters['plotDirection'] = plotDirection
-        if robotspeed is not None:
-            taskparameters['robotspeed'] = robotspeed
-        if robotaccelmult is not None:
-            taskparameters['robotaccelmult'] = robotaccelmult
-        if canJogInCheckMode is not None:
-            taskparameters['canJogInCheckMode'] = canJogInCheckMode
-        if checkSelfCollisionWhileJogging is not None:
-            taskparameters['checkSelfCollisionWhileJogging'] = checkSelfCollisionWhileJogging
-        if force is not None:
-            taskparameters['force'] = force
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-
-    def EndJogMode(self, timeout=1, fireandforget=False, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, **kwargs):
-        """
-        Args:
-            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 1)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
-            unit (str, optional): The unit of the given values. (Default: 'mm')
-            robotname (str, optional): Name of the robot
-            toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
-            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
-            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
-        """
-        taskparameters = {
-            'command': 'EndJogMode',
-            'unit': unit,
-        }
-        if robotname is not None:
-            taskparameters['robotname'] = robotname
-        if toolname is not None:
-            taskparameters['toolname'] = toolname
-        if robotBridgeConnectionInfo is not None:
-            taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
-        if locationCollisionInfos is not None:
-            taskparameters['locationCollisionInfos'] = locationCollisionInfos
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-
     def SetRobotBridgeServoOn(self, servoon, robotname=None, timeout=3, fireandforget=False):
         """
         Args:
             servoon (bool): If True, turns servo on.
             robotname (str, optional): Name of the robot
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 3)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'SetRobotBridgeServoOn',
@@ -1558,7 +1481,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             islockmode (bool): If True, turns on Lock Mode. During Lock Mode, all communication with the physical robot is turned off and the hardware will not move.
             robotname (str, optional): Name of the robot
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 3)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'SetRobotBridgeLockMode',
@@ -1572,7 +1495,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 3)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'ResetSafetyFault',
@@ -1584,7 +1507,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         Args:
             controlMode (str): The control mode to use, e.g. "Manual".
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 3)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'SetRobotBridgeControlMode',
@@ -1611,7 +1534,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             targetname (str): Target object's name.
             graspname (str): Name of the grasp for which to visualize grasps.
             robotname (str, optional): Name of the robot
-            toolname (str, optional): Name of the manipulator. (Default: 'self.toolname')
+            toolname (str, optional): Name of the manipulator. (Default: "self.toolname")
             unit (str, optional): The unit of the given values. (Default: 'mm')
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             approachoffset (float, optional):
@@ -1637,7 +1560,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 1)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'ResetCacheTemplates',
@@ -1651,7 +1574,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         Args:
             enable (bool): If True, collision data will be published to robotbridge.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 2)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'SetRobotBridgeExternalIOPublishing',
@@ -1665,7 +1588,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 1)
-            preserverobotdofvalues (bool, optional): (Default: 1)
+            preserverobotdofvalues (int, optional): A Boolean value represented by 0 or 1. (Default: 1)
         """
         taskparameters = {
             'command': 'RestoreSceneInitialState',
@@ -1996,7 +1919,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10.0)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
             unit (str, optional): The unit of the given values. (Default: 'mm')
             robotname (str, optional): Name of the robot
             toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
@@ -2015,7 +1938,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         Args:
             syncTimeStampUS: us (microseconds, linux time) of the timestamp
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'EnsureSyncWithRobotBridge',
@@ -2029,7 +1952,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'ResetCachedRobotConfigurationState',

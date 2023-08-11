@@ -20,8 +20,8 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
     _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
 
     def __init__(self, regionname=None, **kwargs):
-        """Logs into the mujin controller, initializes binpicking task, and sets up parameters
-        
+        """Connects to the Mujin controller, initializes Binpicking task and sets up parameters
+
         Args:
             regionname (str, optional): Name of the bin, e.g. container1
             robotname (str, optional): Name of the robot, e.g. VP-5243I
@@ -31,8 +31,8 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             robotBridgeConnectionInfo (str, optional): dict holding the connection info for the robot bridge.
             targetname (str, optional): Name of the target, e.g. plasticnut-center
             toolname (str, optional): Name of the manipulator, e.g. 2BaseZ
-            taskzmqport (int, optional): Port of the task's ZMQ server. Default: 11000
-            taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher. Default: 11001
+            taskzmqport (int, optional): Port of the task's ZMQ server, e.g. 7110. (Default: 11000)
+            taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher, e.g. 7111. (Default: 11001)
             taskheartbeattimeout (float, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
             tasktype (str, optional): Type of the task, e.g. 'binpicking', 'handeyecalibration', 'itlrealtimeplanning3'. Default: binpicking
             ctx (zmq.Context, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
@@ -45,13 +45,14 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             callerid (str, optional): Caller identifier to send to server on every command
             ignoredArgs: Additional keyword args are not used, but allowed for easy initialization from a dictionary
         """
-        # bin picking task
         self.regionname = regionname
         super(BinpickingPlanningClient, self).__init__(tasktype=self.tasktype, **kwargs)
 
-    #########################
-    # robot commands
-    #########################
+
+    #
+    # Commands
+    #
+
 
     def PickAndPlace(
         self,
@@ -206,10 +207,10 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
         Args:
             resetExecutionState (bool, optional): if True, then reset the order state variables. By default True (Default: True)
-            resetStatusPickPlace (bool, optional): if True, then reset the statusPickPlace field of hte planning slave.
+            resetStatusPickPlace (bool, optional): if True, then reset the statusPickPlace field of hte planning slave. (Default: False)
             finishCode (str, optional): optional finish code to end the cycle with (if it doesn't end with something else beforehand)
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'StopPickPlaceThread',
@@ -251,7 +252,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             freeincvalue (float, optional): The discretization of the free joints of the robot when computing ik.
             filteroptions (int, optional): OpenRAVE IkFilterOptions bitmask. By default this is 1, which means all collisions are checked
             limit (int, optional): number of solutions to return
-            preshape (list, optional): If the tool has fingers after the end effector, specify their values. The gripper DOFs come from **gripper_dof_pks** field from the tool.
+            preshape (list[float], optional): If the tool has fingers after the end effector, specify their values. The gripper DOFs come from **gripper_dof_pks** field from the tool.
 
         Returns:
             dict: A dictionary with the structure:
@@ -380,7 +381,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
         Returns:
             The positions and the timestamps of the picked objects in a json dictionary, info of each object has the format of quaternion (w,x,y,z) followed by x,y,z translation (in mm) followed by timestamp in milisecond e.g. {'positions': [[1,0,0,0,100,200,300,1389774818.8366449],[1,0,0,0,200,200,300,1389774828.8366449]]}
-
         """
         taskparameters = {
             'command': 'GetPickedPositions',
@@ -401,13 +401,15 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             A dictionary with keys, for example:
 
                 {
+
                     total: 10
-                    messages: [
-                        {
+                    messages: [{
+
                             "message":"message1",
                             "type":"",
                             "level":0,
                             "data": {
+
                                 "jointvalues":[0,0,0,0,0,0]
                             }
                         },
@@ -467,7 +469,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         Args:
             stateTrigger (str): a string that represents a unique trigger
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'SendStateTrigger',
@@ -480,7 +482,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         """
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {'command': 'GetBinpickingState'}
         taskparameters.update(kwargs)
@@ -488,6 +490,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
     
     def SetStopPickPlaceAfterExecutionCycle(self, timeout=10, **kwargs):
         """Sets the cycle for stopping after the current pick cycle finishes.
+
         If robot has not grabbed a part yet, then will stop the robot immediately.
         On proper finish of the pick cycle, robot should go back to the finish position.
 
@@ -587,7 +590,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {'command': 'ClearVisualization'}
         taskparameters.update(kwargs)
@@ -598,7 +601,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 1)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {'command': 'GetPlanStatistics'}
         taskparameters.update(kwargs)
@@ -647,7 +650,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'StopPackFormationComputationThread',
@@ -660,7 +663,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'VisualizePackingState',
@@ -673,7 +676,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
             initializeCameraPosition (bool, optional): Reset camera position
         """
         taskparameters = {
@@ -687,7 +690,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'GetPackFormationSolution',
@@ -699,7 +702,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         """
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'GetPackItemPoseInWorld',
@@ -719,7 +722,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             orderNumber:
             numLeftToPick:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'ManuallyPlacePackItem',
@@ -744,7 +747,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'SendPackFormationComputationResult',
@@ -757,7 +760,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'GetLatestPackFormationResultList',
@@ -770,7 +773,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'ClearPackingStateVisualization',
@@ -780,12 +783,13 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
     def ValidatePackFormationResultList(self, packFormationResultList, timeout=10, fireandforget=False, **kwargs):
         """Validates pack formation result list and compute info (fillRatio, packageDimensions, packedItemsInfo, etc) about it.
-        kwargs should be packing parameters'
+
+        kwargs are expected to be packing parameters.
 
         Args:
             packFormationResultList:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
 
         Returns:
             dict: A dictionary with the structure:

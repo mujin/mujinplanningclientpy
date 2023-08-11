@@ -12,6 +12,7 @@ log = logging.getLogger(__name__)
 
 class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
     """Mujin planning client for the HandEyeCalibration task"""
+
     tasktype = 'handeyecalibration'
 
     robot = None
@@ -19,12 +20,12 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
     _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
 
     def __init__(self, robot, **kwargs):
-        """Logs into the mujin controller, initializes hand eye calibration task, and sets up parameters
+        """Connects to the Mujin controller, initializes HandEyeCalibration task and sets up parameters
 
         Args:
             robot (str): Name of the robot, e.g. VP-5243I
-            taskzmqport (int, optional): Port of the task's ZMQ server. Default: 11000
-            taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher. Default: 11001
+            taskzmqport (int, optional): Port of the task's ZMQ server, e.g. 7110. (Default: 11000)
+            taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher, e.g. 7111. (Default: 11001)
             taskheartbeattimeout (float, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
             tasktype (str, optional): Type of the task, e.g. 'binpicking', 'handeyecalibration', 'itlrealtimeplanning3'. Default: handeyecalibration
             ctx (zmq.Context, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
@@ -39,6 +40,12 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
         """
         super(HandEyeCalibrationPlanningClient, self).__init__(tasktype=self.tasktype, **kwargs)
         self.robot = robot
+
+
+    #
+    # Commands
+    #
+
 
     def ComputeCalibrationPoses(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, numsamples, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, gridindex=None, **kwargs):
         """Compute a set of calibration poses that satisfy the angle constraints using latin hypercube sampling (or stratified sampling upon failure)
