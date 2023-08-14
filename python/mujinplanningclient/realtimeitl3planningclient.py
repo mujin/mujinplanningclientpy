@@ -11,34 +11,37 @@ log = logging.getLogger(__name__)
 
 
 class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningClient):
-    """Mujin planning client for realtimeitlplanning3 task
-    """
+    """Mujin planning client for the RealtimeITL3 task"""
+
+    _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
 
     def __init__(self, **kwargs):
-        """Logs into the mujin controller, initializes realtimeitlplanning3 task, and sets up parameters
+        """Connects to the Mujin controller, initializes RealtimeITL3 task and sets up parameters
 
         Args:
-            controllerip (str, optional): Ip or hostname of the mujin controller, e.g. controller14 or 172.17.0.2
-            controllerurl (str, optional): (Deprecated; use controllerip instead) URL of the mujin controller, e.g. http://controller14.
-            controllerusername (str): Username of the mujin controller, e.g. testuser
-            controllerpassword (str): Password of the mujin controller
             robotname (str, optional): Name of the robot, e.g. VP-5243I
-            scenepk (str, optional): Primary key (pk) of the bin picking task scene, e.g. komatsu_ntc.mujin.dae
             robotspeed (float, optional): Speed of the robot, e.g. 0.4
-            regionname (str, optional): Name of the bin, e.g. container1
-            targetname (str, optional): Name of the target, e.g. plasticnut-center
-            toolname (str, optional): Name of the manipulator, e.g. 2BaseZ
-            envclearance (float, optional): Environment clearance in millimeters, e.g. 20
             robotaccelmult (float, optional): Optional multiplier for the robot acceleration.
-            taskzmqport (int, optional): Port of the task's zmq server, e.g. 7110
-            taskheartbeatport (int, optional): Port of the task's zmq server's heartbeat publisher, e.g. 7111
-            taskheartbeattimeout (float, optional): Seconds until reinitializing the task's zmq server if no heartbeat is received, e.g. 7
+            envclearance (float, optional): Environment clearance in millimeter, e.g. 20
+            robotBridgeConnectionInfo (str, optional): dict holding the connection info for the robot bridge.
+            taskzmqport (int, optional): Port of the task's ZMQ server, e.g. 7110. (Default: 11000)
+            taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher, e.g. 7111. (Default: 11001)
+            taskheartbeattimeout (float, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
+            tasktype (str, optional): Type of the task, e.g. 'binpicking', 'handeyecalibration', 'itlrealtimeplanning3'. Default: realtimeitl3
+            ctx (zmq.Context, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
+            slaverequestid:
+            controllerip (str): IP or hostname of the mujin controller, e.g. 172.17.0.2 or controller123
+            controllerurl (str, optional): (Deprecated. Use controllerip instead) URL of the mujin controller, e.g. http://controller14.
+            controllerusername (str): Username for the Mujin controller, e.g. testuser
+            controllerpassword (str): Password for the Mujin controller
+            scenepk (str, optional): Primary key (pk) of the scene, e.g. irex_demo.mujin.dae
+            callerid (str, optional): Caller identifier to send to server on every command
+            ignoredArgs: Additional keyword args are not used, but allowed for easy initialization from a dictionary
         """
         super(RealtimeITL3PlanningClient, self).__init__(tasktype='realtimeitlplanning3', **kwargs)
 
     def SetJointValues(self, jointvalues, robotname=None, timeout=10, **kwargs):
         """
-
         Args:
             jointvalues (list[float]):
             robotname (str, optional): Name of the robot
@@ -55,11 +58,10 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
 
     def GetITLState(self, robotname=None, timeout=10, fireandforget=False, **kwargs):
         """
-
         Args:
             robotname (str, optional): Name of the robot
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish. The method returns immediately and the command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'GetITLState',
@@ -71,7 +73,6 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
 
     def ExecuteTrajectory(self, identifier, trajectories, statevalues=None, stepping=False, istep=None, cycles=1, restorevalues=None, envclearance=15, robotspeed=None, robotaccelmult=None, timeout=10, fireandforget=False):
         """
-
         Args:
             identifier:
             trajectories:
@@ -84,7 +85,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish. The method returns immediately and the command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'ExecuteTrajectory',
@@ -108,14 +109,13 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
 
     def ExecuteTrajectoryStep(self, reverse=False, envclearance=15, robotspeed=None, robotaccelmult=None, timeout=10, fireandforget=False):
         """
-
         Args:
-            reverse (bool, optional):
+            reverse (bool, optional): (Default: False)
             envclearance (float, optional): Environment clearance in millimeters. (Default: 15)
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish. The method returns immediately and the command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'ExecuteTrajectoryStep',
@@ -130,10 +130,9 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
 
     def PauseExecuteTrajectory(self, timeout=10, fireandforget=False):
         """
-
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish. The method returns immediately and the command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'PauseExecuteTrajectory',
@@ -142,10 +141,9 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
 
     def ResumeExecuteTrajectory(self, timeout=10, fireandforget=False):
         """
-
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish. The method returns immediately and the command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'ResumeExecuteTrajectory',
@@ -154,12 +152,11 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
 
     def ComputeRobotConfigsForCommandVisualization(self, executiongraph, commandindex=0, timeout=2, fireandforget=False, **kwargs):
         """
-
         Args:
             executiongraph:
             commandindex: (Default: 0)
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 2)
-            fireandforget (bool, optional): If True, does not wait for the command to finish. The method returns immediately and the command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'ComputeRobotConfigsForCommandVisualization',
@@ -171,12 +168,11 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
 
     def ComputeRobotJointValuesForCommandVisualization(self, program, commandindex=0, timeout=2, fireandforget=False, **kwargs):
         """
-
         Args:
             program:
             commandindex: (Default: 0)
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 2)
-            fireandforget (bool, optional): If True, does not wait for the command to finish. The method returns immediately and the command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'ComputeRobotJointValuesForCommandVisualization',
@@ -188,10 +184,9 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
 
     def PlotProgramWaypoints(self, timeout=1, fireandforget=True, **kwargs):
         """
-
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 1)
-            fireandforget (bool, optional): If True, does not wait for the command to finish. The method returns immediately and the command remains queued on the server. (Default: True)
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: True)
         """
         taskparameters = {
             'command': 'PlotProgramWaypoints',
@@ -201,13 +196,12 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
 
     def StartITLProgram(self, programName, robotspeed=None, robotaccelmult=None, timeout=10, fireandforget=False, **kwargs):
         """
-
         Args:
             programName:
             robotspeed:
             robotaccelmult:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish. The method returns immediately and the command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'StartITLProgram',
@@ -225,7 +219,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish. The method returns immediately and the command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'StopITLProgram',
@@ -241,7 +235,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             commandTimeout: (Default: 0.2)
             totalTimeout: (Default: 1.0)
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish. The method returns immediately and the command remains queued on the server.
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'GenerateExecutionGraph',
@@ -253,7 +247,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
     def PopulateTargetInContainer(self, locationName, populateTargetUri, populateFnName, containerMetaData=None, timeout=20, **kwargs):
-        """Populates targets in container using populateFn.
+        """Populates targets in the container using populateFn.
 
         Args:
             locationName:
