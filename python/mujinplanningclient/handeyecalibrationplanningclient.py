@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2013-2015 MUJIN Inc.
-# Mujin controller client for bin picking task
+# Copyright (C) 2012-2023 Mujin, Inc.
+
+# system imports
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from typing import Any, Dict, List, Optional, Tuple, Union # noqa: F401 # used in type check
 
 # mujin imports
+from . import zmq
 from . import planningclient
 
 # logging
@@ -13,13 +18,28 @@ log = logging.getLogger(__name__)
 class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
     """Mujin planning client for the HandEyeCalibration task"""
 
-    tasktype = 'handeyecalibration'
-
-    robot = None
+    robot = None  # type: str # type: ignore
 
     _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
 
-    def __init__(self, robot, **kwargs):
+    def __init__(
+        self,
+        robot,
+        taskzmqport=11000,
+        taskheartbeatport=11001,
+        taskheartbeattimeout=7.0,
+        tasktype='handeyecalibration',
+        ctx=None,
+        slaverequestid=None,
+        controllerip='',
+        controllerurl='',
+        controllerusername='',
+        controllerpassword='',
+        scenepk='',
+        callerid='',
+        **ignoredArgs
+    ):
+        # type: (str, int, int, float, str, Optional[zmq.Context], Optional[str], str, str, str, str, str, str, Any) -> None
         """Connects to the Mujin controller, initializes HandEyeCalibration task and sets up parameters
 
         Args:
@@ -38,8 +58,21 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
             callerid (str, optional): Caller identifier to send to server on every command
             ignoredArgs: Additional keyword args are not used, but allowed for easy initialization from a dictionary
         """
-        super(HandEyeCalibrationPlanningClient, self).__init__(tasktype=self.tasktype, **kwargs)
         self.robot = robot
+        super(HandEyeCalibrationPlanningClient, self).__init__(
+            taskzmqport=taskzmqport,
+            taskheartbeatport=taskheartbeatport,
+            taskheartbeattimeout=taskheartbeattimeout,
+            tasktype=tasktype,
+            ctx=ctx,
+            slaverequestid=slaverequestid,
+            controllerip=controllerip,
+            controllerurl=controllerurl,
+            controllerusername=controllerusername,
+            controllerpassword=controllerpassword,
+            scenepk=scenepk,
+            callerid=callerid
+        )
 
 
     #
@@ -47,7 +80,8 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
     #
 
 
-    def ComputeCalibrationPoses(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, numsamples, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, gridindex=None, **kwargs):
+    def ComputeCalibrationPoses(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, numsamples, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, gridindex=None, toolname=None, calibboardObjectName=None, minPatternTiltAngle=None, maxPatternTiltAngle=None, dynamicEnvironmentState=None, robot=None, **kwargs):
+        # type: (Dict, List[Dict], int, Dict, Optional[str], Optional[str], float, Optional[int], Optional[str], Optional[str], Optional[float], Optional[float], Optional[List[Dict]], Optional[str], Any) -> Any
         """Compute a set of calibration poses that satisfy the angle constraints using latin hypercube sampling (or stratified sampling upon failure)
 
         Args:
@@ -72,19 +106,32 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
             'secondarySensorSelectionInfos': secondarySensorSelectionInfos,
             'numsamples': numsamples,
             'calibboardvisibility': calibboardvisibility,
-        }
+        }  # type: Dict[str, Any]
         if calibboardLinkName is not None:
             taskparameters['calibboardLinkName'] = calibboardLinkName
         if calibboardGeomName is not None:
             taskparameters['calibboardGeomName'] = calibboardGeomName
         if gridindex is not None:
             taskparameters['gridindex'] = gridindex
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
+        if calibboardObjectName is not None:
+            taskparameters['calibboardObjectName'] = calibboardObjectName
+        if minPatternTiltAngle is not None:
+            taskparameters['minPatternTiltAngle'] = minPatternTiltAngle
+        if maxPatternTiltAngle is not None:
+            taskparameters['maxPatternTiltAngle'] = maxPatternTiltAngle
+        if dynamicEnvironmentState is not None:
+            taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if self.robot is not None:
             taskparameters['robot'] = self.robot
+        if robot is not None:
+            taskparameters['robot'] = robot
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SampleCalibrationConfiguration(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, gridindex, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, minPatternTiltAngle=None, maxPatternTiltAngle=None, **kwargs):
+    def SampleCalibrationConfiguration(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, gridindex, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, minPatternTiltAngle=None, maxPatternTiltAngle=None, toolname=None, calibboardObjectName=None, dynamicEnvironmentState=None, robot=None, **kwargs):
+        # type: (Dict, List[Dict], int, Dict, Optional[str], Optional[str], float, Optional[float], Optional[float], Optional[str], Optional[str], Optional[List[Dict]], Optional[str], Any) -> Optional[Dict[str, List[float]]]
         """Sample a valid calibration pose inside the given voxel and find a corresponding IK solution.
 
         Args:
@@ -113,7 +160,7 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
             'secondarySensorSelectionInfos': secondarySensorSelectionInfos,
             'gridindex': gridindex,
             'calibboardvisibility': calibboardvisibility,
-        }
+        }  # type: Dict[str, Any]
         if calibboardLinkName is not None:
             taskparameters['calibboardLinkName'] = calibboardLinkName
         if calibboardGeomName is not None:
@@ -122,8 +169,16 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
             taskparameters['minPatternTiltAngle'] = minPatternTiltAngle
         if maxPatternTiltAngle is not None:
             taskparameters['maxPatternTiltAngle'] = maxPatternTiltAngle
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
+        if calibboardObjectName is not None:
+            taskparameters['calibboardObjectName'] = calibboardObjectName
+        if dynamicEnvironmentState is not None:
+            taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if self.robot is not None:
             taskparameters['robot'] = self.robot
+        if robot is not None:
+            taskparameters['robot'] = robot
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
