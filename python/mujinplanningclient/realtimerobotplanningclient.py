@@ -140,12 +140,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
         if self._robotBridgeConnectionInfo is not None:
             taskparameters['robotBridgeConnectionInfo'] = self._robotBridgeConnectionInfo
-<<<<<<< HEAD
-        log.error('Zach taskparameters=%r', taskparameters)
-        
-=======
-
->>>>>>> d14af9a82d592db01afb18adaa846524c005ed15
         if 'envclearance' not in taskparameters or taskparameters['envclearance'] is None:
             if envclearance is None:
                 envclearance = self._envclearance
