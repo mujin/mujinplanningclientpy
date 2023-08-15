@@ -104,6 +104,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             taskparameters['robotspeed'] = robotspeed
         if robotaccelmult is not None:
             taskparameters['robotaccelmult'] = robotaccelmult
+        log.error('Zach taskparameters=%r', taskparameters)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
     def ExecuteTrajectoryStep(self, reverse=False, envclearance=15, robotspeed=None, robotaccelmult=None, timeout=10, fireandforget=False):

@@ -258,6 +258,7 @@ class PlanningClient(object):
             'stamp': time.time(),
             'respawnopts': respawnopts,
         }
+        log.error('Zach command=%r', command)
         if self._callerid is not None:
             command['callerid'] = self._callerid
             if 'callerid' not in taskparameters:
