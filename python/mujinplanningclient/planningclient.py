@@ -177,7 +177,15 @@ class PlanningClient(object):
             except Exception:
                 pass
             self._ctxown = None
-
+    
+    @property
+    def commandport(self):
+        return self.taskzmqport
+    
+    @property
+    def hostname(self):
+        return self.controllerIp
+    
     def SetDestroy(self):
         commandsocket = self._commandsocket
         if commandsocket is not None:
