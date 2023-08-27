@@ -268,11 +268,11 @@ class ZmqThreadedSubscriber(ZmqSubscriber):
                     self.SpinOnce(timeout=self._timeout, checkpreemptfn=self._CheckPreempt)
                     loggedTimeoutError = False
                 except UserInterrupt as e:
-                    log.exception('subscriber thread "%s" preempted: %s', self._threadName, e)
+                    log.error('subscriber thread "%s" preempted: %s', self._threadName, e)
                     break # preempted
                 except TimeoutError as e:
                     if not loggedTimeoutError:
-                        log.exception('timed out in subscriber thread "%s": %s', self._threadName, e)
+                        log.error('timed out in subscriber thread "%s": %s', self._threadName, e)
                         loggedTimeoutError = True
                 except Exception as e:
                     log.exception('exception caught in subscriber thread "%s": %s', self._threadName, e)
