@@ -338,7 +338,12 @@ class PlanningClient(object):
         if error is not None:
             raise error
         return response['output']
-
+    
+    def TerminateSlaves(self, slaverequestids, timeout=None, fireandforget=None, checkpreempt=True):
+        """terminate slaves with specific slaverequestids
+        """
+        return self.SendConfig({'command':'TerminateSlaves', 'slaverequestids':slaverequestids}, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
+    
     #
     # Viewer Parameters Related
     #
