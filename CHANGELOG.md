@@ -1,3 +1,7 @@
+# Unreleased
+
+- Add master functions TerminateSlaves, CancelSlaves, Quit
+
 # 0.1.6 (2023-06-09)
 
 - Fix `SetLogLevel` call in planningclient
