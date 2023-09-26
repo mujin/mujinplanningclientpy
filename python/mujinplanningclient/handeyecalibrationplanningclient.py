@@ -3,14 +3,14 @@
 # Mujin controller client for bin picking task
 
 # mujin imports
-from . import planningclient
+from .realtimerobotplanningclient import RealtimeRobotPlanningClient
 
 # logging
 import logging
 log = logging.getLogger(__name__)
 
 
-class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
+class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
     """Mujin planning client for the HandEyeCalibration task"""
 
     tasktype = 'handeyecalibration'
@@ -45,7 +45,6 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
     #
     # Commands
     #
-
 
     def ComputeCalibrationPoses(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, numsamples, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, gridindex=None, **kwargs):
         """Compute a set of calibration poses that satisfy the angle constraints using latin hypercube sampling (or stratified sampling upon failure)
