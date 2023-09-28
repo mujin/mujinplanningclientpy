@@ -21,7 +21,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
     _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
 
-    def __init__(self, robotname='', robotspeed=None, robotaccelmult=None, envclearance=10.0, robotBridgeConnectionInfo=None, **kwargs):
+    def __init__(self, robotname=None, robotspeed=None, robotaccelmult=None, envclearance=10.0, robotBridgeConnectionInfo=None, **kwargs):
         """Connects to the Mujin controller, initializes RealtimeRobot task and sets up parameters
 
         Args:
