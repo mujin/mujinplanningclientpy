@@ -140,6 +140,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
         if self._robotBridgeConnectionInfo is not None:
             taskparameters['robotBridgeConnectionInfo'] = self._robotBridgeConnectionInfo
+
         if 'envclearance' not in taskparameters or taskparameters['envclearance'] is None:
             if envclearance is None:
                 envclearance = self._envclearance
@@ -987,7 +988,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def MoveZac(self, linkName, robotname=None, robotspeed=None, robotaccelmult=None, execute=1, startJointConfigurationStates=None, envclearance=None, timeout=100, **kwargs):
+    def MoveAndSampleForceTorqueSensorDataForCalibration(self, linkName, robotname=None, robotspeed=None, robotaccelmult=None, execute=1, startJointConfigurationStates=None, envclearance=None, timeout=100, **kwargs):
         taskparameters = {
             'command': 'MoveAndSampleForceTorqueSensorDataForCalibration',
             'execute': execute,
@@ -1002,8 +1003,18 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
 
-    def MoveJointsToJointConfigurationStates(self, jointConfigurationStates, robotname=None, robotspeed=None, robotaccelmult=None, execute=1, startJointConfigurationStates=None, envclearance=None, timeout=10, **kwargs):
-
+    def MoveJointsToJointConfigurationStates(
+        self,
+        jointConfigurationStates,
+        robotname=None,
+        robotspeed=None,
+        robotaccelmult=None,
+        execute=1,
+        startJointConfigurationStates=None,
+        envclearance=None,
+        timeout=10,
+        **kwargs
+    ):
         """Moves the robot to desired joint angles specified in jointStates
 
         Args:
