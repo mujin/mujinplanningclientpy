@@ -3,27 +3,25 @@
 # Mujin controller client for bin picking task
 
 # mujin imports
-from . import planningclient
+from .realtimerobotplanningclient import RealtimeRobotPlanningClient
 
 # logging
 import logging
 log = logging.getLogger(__name__)
 
 
-class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
+class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
     """Mujin planning client for the HandEyeCalibration task"""
 
     tasktype = 'handeyecalibration'
 
-    robot = None
-
     _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
 
-    def __init__(self, robot, **kwargs):
+    def __init__(self, **kwargs):
         """Connects to the Mujin controller, initializes HandEyeCalibration task and sets up parameters
 
         Args:
-            robot (str): Name of the robot, e.g. VP-5243I
+            robotname (str): Name of the robot, e.g. VP-5243I
             taskzmqport (int, optional): Port of the task's ZMQ server, e.g. 7110. (Default: 11000)
             taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher, e.g. 7111. (Default: 11001)
             taskheartbeattimeout (float, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
@@ -39,13 +37,11 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
             ignoredArgs: Additional keyword args are not used, but allowed for easy initialization from a dictionary
         """
         super(HandEyeCalibrationPlanningClient, self).__init__(tasktype=self.tasktype, **kwargs)
-        self.robot = robot
 
 
     #
     # Commands
     #
-
 
     def ComputeCalibrationPoses(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, numsamples, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, gridindex=None, **kwargs):
         """Compute a set of calibration poses that satisfy the angle constraints using latin hypercube sampling (or stratified sampling upon failure)
@@ -79,8 +75,10 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
             taskparameters['calibboardGeomName'] = calibboardGeomName
         if gridindex is not None:
             taskparameters['gridindex'] = gridindex
-        if self.robot is not None:
-            taskparameters['robot'] = self.robot
+        if 'robot' in kwargs:
+            taskparameters['robot'] = kwargs['robot']
+        elif self._robotname is not None:
+            taskparameters['robot'] = self._robotname
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
@@ -122,8 +120,10 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
             taskparameters['minPatternTiltAngle'] = minPatternTiltAngle
         if maxPatternTiltAngle is not None:
             taskparameters['maxPatternTiltAngle'] = maxPatternTiltAngle
-        if self.robot is not None:
-            taskparameters['robot'] = self.robot
+        if 'robot' in kwargs:
+            taskparameters['robot'] = kwargs['robot']
+        elif self._robotname is not None:
+            taskparameters['robot'] = self._robotname
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
