@@ -202,7 +202,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, toolname=toolname, timeout=timeout)
 
-    def StopPickPlaceThread(self, resetExecutionState=True, resetStatusPickPlace=False, finishCode=None, timeout=10, fireandforget=False, **kwargs):
+    def StopPickPlaceThread(self, resetExecutionState=True, resetStatusPickPlace=False, finishCode=None, finishMessage=None, timeout=10, fireandforget=False, **kwargs):
         """stops the pick and place thread started with StartPickAndPlaceThread
 
         Args:
@@ -216,7 +216,8 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             'command': 'StopPickPlaceThread',
             'resetExecutionState': resetExecutionState,
             'resetStatusPickPlace': resetStatusPickPlace,
-            'finishCode': finishCode
+            'finishCode': finishCode,
+            'finishMessage': finishMessage,
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
