@@ -8,23 +8,21 @@ if TYPE_CHECKING:
     from . import zmq
 
 # mujin imports
-from . import planningclient
+from .realtimerobotplanningclient import RealtimeRobotPlanningClient
 
 # logging
 import logging
 log = logging.getLogger(__name__)
 
 
-class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
+class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
     """Mujin planning client for the HandEyeCalibration task"""
-
-    robot = None  # type: str # type: ignore
 
     _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
 
     def __init__(
         self,
-        robot,
+        robotname,
         taskzmqport=11000,
         taskheartbeatport=11001,
         taskheartbeattimeout=7.0,
@@ -43,7 +41,7 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
         """Connects to the Mujin controller, initializes HandEyeCalibration task and sets up parameters
 
         Args:
-            robot (str): Name of the robot, e.g. VP-5243I
+            robotname (str): Name of the robot, e.g. VP-5243I
             taskzmqport (int, optional): Port of the task's ZMQ server, e.g. 7110. (Default: 11000)
             taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher, e.g. 7111. (Default: 11001)
             taskheartbeattimeout (float, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
@@ -58,7 +56,6 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
             callerid (str, optional): Caller identifier to send to server on every command
             ignoredArgs: Additional keyword args are not used, but allowed for easy initialization from a dictionary
         """
-        self.robot = robot
         super(HandEyeCalibrationPlanningClient, self).__init__(
             taskzmqport=taskzmqport,
             taskheartbeatport=taskheartbeatport,
@@ -123,8 +120,8 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
             taskparameters['maxPatternTiltAngle'] = maxPatternTiltAngle
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
-        if self.robot is not None:
-            taskparameters['robot'] = self.robot
+        if self._robotname is not None:
+            taskparameters['robot'] = self._robotname
         if robot is not None:
             taskparameters['robot'] = robot
         taskparameters.update(kwargs)
@@ -175,8 +172,8 @@ class HandEyeCalibrationPlanningClient(planningclient.PlanningClient):
             taskparameters['calibboardObjectName'] = calibboardObjectName
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
-        if self.robot is not None:
-            taskparameters['robot'] = self.robot
+        if self._robotname is not None:
+            taskparameters['robot'] = self._robotname
         if robot is not None:
             taskparameters['robot'] = robot
         taskparameters.update(kwargs)
