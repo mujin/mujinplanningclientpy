@@ -356,7 +356,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
         Args:
             bodyname: Name of the object
-            sensorSelectionInfo (dict): A dictionary with the structure:
+            sensorSelectionInfo (dict[str, str]): A dictionary with the structure:
 
                 - sensorName (str): Name of the sensor body
                 - sensorLinkName (str): Name of the sensor link
