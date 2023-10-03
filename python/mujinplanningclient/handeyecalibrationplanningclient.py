@@ -23,6 +23,10 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
     def __init__(
         self,
         robotname,
+        robotspeed=None,
+        robotaccelmult=None,
+        envclearance=10.0,
+        robotBridgeConnectionInfo=None, 
         taskzmqport=11000,
         taskheartbeatport=11001,
         taskheartbeattimeout=7.0,
@@ -41,7 +45,11 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
         """Connects to the Mujin controller, initializes HandEyeCalibration task and sets up parameters
 
         Args:
-            robotname (str): Name of the robot, e.g. VP-5243I
+            robotname (str, optional): Name of the robot, e.g. VP-5243I
+            robotspeed (float, optional): Speed of the robot, e.g. 0.4
+            robotaccelmult (float, optional): Optional multiplier for the robot acceleration.
+            envclearance (float, optional): Environment clearance in millimeter, e.g. 20
+            robotBridgeConnectionInfo (str, optional): dict holding the connection info for the robot bridge.
             taskzmqport (int, optional): Port of the task's ZMQ server, e.g. 7110. (Default: 11000)
             taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher, e.g. 7111. (Default: 11001)
             taskheartbeattimeout (float, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
@@ -58,6 +66,10 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
         """
         super(HandEyeCalibrationPlanningClient, self).__init__(
             robotname=robotname,
+            robotspeed=robotspeed,
+            robotaccelmult=robotaccelmult,
+            envclearance=envclearance,
+            robotBridgeConnectionInfo=robotBridgeConnectionInfo,
             taskzmqport=taskzmqport,
             taskheartbeatport=taskheartbeatport,
             taskheartbeattimeout=taskheartbeattimeout,
