@@ -69,7 +69,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         worksteplength=None,
         densowavearmgroup=5,
         regionname=None,
-        cameranames=None,
+        sensorSelectionInfos=None,
         envclearance=None,
         toolname=None,
         robotspeed=None,
@@ -93,7 +93,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             worksteplength (str): planning parameter
             densowavearmgroup (str): planning parameter
             regionname (str, optional): Name of the region of the objects
-            cameranames (list[str], optional): The names of the cameras to avoid occlusions with the robot
+            sensorSelectionInfos (list[dict[str, str]], optional): The sensorSelectionInfo configs of the cameras to avoid occlusions with the robot.
             envclearance (float, optional): Environment clearance in millimeters
             toolname (str, optional): Name of the manipulator
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
@@ -169,7 +169,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             densowavearmgroup (optional): robot parameters
-            cameranames (list[str], optional): the names of the cameras to avoid occlusions with the robot
+            sensorSelectionInfos (list[dict[str, str]], optional): The sensorSelectionInfo configs of the cameras to avoid occlusions with the robot.
             cycledests (int, optional): When finished cycling through all destikparamnames, will delete all the targets and start from the first index again doing this for cycledests times. By default it is 1.
             desttargetname (str): The destination target name where the destination goal ikparams come from
             destikparamnames (list[list[str]]): A list of lists of ikparam names for the ordered destinations of the target. destikparamnames[0] is where the first picked up part goes, desttargetname[1] is where the second picked up target goes.
@@ -351,12 +351,15 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, robotname=robotname, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
 
-    def IsRobotOccludingBody(self, bodyname, cameraname, timeout=10, **kwargs):
+    def IsRobotOccludingBody(self, bodyname, sensorSelectionInfo, timeout=10, **kwargs):
         """returns if the robot is occluding body in the view of the specified camera
 
         Args:
             bodyname: Name of the object
-            cameraname: Name of the camera
+            sensorSelectionInfo (dict): A dictionary with the structure:
+
+                - sensorName (str): Name of the sensor body
+                - sensorLinkName (str): Name of the sensor link
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
 
         Returns:
@@ -367,7 +370,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         taskparameters = {
             'command': 'IsRobotOccludingBody',
             'bodyname': bodyname,
-            'cameraname': cameraname,
+            'sensorSelectionInfo': sensorSelectionInfo,
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
@@ -431,7 +434,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
             toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            cameranames (list[str], optional): The names of the cameras to avoid occlusions with the robot
+            sensorSelectionInfos (list[dict[str, str]], optional): The sensorSelectionInfo configs of the cameras to avoid occlusions with the robot.
         """
         if regionname is None:
             regionname = self.regionname
