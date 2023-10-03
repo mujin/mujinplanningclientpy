@@ -57,6 +57,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             ignoredArgs: Additional keyword args are not used, but allowed for easy initialization from a dictionary
         """
         super(HandEyeCalibrationPlanningClient, self).__init__(
+            robotname=robotname,
             taskzmqport=taskzmqport,
             taskheartbeatport=taskheartbeatport,
             taskheartbeattimeout=taskheartbeattimeout,
