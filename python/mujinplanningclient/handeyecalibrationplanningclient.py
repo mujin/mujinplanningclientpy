@@ -18,7 +18,7 @@ log = logging.getLogger(__name__)
 class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
     """Mujin planning client for the HandEyeCalibration task"""
 
-    tasktype='handeyecalibration',
+    tasktype = 'handeyecalibration',
 
     _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
 
