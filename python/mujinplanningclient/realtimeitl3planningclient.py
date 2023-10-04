@@ -6,9 +6,9 @@
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Tuple, Union # noqa: F401 # used in type check
+    from . import zmq
 
 # mujin imports
-from . import zmq
 from . import realtimerobotplanningclient
 
 # logging
