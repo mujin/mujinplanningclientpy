@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningClient):
     """Mujin planning client for the RealtimeITL3 task"""
 
-    tasktype = 'realtimeitl3'
+    tasktype = 'realtimeitlplanning3'
 
     _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
 
