@@ -18,6 +18,8 @@ log = logging.getLogger(__name__)
 class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
     """Mujin planning client for the HandEyeCalibration task"""
 
+    tasktype='handeyecalibration',
+
     _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
 
     def __init__(
@@ -30,7 +32,6 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
         taskzmqport=11000,
         taskheartbeatport=11001,
         taskheartbeattimeout=7.0,
-        tasktype='handeyecalibration',
         ctx=None,
         slaverequestid=None,
         controllerip='',
@@ -41,7 +42,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
         callerid='',
         **ignoredArgs
     ):
-        # type: (str, int, int, float, str, Optional[zmq.Context], Optional[str], str, str, str, str, str, str, Any) -> None
+        # type: (str, Optional[float], Optional[float], float, Optional[str], int, int, float, Optional[zmq.Context], Optional[str], str, str, str, str, str, str, Any) -> None
         """Connects to the Mujin controller, initializes HandEyeCalibration task and sets up parameters
 
         Args:
@@ -53,7 +54,6 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             taskzmqport (int, optional): Port of the task's ZMQ server, e.g. 7110. (Default: 11000)
             taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher, e.g. 7111. (Default: 11001)
             taskheartbeattimeout (float, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
-            tasktype (str, optional): Type of the task, e.g. 'binpicking', 'handeyecalibration', 'itlrealtimeplanning3'. Default: handeyecalibration
             ctx (zmq.Context, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
             slaverequestid:
             controllerip (str): IP or hostname of the mujin controller, e.g. 172.17.0.2 or controller123
@@ -73,7 +73,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             taskzmqport=taskzmqport,
             taskheartbeatport=taskheartbeatport,
             taskheartbeattimeout=taskheartbeattimeout,
-            tasktype=tasktype,
+            tasktype=self.tasktype,
             ctx=ctx,
             slaverequestid=slaverequestid,
             controllerip=controllerip,
