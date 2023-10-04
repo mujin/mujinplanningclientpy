@@ -56,8 +56,8 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
     def PickAndPlace(
         self,
-        goaltype,
-        goals,
+        goaltype=_deprecated,
+        goals=_deprecated,
         targetnamepattern=None,
         approachoffset=30,
         departoffsetdir=[0, 0, 50],
