@@ -19,6 +19,8 @@ log = logging.getLogger(__name__)
 class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningClient):
     """Mujin planning client for the RealtimeITL3 task"""
 
+    tasktype = 'realtimeitl3'
+
     _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
 
     def __init__(
@@ -31,7 +33,6 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
         taskzmqport=11000,
         taskheartbeatport=11001,
         taskheartbeattimeout=7.0,
-        tasktype='realtimeitl3',
         ctx=None,
         slaverequestid=None,
         controllerip='',
@@ -42,7 +43,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
         callerid='',
         **ignoredArgs
     ):
-        # type: (str, Optional[float], Optional[float], float, Optional[str], int, int, float, str, Optional[zmq.Context], Optional[str], str, str, str, str, str, str, Any) -> None
+        # type: (str, Optional[float], Optional[float], float, Optional[str], int, int, float, Optional[zmq.Context], Optional[str], str, str, str, str, str, str, Any) -> None
         """Connects to the Mujin controller, initializes RealtimeITL3 task and sets up parameters
 
         Args:
@@ -54,7 +55,6 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             taskzmqport (int, optional): Port of the task's ZMQ server, e.g. 7110. (Default: 11000)
             taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher, e.g. 7111. (Default: 11001)
             taskheartbeattimeout (float, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
-            tasktype (str, optional): Type of the task, e.g. 'binpicking', 'handeyecalibration', 'itlrealtimeplanning3'. Default: realtimeitl3
             ctx (zmq.Context, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
             slaverequestid:
             controllerip (str): IP or hostname of the mujin controller, e.g. 172.17.0.2 or controller123
@@ -75,7 +75,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             taskzmqport=taskzmqport,
             taskheartbeatport=taskheartbeatport,
             taskheartbeattimeout=taskheartbeattimeout,
-            tasktype=tasktype,
+            tasktype=self.tasktype,
             ctx=ctx,
             slaverequestid=slaverequestid,
             controllerip=controllerip,
@@ -125,6 +125,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
+    # TODO: Determine actual types of the arguments instead of using Any.
     def ExecuteTrajectory(self, identifier, trajectories, statevalues=None, stepping=False, istep=None, cycles=1, restorevalues=None, envclearance=15, robotspeed=None, robotaccelmult=None, timeout=10, fireandforget=False):
         # type: (Any, Any, Any, Any, Any, Any, Any, float, Optional[float], Optional[float], float, bool) -> Any
         """
