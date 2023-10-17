@@ -255,6 +255,9 @@ class ZmqClient(object):
         self._apispec = apispec
         self._validateapi = validateapi
 
+        log.warn('---BLA BLA---')
+        log.warn(repr(self._apispec))
+
     def __del__(self):
         self.Destroy()
 
@@ -295,9 +298,14 @@ class ZmqClient(object):
     def _ValidateCommand(self, command):
         if not self._validateapi:
             return
-        print('---INSERT VALIDATION HERE---')
-        print(repr(command))
-        print(repr(self._apispec))
+        log.warn('---INSERT VALIDATION COMMAND HERE---')
+        log.warn(repr(command))
+    
+    def _ValidateReturnValue(self, returnValue):
+        if not self._validateapi:
+            return
+        log.warn('---INSERT VALIDATION RETURN HERE---')
+        log.warn(repr(returnValue))
     
     def _CheckCallerThread(self, context=None):
         """Catch bad callers who use zmq client from multiple threads and cause random race conditions.
@@ -345,6 +353,7 @@ class ZmqClient(object):
             log.warn(u'Need to specify checkpreempt to zmq client for command %r', command)
         
         self._CheckCallerThread(command)
+        self._ValidateCommand(command)
 
         if fireandforget:
             blockwait = False
@@ -432,15 +441,19 @@ class ZmqClient(object):
                 if endpolltime - startpolltime > 0.2:  # Due to python delays sometimes this can be 0.11s
                     log.critical('Polling time took %fs!', endpolltime - startpolltime)
                 if (waitingevents & zmq.POLLIN) == zmq.POLLIN:
+                    returnValue = None
                     if recvmultipart:
                         releaseSocket = True
-                        return self._socket.recv_multipart(zmq.NOBLOCK)
+                        returnValue = self._socket.recv_multipart(zmq.NOBLOCK)
                     elif recvjson:
                         releaseSocket = True
-                        return self._socket.recv_json(zmq.NOBLOCK)
+                        returnValue = self._socket.recv_json(zmq.NOBLOCK)
                     else:
                         releaseSocket = True
-                        return self._socket.recv(zmq.NOBLOCK)
+                        returnValue = self._socket.recv(zmq.NOBLOCK)
+                    if returnValue is not None:
+                        self._ValidateReturnValue(returnValue)
+                        return returnValue
                 
                 # Do timeout checking at the end
                 elapsedtime = GetMonotonicTime() - starttime
