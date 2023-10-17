@@ -230,7 +230,7 @@ class ZmqClient(object):
     _callerthread = None  # Last caller thread
     _callercontext = None  # The context of the last caller
 
-    def __init__(self, hostname='', port=0, ctx=None, limit=100, url=None, checkpreemptfn=None, reusetimeout=10.0):
+    def __init__(self, hostname='', port=0, ctx=None, limit=100, url=None, checkpreemptfn=None, reusetimeout=10.0, apispec=None, validateapi=False):
         """Creates a new zmq client. Uses zmq req socket over tcp.
 
         :param hostname: Hostname or ip to connect to
@@ -252,6 +252,8 @@ class ZmqClient(object):
         self._socket = None
         self._isok = True
         self._checkpreemptfn = checkpreemptfn
+        self._apispec = apispec
+        self._validateapi = validateapi
 
     def __del__(self):
         self.Destroy()
@@ -289,6 +291,13 @@ class ZmqClient(object):
     @property
     def port(self):
         return self._port
+    
+    def _ValidateCommand(self, command):
+        if not self._validateapi:
+            return
+        print('---INSERT VALIDATION HERE---')
+        print(repr(command))
+        print(repr(self._apispec))
     
     def _CheckCallerThread(self, context=None):
         """Catch bad callers who use zmq client from multiple threads and cause random race conditions.
