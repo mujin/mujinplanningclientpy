@@ -44,3 +44,10 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
             'command': 'ForceReplan',
         }
         return self.ExecuteCommand(taskparameters)
+
+    def ResumeCommandQueue(self):
+        """Resume the bridge command queue for this planner"""
+        taskparameters = {
+            'command': 'ResumeCommandQueue',
+        }
+        return self.ExecuteCommand(taskparameters)
