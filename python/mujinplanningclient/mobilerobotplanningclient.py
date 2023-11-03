@@ -16,7 +16,7 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
         """Connects to the Mujin controller, initializes task"""
         super(MobileRobotPlanningClient, self).__init__(tasktype=self.TASK_TYPE, **kwargs)
 
-    def StartPlanningThread(self, robotBridgeConnectionInfo=None, chargingParameters=None):
+    def StartMobilerRobotPlanningThread(self, robotBridgeConnectionInfo=None, chargingParameters=None):
         """
         Initialize the planning thread.
         Robot bridge connection info may be specified as a dictionary with the following fields:
@@ -36,7 +36,7 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
             assert 'queueId' not in robotBridgeConnectionInfo
 
         taskparameters = {
-            'command': 'StartPlanningThread',
+            'command': 'StartMobilerRobotPlanningThread',
             'robotBridgeConnectionInfo': robotBridgeConnectionInfo,
             'chargingParameters': chargingParameters,
         }
