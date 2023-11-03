@@ -16,9 +16,10 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
         """Connects to the Mujin controller, initializes task"""
         super(MobileRobotPlanningClient, self).__init__(tasktype=self.TASK_TYPE, **kwargs)
 
-    def StartMobilerRobotPlanningThread(self, robotBridgeConnectionInfo=None, chargingParameters=None):
+    def StartMobileRobotPlanningThread(self, robotBridgeConnectionInfo=None, chargingParameters=None):
         """
-        Initialize the planning thread.
+        Initialize the planning thread. If the robotBridgeConnectionInfo is not used, current planning thread will be killed as
+        no updated information can be found from robot bridge.
         Robot bridge connection info may be specified as a dictionary with the following fields:
             use: bool: Whether the planning task should connect to robot bridges. Defaults to false.
             host: string: Hostname of the robot bridge server to communicate with
@@ -29,6 +30,8 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
             lowPowerThresholdPercent: Battery percentage [0, 100) below which a robot will be considered for charging
             sufficientPowerThresholdPercent: Battery percentage [0, 100) above which a robot will yield a charger to another robot
             highPowerThresholdPercent: Battery percentage [0, 100) above which a robot will disengage from the charger
+        Example usage:
+        >>>cc.StartMobileRobotPlanningThread(robotBridgeConnectionInfo={'use': True}) # to start planning thread
         """
         # Some of the expected parameters here do not match the standard naming convention.
         # Check that no accidentally misnamed parameters exist.
@@ -36,7 +39,7 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
             assert 'queueId' not in robotBridgeConnectionInfo
 
         taskparameters = {
-            'command': 'StartMobilerRobotPlanningThread',
+            'command': 'StartMobileRobotPlanningThread',
             'robotBridgeConnectionInfo': robotBridgeConnectionInfo,
             'chargingParameters': chargingParameters,
         }
