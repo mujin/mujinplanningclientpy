@@ -18,8 +18,9 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
 
     def StartMobileRobotPlanningThread(self, robotBridgeConnectionInfo=None, chargingParameters=None):
         """
-        Initialize the planning thread. If the robotBridgeConnectionInfo is not used, current planning thread will be killed as
-        no updated information can be found from robot bridge.
+        Initialize the planning thread.
+        If the robotBridgeConnectionInfo is not set to use=True, no robot movement will occur as
+        there will be no way to fetch updated information from the robot bridge server.
         Robot bridge connection info may be specified as a dictionary with the following fields:
             use: bool: Whether the planning task should connect to robot bridges. Defaults to false.
             host: string: Hostname of the robot bridge server to communicate with
@@ -64,6 +65,28 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
         """Resets the current task graph. Robots will stop after finishing their current trajectories."""
         taskparameters = {
             'command': 'ClearTaskGraph',
+        }
+        return self.ExecuteCommand(taskparameters)
+
+    def ClearCompletedTasks(self):
+        """
+        Removes all finished tasks from the task graph that are not dependencies of active tasks.
+        Returns the set of tasks that were deleted.
+        """
+        taskparameters = {
+            'command': 'ClearCompletedTasks',
+        }
+        return self.ExecuteCommand(taskparameters)
+
+    def ClearTasksById(self, taskIdList):
+        """
+        Removes all tasks in the given list of task IDs from the task graph.
+        Returns the set of tasks that were deleted.
+        If an id is not present in the task graph, the call will throw and no changes will be made.
+        """
+        taskparameters = {
+            'command': 'ClearTasksById',
+            'taskIdList': taskIdList,
         }
         return self.ExecuteCommand(taskparameters)
 
