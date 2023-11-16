@@ -89,6 +89,8 @@ class PlanningClient(object):
     _subscriber = None # an instance of ZmqSubscriber
     _callerid = None # caller identification string to be sent with every command
 
+    _validationQueue = None
+
     def __init__(
         self,
         taskzmqport=11000,
@@ -162,6 +164,8 @@ class PlanningClient(object):
 
     def Destroy(self):
         self.SetDestroy()
+        if self._validationQueue:
+            self._validationQueue.Destroy()
         if self._subscriber is not None:
             self._subscriber.Destroy()
             self._subscriber = None
@@ -227,6 +231,15 @@ class PlanningClient(object):
     # Tasks related
     #
 
+    def _Validate(self, commandPayload, returnValue):
+        if not self._validationQueue:
+            return
+        
+        commandName = commandPayload['taskparams']['taskparameters']['command']
+        del commandPayload['taskparams']['taskparameters']['command']
+
+        self._validationQueue.Add(commandName, commandPayload, returnValue)
+
     def ExecuteCommand(self, taskparameters, slaverequestid=None, timeout=None, fireandforget=None, respawnopts=None, checkpreempt=True, forcereload=False):
         """Executes command with taskparameters via ZMQ.
 
@@ -267,6 +280,7 @@ class PlanningClient(object):
         response = self._commandsocket.SendCommand(command, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
 
         if fireandforget:
+            self._Validate(command, None)
             # For fire and forget commands, no response will be available
             return None
 
@@ -275,9 +289,11 @@ class PlanningClient(object):
             log.warn('GetAPIServerErrorFromZMQ returned error for %r', response)
             raise error
         if response is None:
+            self._Validate(command, None)
             log.warn(u'got no response from task %r', taskparameters)
             return None
 
+        self._Validate(command, response['output'])
         return response['output']
         
     #
@@ -323,12 +339,15 @@ class PlanningClient(object):
             command['callerid'] = self._callerid
         response = self._configsocket.SendCommand(command, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
         if fireandforget:
+            self._Validate(command, None)
             # For fire and forget commands, no response will be available
             return None
 
         error = GetAPIServerErrorFromZMQ(response)
         if error is not None:
+            self._Validate(command, None)
             raise error
+        self._Validate(command, response['output'])
         return response['output']
 
     #

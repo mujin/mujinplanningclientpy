@@ -5,6 +5,8 @@
 from . import json
 from . import planningclient
 
+import os
+
 # logging
 import logging
 log = logging.getLogger(__name__)
@@ -49,6 +51,22 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         self._robotaccelmult = robotaccelmult
         self._envclearance = envclearance
         self._robotBridgeConnectionInfo = robotBridgeConnectionInfo
+
+        self._validateapi = os.environ.get('MUJIN_VALIDATE_APIS', 'false') in ['True', 'true']
+        if self._validateapi and not self._validationQueue:
+            from mujinapispecvalidation.apiSpecServicesValidation import ValidationQueue
+            try:
+                from mujinplanningapi.spec_realtimerobot import realtimeRobotSpec
+            except ImportError:
+                # When client is used in ITL - it may not be possible to import spec as python library. This is due to dependency on controllercommon (for dictutils), translation library and possible schema dependencies that are not installed for ITL.
+                import json
+                installDir = os.environ.get('MUJIN_INSTALL_DIR', 'opt')
+                specExportPath = os.path.join(installDir, 'share', 'apispec', 'en_US.UTF-8', 'mujinplanningapi.spec_realtimerobot.realtimeRobotSpec.json')
+                log.warning('Could not import API spec directly. Trying to read it from a file: %s', specExportPath)
+                realtimeRobotSpec = json.load(open(specExportPath))
+
+            self._validationQueue = ValidationQueue(apiSpec=realtimeRobotSpec, ignoreCommandParameters=set(), clientName='RealtimeRobotPlanningClient')
+
         super(RealtimeRobotPlanningClient, self).__init__(**kwargs)
 
     def GetRobotConnectionInfo(self):

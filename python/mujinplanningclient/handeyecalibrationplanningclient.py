@@ -10,6 +10,8 @@ if TYPE_CHECKING:
 # mujin imports
 from .realtimerobotplanningclient import RealtimeRobotPlanningClient
 
+import os
+
 # logging
 import logging
 log = logging.getLogger(__name__)
@@ -64,6 +66,22 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             callerid (str, optional): Caller identifier to send to server on every command
             ignoredArgs: Additional keyword args are not used, but allowed for easy initialization from a dictionary
         """
+
+        self._validateapi = os.environ.get('MUJIN_VALIDATE_APIS', 'false') in ['True', 'true']
+        if self._validateapi and not self._validationQueue:
+            from mujinapispecvalidation.apiSpecServicesValidation import ValidationQueue
+            try:
+                from mujinplanningapi.spec_handeyecalibration import calibrationSpec
+            except ImportError:
+                # When client is used in ITL - it may not be possible to import spec as python library. This is due to dependency on controllercommon (for dictutils), translation library and possible schema dependencies that are not installed for ITL.
+                import json
+                installDir = os.environ.get('MUJIN_INSTALL_DIR', 'opt')
+                specExportPath = os.path.join(installDir, 'share', 'apispec', 'en_US.UTF-8', 'mujinplanningapi.spec_handeyecalibration.calibrationSpec.json')
+                log.warning('Could not import API spec directly. Trying to read it from a file: %s', specExportPath)
+                calibrationSpec = json.load(open(specExportPath))
+
+            self._validationQueue = ValidationQueue(apiSpec=calibrationSpec, ignoreCommandParameters=set(['command']), clientName='HandEyeCalibrationPlanningClient')
+
         super(HandEyeCalibrationPlanningClient, self).__init__(
             robotname=robotname,
             robotspeed=robotspeed,
