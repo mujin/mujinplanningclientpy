@@ -46,17 +46,105 @@ class RemoteViewerPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters)
 
-    def PrintHelloWorld(self):
-        print("Hello World")
-        taskparameters = {
-            'command': 'PrintHelloWorld',
-        }
-        return self.ExecuteCommand(taskparameters)
-
     def TestStart(self):
-        robotBridgeConnectionInfo=[{"use": True, "host": "127.0.0.1", "port": 7000}]
+        robotBridgeConnectionInfo=[
+            {
+                "address": "127.0.0.1",
+                "remoteBodyNamePrefix": "local",
+                "envTransform": [1, 0, 0, 0, 0, 0 ,0],
+                "environmentIds": [
+                    "frame",
+                ],
+            },
+            {
+                "address": "10.2.48.10",
+                "remoteBodyNamePrefix": "c1007",
+                "envTransform": [1, 0, 0, 0, 0, 20, 0],
+                "environmentIds": [
+                    "frame",
+                    "T800",
+                ],
+            },
+            {
+                "address": "10.2.12.21",
+                "remoteBodyNamePrefix": "c1004",
+                "envTransform": [1, 0, 0, 0, 0, -20, 0],
+                "environmentIds": [],
+            },
+        ]
         self.StartRemoteViewerPlanningThread(robotBridgeConnectionInfo=robotBridgeConnectionInfo)
+
+    def TestHand(self):
+        robotBridgeConnectionInfo=[
+            {
+                "address": "127.0.0.1",
+                "remoteBodyNamePrefix": "local",
+                "envTransform": [0, 0, 0, 1, 0, 10 ,0],
+                "environmentIds": [
+                    "frame",
+                ],
+            },
+            {
+                "address": "10.2.12.21",
+                "remoteBodyNamePrefix": "c1004",
+                "envTransform": [0.707, 0, 0, 0.707, 0, -10, 0],
+                "environmentIds": [],
+            },
+        ]
+        self.StartRemoteViewerPlanningThread(robotBridgeConnectionInfo=robotBridgeConnectionInfo)
+
+    def TestCell(self):
+        robotBridgeConnectionInfo=[
+            {
+                "address": "127.0.0.1",
+                "remoteBodyNamePrefix": "local",
+                "envTransform": [0, 0, 0, 1, 0, 10 ,0],
+                "environmentIds": [
+                    "frame",
+                ],
+            },
+            {
+                "address": "10.2.12.21",
+                "remoteBodyNamePrefix": "c1004",
+                "envTransform": [0.707, 0, 0, 0.707, 0, -10, 0],
+                "environmentIds": [],
+            },
+            {
+                "address": "10.2.12.59",
+                "remoteBodyNamePrefix": "detect_cell",
+                "envTransform": [0.707, 0, 0, 0.707, 10, 0, 0],
+                "environmentIds": [],
+            },
+        ]
+        self.StartRemoteViewerPlanningThread(robotBridgeConnectionInfo=robotBridgeConnectionInfo)
+
+    def TestStartLocal(self):
+        robotBridgeConnectionInfo=[
+            {
+                "address": "127.0.0.1",
+                "envTransform": [1, 0, 0, 0, 50, 0 ,0],
+                "environmentIds": [
+                    "frame",
+                ],
+            },
+        ]
+        self.StartRemoteViewerPlanningThread(robotBridgeConnectionInfo=robotBridgeConnectionInfo)
+
+    def TestStartRemote(self):
+        robotBridgeConnectionInfo=[
+            {
+                "address": "10.2.48.10",
+                "envTransform": [1, 0, 0, 0, 0, 10, 10],
+                "environmentIds": [
+                    "frame",
+                    "T800",
+                ],
+            },
+        ]
+        self.StartRemoteViewerPlanningThread(robotBridgeConnectionInfo=robotBridgeConnectionInfo)
+
+    def TestConfig(self):
+        self.StartRemoteViewerPlanningThread()
 
     def TestStop(self):
-        robotBridgeConnectionInfo={"use": False}
-        self.StartRemoteViewerPlanningThread(robotBridgeConnectionInfo=robotBridgeConnectionInfo)
+        self.StartRemoteViewerPlanningThread(robotBridgeConnectionInfo=[])
