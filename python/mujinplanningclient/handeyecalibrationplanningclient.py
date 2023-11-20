@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2013-2015 MUJIN Inc.
-# Mujin controller client for bin picking task
+# Copyright (C) 2012-2023 Mujin, Inc.
+
+# system imports
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from typing import Any, Dict, List, Optional, Tuple, Union # noqa: F401 # used in type check
+    from . import zmq
 
 # mujin imports
 from .realtimerobotplanningclient import RealtimeRobotPlanningClient
@@ -17,15 +22,38 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
 
     _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
 
-    def __init__(self, **kwargs):
+    def __init__(
+        self,
+        robotname,
+        robotspeed=None,
+        robotaccelmult=None,
+        envclearance=10.0,
+        robotBridgeConnectionInfo=None, 
+        taskzmqport=11000,
+        taskheartbeatport=11001,
+        taskheartbeattimeout=7.0,
+        ctx=None,
+        slaverequestid=None,
+        controllerip='',
+        controllerurl='',
+        controllerusername='',
+        controllerpassword='',
+        scenepk='',
+        callerid='',
+        **ignoredArgs
+    ):
+        # type: (str, Optional[float], Optional[float], float, Optional[str], int, int, float, Optional[zmq.Context], Optional[str], str, str, str, str, str, str, Any) -> None
         """Connects to the Mujin controller, initializes HandEyeCalibration task and sets up parameters
 
         Args:
-            robotname (str): Name of the robot, e.g. VP-5243I
+            robotname (str, optional): Name of the robot, e.g. VP-5243I
+            robotspeed (float, optional): Speed of the robot, e.g. 0.4
+            robotaccelmult (float, optional): Optional multiplier for the robot acceleration.
+            envclearance (float, optional): Environment clearance in millimeter, e.g. 20
+            robotBridgeConnectionInfo (str, optional): dict holding the connection info for the robot bridge.
             taskzmqport (int, optional): Port of the task's ZMQ server, e.g. 7110. (Default: 11000)
             taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher, e.g. 7111. (Default: 11001)
             taskheartbeattimeout (float, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
-            tasktype (str, optional): Type of the task, e.g. 'binpicking', 'handeyecalibration', 'itlrealtimeplanning3'. Default: handeyecalibration
             ctx (zmq.Context, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
             slaverequestid:
             controllerip (str): IP or hostname of the mujin controller, e.g. 172.17.0.2 or controller123
@@ -36,14 +64,34 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             callerid (str, optional): Caller identifier to send to server on every command
             ignoredArgs: Additional keyword args are not used, but allowed for easy initialization from a dictionary
         """
-        super(HandEyeCalibrationPlanningClient, self).__init__(tasktype=self.tasktype, **kwargs)
+        super(HandEyeCalibrationPlanningClient, self).__init__(
+            robotname=robotname,
+            robotspeed=robotspeed,
+            robotaccelmult=robotaccelmult,
+            envclearance=envclearance,
+            robotBridgeConnectionInfo=robotBridgeConnectionInfo,
+            taskzmqport=taskzmqport,
+            taskheartbeatport=taskheartbeatport,
+            taskheartbeattimeout=taskheartbeattimeout,
+            tasktype=self.tasktype,
+            ctx=ctx,
+            slaverequestid=slaverequestid,
+            controllerip=controllerip,
+            controllerurl=controllerurl,
+            controllerusername=controllerusername,
+            controllerpassword=controllerpassword,
+            scenepk=scenepk,
+            callerid=callerid
+        )
 
 
     #
     # Commands
     #
 
-    def ComputeCalibrationPoses(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, numsamples, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, gridindex=None, **kwargs):
+
+    def ComputeCalibrationPoses(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, numsamples, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, gridindex=None, toolname=None, calibboardObjectName=None, minPatternTiltAngle=None, maxPatternTiltAngle=None, dynamicEnvironmentState=None, robot=None, **kwargs):
+        # type: (Dict, List[Dict], int, Dict, Optional[str], Optional[str], float, Optional[int], Optional[str], Optional[str], Optional[float], Optional[float], Optional[List[Dict]], Optional[str], Any) -> Any
         """Compute a set of calibration poses that satisfy the angle constraints using latin hypercube sampling (or stratified sampling upon failure)
 
         Args:
@@ -68,21 +116,32 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             'secondarySensorSelectionInfos': secondarySensorSelectionInfos,
             'numsamples': numsamples,
             'calibboardvisibility': calibboardvisibility,
-        }
+        }  # type: Dict[str, Any]
         if calibboardLinkName is not None:
             taskparameters['calibboardLinkName'] = calibboardLinkName
         if calibboardGeomName is not None:
             taskparameters['calibboardGeomName'] = calibboardGeomName
         if gridindex is not None:
             taskparameters['gridindex'] = gridindex
-        if 'robot' in kwargs:
-            taskparameters['robot'] = kwargs['robot']
-        elif self._robotname is not None:
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
+        if calibboardObjectName is not None:
+            taskparameters['calibboardObjectName'] = calibboardObjectName
+        if minPatternTiltAngle is not None:
+            taskparameters['minPatternTiltAngle'] = minPatternTiltAngle
+        if maxPatternTiltAngle is not None:
+            taskparameters['maxPatternTiltAngle'] = maxPatternTiltAngle
+        if dynamicEnvironmentState is not None:
+            taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
+        if self._robotname is not None:
             taskparameters['robot'] = self._robotname
+        if robot is not None:
+            taskparameters['robot'] = robot
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SampleCalibrationConfiguration(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, gridindex, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, minPatternTiltAngle=None, maxPatternTiltAngle=None, **kwargs):
+    def SampleCalibrationConfiguration(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, gridindex, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, minPatternTiltAngle=None, maxPatternTiltAngle=None, toolname=None, calibboardObjectName=None, dynamicEnvironmentState=None, robot=None, **kwargs):
+        # type: (Dict, List[Dict], int, Dict, Optional[str], Optional[str], float, Optional[float], Optional[float], Optional[str], Optional[str], Optional[List[Dict]], Optional[str], Any) -> Optional[Dict[str, List[float]]]
         """Sample a valid calibration pose inside the given voxel and find a corresponding IK solution.
 
         Args:
@@ -111,7 +170,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             'secondarySensorSelectionInfos': secondarySensorSelectionInfos,
             'gridindex': gridindex,
             'calibboardvisibility': calibboardvisibility,
-        }
+        }  # type: Dict[str, Any]
         if calibboardLinkName is not None:
             taskparameters['calibboardLinkName'] = calibboardLinkName
         if calibboardGeomName is not None:
@@ -120,10 +179,16 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             taskparameters['minPatternTiltAngle'] = minPatternTiltAngle
         if maxPatternTiltAngle is not None:
             taskparameters['maxPatternTiltAngle'] = maxPatternTiltAngle
-        if 'robot' in kwargs:
-            taskparameters['robot'] = kwargs['robot']
-        elif self._robotname is not None:
+        if toolname is not None:
+            taskparameters['toolname'] = toolname
+        if calibboardObjectName is not None:
+            taskparameters['calibboardObjectName'] = calibboardObjectName
+        if dynamicEnvironmentState is not None:
+            taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
+        if self._robotname is not None:
             taskparameters['robot'] = self._robotname
+        if robot is not None:
+            taskparameters['robot'] = robot
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
