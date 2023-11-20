@@ -65,7 +65,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
                 log.warning('Could not import API spec directly. Trying to read it from a file: %s', specExportPath)
                 realtimeRobotSpec = json.load(open(specExportPath))
 
-            self._validationQueue = ValidationQueue(apiSpec=realtimeRobotSpec, ignoreCommandParameters=set(), clientName='RealtimeRobotPlanningClient')
+            self._validationQueue = ValidationQueue(apiSpec=realtimeRobotSpec, ignoreCommandParameters=set(['command']), clientName='RealtimeRobotPlanningClient')
 
         super(RealtimeRobotPlanningClient, self).__init__(**kwargs)
 

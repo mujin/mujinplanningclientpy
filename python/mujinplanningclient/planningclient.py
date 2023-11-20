@@ -339,15 +339,12 @@ class PlanningClient(object):
             command['callerid'] = self._callerid
         response = self._configsocket.SendCommand(command, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
         if fireandforget:
-            self._Validate(command, None)
             # For fire and forget commands, no response will be available
             return None
 
         error = GetAPIServerErrorFromZMQ(response)
         if error is not None:
-            self._Validate(command, None)
             raise error
-        self._Validate(command, response['output'])
         return response['output']
 
     #
