@@ -7,5 +7,5 @@ ugettext, ungettext = mujincommon.i18n.GetDomain('planningclient').GetTranslatio
 _ = ugettext
 
 
-def UpdateParameters(base, custom):
-    return MergeListsByKey(base, custom, lambda x: x['name'], lambda x, y: MergeDicts([x, y]))
+def UpdateTaskparams(parameters, taskparamsDict):
+    return MergeListsByKey(parameters, [taskparamsDict], lambda x: x['name'], lambda x, y: MergeDicts([x, y], deepcopy=True))

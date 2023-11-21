@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 from . import _
 from mujincommon.dictutil import MergeDicts
-from . import UpdateParameters
+from . import UpdateTaskparams
 
 from . import components
 from . import components_handeyecalibration
@@ -15,7 +15,7 @@ from . import spec_realtimerobot
 services = [
     ('ComputeCalibrationPoses', {
         'description': _('Compute a set of calibration poses that satisfy the angle constraints using latin hypercube sampling (or stratified sampling upon failure)'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -76,7 +76,7 @@ services = [
     }),
     ('SampleCalibrationConfiguration', {
         'description': _('Sample a valid calibration pose inside the given voxel and find a corresponding IK solution.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',

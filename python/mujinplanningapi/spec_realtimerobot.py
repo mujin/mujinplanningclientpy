@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 from . import _
 from mujincommon.dictutil import MergeDicts
-from . import UpdateParameters
+from . import UpdateTaskparams
 
 from . import components
 from . import components_realtimerobot
@@ -15,7 +15,7 @@ from mujinbinpickingmanager.schema import binpickingparametersschema  # TODO(fel
 services = [
     ('GetJointValues', {
         'description': _('Gets the current robot joint values'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -59,7 +59,7 @@ services = [
     }),
     ('MoveToolLinear', {
         'description': _('Moves the tool linearly in cartesian (3D) space.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -159,7 +159,7 @@ services = [
     }),
     ('MoveToHandPosition', {
         'description': _('Computes the inverse kinematics and moves the manipulator to any one of the goals specified.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -232,7 +232,7 @@ services = [
     }),
     ('UpdateObjects', {
         'description': _('Updates objects in the scene with the envstate'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -368,7 +368,7 @@ services = [
     }),
     ('Grab', {
         'description': _('Grabs an object with tool'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -398,7 +398,7 @@ services = [
     }),
     ('Release', {
         'description': _('Releases a grabbed object.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -427,7 +427,7 @@ services = [
     }),
     ('GetGrabbed', {
         'description': _('Gets the names of the objects currently grabbed'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -457,7 +457,7 @@ services = [
     }),
     ('GetTransform', {
         'description': _('Gets the transform of an object'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -520,7 +520,7 @@ services = [
     }),
     ('GetLinkParentInfo', {
         'description': _('Gets the parent link transform and name.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -567,7 +567,7 @@ services = [
     }),
     ('SetTransform', {
         'description': _('Sets the transform of an object. Rotation can be specified by either quaternion or rotation matrix.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -608,7 +608,7 @@ services = [
     }),
     ('GetOBB', {
         'description': _('Get the oriented bounding box (OBB) of object.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -651,7 +651,7 @@ services = [
     }),
     ('GetInnerEmptyRegionOBB', {
         'description': _('Get the inner empty oriented bounding box (OBB) of a container.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -694,7 +694,7 @@ services = [
     }),
     ('GetInstObjectAndSensorInfo', {
         'description': _('Returns information about the inst objects and sensors that are a part of those inst objects.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -731,7 +731,7 @@ services = [
     }),
     ('GetInstObjectInfoFromURI', {
         'description': _('Opens a URI and returns info about the internal/external and geometry info from it.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -762,7 +762,7 @@ services = [
     }),
     ('GetAABB', {
         'description': _('Gets the axis-aligned bounding box (AABB) of an object.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -807,7 +807,7 @@ services = [
     }),
     ('SetLocationTracking', {
         'description': _('Resets the tracking of specific containers'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -846,7 +846,7 @@ services = [
     }),
     ('ResetLocationTracking', {
         'description': _('Resets tracking updates for locations'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -893,7 +893,7 @@ services = [
     }),
     ('GetLocationTrackingInfos', {
         'description': _('Gets the active tracked locations'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -921,7 +921,7 @@ services = [
     }),
     ('UpdateLocationContainerIdType', {
         'description': _('Resets the tracking of specific containers'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -965,7 +965,7 @@ services = [
     }),
     ('ResetLocationTrackingContainerId', {
         'description': _('Resets the containerId of self._activeLocationTrackingInfos if it matches checkContainerId.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -994,7 +994,7 @@ services = [
     }),
     ('RemoveObjectsWithPrefix', {
         'description': _('Removes objects with prefix.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1035,7 +1035,7 @@ services = [
     }),
     ('GetTrajectoryLog', {
         'description': _('Gets the recent trajectories executed on the binpicking server. The internal server keeps trajectories around for 10 minutes before clearing them.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1103,7 +1103,7 @@ services = [
     }),
     ('ChuckGripper', {
         'description': _('Chucks the manipulator'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1132,7 +1132,7 @@ services = [
     }),
     ('UnchuckGripper', {
         'description': _('Unchucks the manipulator and releases the target'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1178,7 +1178,7 @@ services = [
     }),
     ('CalibrateGripper', {
         'description': _('Goes through the gripper calibration procedure'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1206,7 +1206,7 @@ services = [
         'returns': {},
     }),
     ('StopGripper', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1235,7 +1235,7 @@ services = [
     }),
     ('MoveGripper', {
         'description': _('Moves the chuck of the manipulator to a given value.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1273,7 +1273,7 @@ services = [
     }),
     ('ExecuteRobotProgram', {
         'description': _('Execute a robot specific program by name'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1305,7 +1305,7 @@ services = [
     }),
     ('SaveScene', {
         'description': _('Saves the current scene to file'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1348,7 +1348,7 @@ services = [
     }),
     ('SaveGripper', {
         'description': _('Separate gripper from a robot in a scene and save it.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1391,7 +1391,7 @@ services = [
     }),
     ('MoveJointsToJointConfigurationStates', {
         'description': _('Moves the robot to desired joint angles specified in jointStates'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1429,7 +1429,7 @@ services = [
     }),
     ('MoveJoints', {
         'description': _('Moves the robot to desired joint angles specified in jointvalues'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1482,7 +1482,7 @@ services = [
     }),
     ('MoveJointsToPositionConfiguration', {
         'description': _('Moves the robot to desired position configuration specified in positionConfigurationName'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1537,7 +1537,7 @@ services = [
     }),
     ('GetRobotBridgeIOVariables', {
         'description': _('Returns the data of the IO in ASCII hex as a string'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1582,7 +1582,7 @@ services = [
     }),
     ('SetRobotBridgeIOVariables', {
         'description': _('Sets a set of IO variables in the robot bridge.\nThis should not lock self.env since it can happen during the runtime of a task and lock out other functions waiting in the queue.\n'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1615,7 +1615,7 @@ services = [
     }),
     ('ComputeIkParamPosition', {
         'description': _('Given the name of a Kinbody, computes the manipulator (TCP) position in the Kinbody frame to generate values for an IKParameterization.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1684,7 +1684,7 @@ services = [
         },
     }),
     ('ComputeIKFromParameters', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1790,7 +1790,7 @@ services = [
         },
     }),
     ('ReloadModule', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1808,7 +1808,7 @@ services = [
         'returns': {},
     }),
     ('ShutdownRobotBridge', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1826,7 +1826,7 @@ services = [
         'returns': {},
     }),
     ('GetRobotBridgeState', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1852,7 +1852,7 @@ services = [
         'returns': {},
     }),
     ('ClearRobotBridgeError', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1870,7 +1870,7 @@ services = [
         'returns': {},
     }),
     ('SetRobotBridgePause', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1888,7 +1888,7 @@ services = [
         'returns': {},
     }),
     ('SetRobotBridgeResume', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1906,7 +1906,7 @@ services = [
         'returns': {},
     }),
     ('SetRobotBridgeServoOn', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1931,7 +1931,7 @@ services = [
         'returns': {},
     }),
     ('SetRobotBridgeLockMode', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1956,7 +1956,7 @@ services = [
         'returns': {},
     }),
     ('ResetSafetyFault', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1974,7 +1974,7 @@ services = [
         'returns': {},
     }),
     ('SetRobotBridgeControlMode', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1999,7 +1999,7 @@ services = [
     }),
     ('GetDynamicObjects', {
         'description': _('Get a list of dynamically added objects in the scene, from vision detection and physics simulation.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2018,7 +2018,7 @@ services = [
     }),
     ('ComputeRobotConfigsForGraspVisualization', {
         'description': _('Returns robot configs for grasp visualization'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2085,7 +2085,7 @@ services = [
     }),
     ('ResetCacheTemplates', {
         'description': _('Resets any cached templates'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2104,7 +2104,7 @@ services = [
     }),
     ('SetRobotBridgeExternalIOPublishing', {
         'description': _('Enables publishing collision data to the robotbridge'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2129,7 +2129,7 @@ services = [
     }),
     ('RestoreSceneInitialState', {
         'description': _('Restores the scene to the state on the filesystem'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2153,7 +2153,7 @@ services = [
     }),
     ('RunMotorControlTuningStepTest', {
         'description': _('Runs step response test on specified joint and returns result'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2191,7 +2191,7 @@ services = [
     }),
     ('RunMotorControlTuningMaximulLengthSequence', {
         'description': _('Runs maximum length sequence test on specified joint and returns result'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2236,7 +2236,7 @@ services = [
     }),
     ('RunMotorControlTuningDecayingChirp', {
         'description': _('runs chirp test on specified joint and returns result'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2290,7 +2290,7 @@ services = [
     }),
     ('RunMotorControlTuningGaussianImpulse', {
         'description': _('Runs Gaussian Impulse test on specified joint and returns result'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2335,7 +2335,7 @@ services = [
     }),
     ('RunMotorControlTuningBangBangResponse', {
         'description': _('Runs bangbang trajectory in acceleration or jerk space and returns result'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2379,7 +2379,7 @@ services = [
         'returns': {},
     }),
     ('RunDynamicsIdentificationTest', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2403,7 +2403,7 @@ services = [
         'returns': {},
     }),
     ('GetTimeToRunDynamicsIdentificationTest', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2438,7 +2438,7 @@ services = [
         'returns': {},
     }),
     ('CalculateTestRangeFromCollision', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2468,7 +2468,7 @@ services = [
     }),
     ('GetMotorControlParameterSchema', {
         'description': _('Gets motor control parameter schema'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2487,7 +2487,7 @@ services = [
     }),
     ('GetMotorControlParameter', {
         'description': _("Gets motor control parameters as a name-value dict, e.g.: {'J1':{'KP':1}, 'J2':{'KV':2}}"),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2523,7 +2523,7 @@ services = [
     }),
     ('GetMotorControlParameters', {
         'description': _('Gets cached motor control parameters as name-value dict'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2542,7 +2542,7 @@ services = [
     }),
     ('SetMotorControlParameter', {
         'description': _('Sets motor control parameter'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2588,7 +2588,7 @@ services = [
     }),
     ('IsProfilingRunning', {
         'description': _('Queries if profiling is running on planning'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2607,7 +2607,7 @@ services = [
     }),
     ('StartProfiling', {
         'description': _('Start profiling planning'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2631,7 +2631,7 @@ services = [
     }),
     ('StopProfiling', {
         'description': _('Stop profiling planning'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2650,7 +2650,7 @@ services = [
     }),
     ('ReplaceBodies', {
         'description': _('Replaces bodies in the environment with new uris'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2692,7 +2692,7 @@ services = [
         'returns': {},
     }),
     ('GetState', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2711,7 +2711,7 @@ services = [
     }),
     ('EnsureSyncWithRobotBridge', {
         'description': _('Ensures that planning has synchronized with robotbridge data that is newer than syncTimeStampUS'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -2736,7 +2736,7 @@ services = [
     }),
     ('ResetCachedRobotConfigurationState', {
         'description': _('Resets cached robot configuration (position of the robot) in the planning slave received from slave notification. Need to perform every time robot moved not from the task slaves.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',

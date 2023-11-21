@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 from . import _
 from mujincommon.dictutil import MergeDicts
-from . import UpdateParameters
+from . import UpdateTaskparams
 
 from . import components
 from . import components_realtimerobot
@@ -13,7 +13,7 @@ from . import spec_realtimerobot
 
 services = [
     ('SetJointValues', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -42,7 +42,7 @@ services = [
         'returns': {},
     }),
     ('GetITLState', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -62,7 +62,7 @@ services = [
         'returns': {},
     }),
     ('ExecuteTrajectory', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -113,7 +113,7 @@ services = [
         'returns': {},
     }),
     ('ExecuteTrajectoryStep', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -148,7 +148,7 @@ services = [
         'returns': {},
     }),
     ('PauseExecuteTrajectory', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -166,7 +166,7 @@ services = [
         'returns': {},
     }),
     ('ResumeExecuteTrajectory', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -184,7 +184,7 @@ services = [
         'returns': {},
     }),
     ('ComputeRobotConfigsForCommandVisualization', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -209,7 +209,7 @@ services = [
         'returns': {},
     }),
     ('ComputeRobotJointValuesForCommandVisualization', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -234,7 +234,7 @@ services = [
         'returns': {},
     }),
     ('PlotProgramWaypoints', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -252,7 +252,7 @@ services = [
         'returns': {},
     }),
     ('StartITLProgram', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -277,7 +277,7 @@ services = [
     }),
     ('StopITLProgram', {
         'description': _('Stops the ITL program'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -296,7 +296,7 @@ services = [
     }),
     ('GenerateExecutionGraph', {
         'description': _('Generates a list of commands for the ITL program.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -325,7 +325,7 @@ services = [
     }),
     ('PopulateTargetInContainer', {
         'description': _('Populates targets in container using populateFn.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',

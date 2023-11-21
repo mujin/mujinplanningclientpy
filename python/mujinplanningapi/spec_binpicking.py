@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 from . import _
 from mujincommon.dictutil import MergeDicts
-from . import UpdateParameters
+from . import UpdateTaskparams
 
 from . import components
 from . import components_binpicking
@@ -15,7 +15,7 @@ from . import spec_realtimerobot
 services = [
     ('PickAndPlace', {
         'description': _('Picks up an object with the targetnamepattern and places it down at one of the goals. First computes the entire plan from robot moving to a grasp and then moving to its destination, then runs it on the real robot. Task finishes once the real robot is at the destination.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -126,7 +126,7 @@ services = [
     }),
     ('StartPickAndPlaceThread', {
         'description': _('Start a background loop to continuously pick up objects with the targetnamepattern and place them down at the goals. The loop will check new objects arriving in and move the robot as soon as it finds a feasible grasp. The thread can be quit with StopPickPlaceThread.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -245,7 +245,7 @@ services = [
     }),
     ('StopPickPlaceThread', {
         'description': _('stops the pick and place thread started with StartPickAndPlaceThread'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -292,7 +292,7 @@ services = [
         },
     }),
     ('ComputeIK', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -351,7 +351,7 @@ services = [
     }),
     ('InitializePartsWithPhysics', {
         'description': _('Start a physics simulation where the parts drop down into the bin. The method returns as soon as the physics is initialized, user has to wait for the "duration" or call StopPhysicsThread command.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -402,7 +402,7 @@ services = [
     }),
     ('JitterPartUntilValidGrasp', {
         'description': _("Select a part that wasn't able to be grasped and jitter its location such that a grasp set is found for it that will take it to the destination."),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -461,7 +461,7 @@ services = [
     }),
     ('MoveToDropOff', {
         'description': _('Moves the robot to desired joint angles.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -503,7 +503,7 @@ services = [
     }),
     ('IsRobotOccludingBody', {
         'description': _('returns if the robot is occluding body in the view of the specified camera'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -534,7 +534,7 @@ services = [
     }),
     ('GetPickedPositions', {
         'description': _('returns the poses and the timestamps of the picked objects'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -557,7 +557,7 @@ services = [
     }),
     ('GetPickAndPlaceLog', {
         'description': _('Gets the recent pick-and-place log executed on the binpicking server. The internal server keeps the log around until the next Pick-and-place command is executed.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -587,7 +587,7 @@ services = [
     }),
     ('MoveRobotOutOfCameraOcclusion', {
         'description': _('Moves the robot out of camera occlusion and deletes targets if it was in occlusion.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -616,7 +616,7 @@ services = [
         'returns': {},
     }),
     ('PausePickPlace', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -634,7 +634,7 @@ services = [
         'returns': {},
     }),
     ('ResumePickPlace', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -652,7 +652,7 @@ services = [
         'returns': {},
     }),
     ('SendStateTrigger', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -676,7 +676,7 @@ services = [
         'returns': {},
     }),
     ('GetBinpickingState', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -695,7 +695,7 @@ services = [
     }),
     ('SetStopPickPlaceAfterExecutionCycle', {
         'description': _('Sets the cycle for stopping after the current pick cycle finishes.\n\nIf robot has not grabbed a part yet, then will stop the robot immediately.\nOn proper finish of the pick cycle, robot should go back to the finish position.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -718,7 +718,7 @@ services = [
     }),
     ('PutPartsBack', {
         'description': _('Runs saved planningresult trajectories.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -758,7 +758,7 @@ services = [
     }),
     ('GenerateGraspModelFromIkParams', {
         'description': _('Generates grasp model IK for given setup.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -802,7 +802,7 @@ services = [
     }),
     ('CheckGraspModelIk', {
         'description': _('Checks if grasp model is generated for given setup.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -847,7 +847,7 @@ services = [
     }),
     ('SetCurrentLayoutDataFromPLC', {
         'description': _('Sets current layout from PLC.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -890,7 +890,7 @@ services = [
     }),
     ('SetCurrentLayoutDataSendOnObjectUpdateData', {
         'description': _('Sets currentLayoutDataSendOnObjectUpdateData structure'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -919,7 +919,7 @@ services = [
     }),
     ('StartPackFormationComputationThread', {
         'description': _('Starts a background loop to copmute packing formation.'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -949,7 +949,7 @@ services = [
     }),
     ('VisualizePackFormationResult', {
         'description': _('Stops the packing computation thread thread started with StartPackFormationComputationThread'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -976,7 +976,7 @@ services = [
         'returns': {},
     }),
     ('GetPackItemPoseInWorld', {
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -995,7 +995,7 @@ services = [
     }),
     ('ManuallyPlacePackItem', {
         'description': _('Places an item according to the pack formation assuming the item is placed manually and updates robotbridge state'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
@@ -1034,7 +1034,7 @@ services = [
     }),
     ('ValidatePackFormationResultList', {
         'description': _('Validates pack formation result list and compute info (fillRatio, packageDimensions, packedItemsInfo, etc) about it.\n\nkwargs are expected to be packing parameters.\n'),
-        'parameters': UpdateParameters(
+        'parameters': UpdateTaskparams(
             components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
