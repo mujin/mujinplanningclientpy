@@ -5,14 +5,16 @@ from collections import OrderedDict
 
 from . import _
 from mujincommon.dictutil import MergeDicts
+from . import UpdateParameters
 
 from . import components
 from . import components_realtimerobot
-
+from . import spec_realtimerobot
 
 services = [
     ('SetJointValues', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -36,11 +38,12 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('GetITLState', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -55,11 +58,12 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('ExecuteTrajectory', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -105,11 +109,12 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('ExecuteTrajectoryStep', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -139,11 +144,12 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('PauseExecuteTrajectory', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -156,11 +162,12 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('ResumeExecuteTrajectory', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -173,11 +180,12 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('ComputeRobotConfigsForCommandVisualization', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -197,11 +205,12 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('ComputeRobotJointValuesForCommandVisualization', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -221,11 +230,12 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('PlotProgramWaypoints', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -238,11 +248,12 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('StartITLProgram', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -261,12 +272,13 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('StopITLProgram', {
         'description': _('Stops the ITL program'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -279,12 +291,13 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('GenerateExecutionGraph', {
         'description': _('Generates a list of commands for the ITL program.'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -307,12 +320,13 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('PopulateTargetInContainer', {
         'description': _('Populates targets in container using populateFn.'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -338,7 +352,7 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
 ]
@@ -349,5 +363,11 @@ realtimeITL3Spec = {
         'description': 'The ITL Planning (v3) API of the Mujin Planning Server.',
         'mujinspecformatversion': '0.0.1',
     },
-    'services': OrderedDict(services),
+    'services': MergeDicts(
+        [
+            OrderedDict(services),
+            spec_realtimerobot.realtimeRobotSpec['services'],
+        ],
+        deepcopy=True
+    ),
 }

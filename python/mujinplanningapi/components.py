@@ -145,7 +145,7 @@ Internal_ExecuteCommandParameters = {
                 'type': 'float',
             }),
         ]),
-        'type': 'object',
+        'type': ['object', 'null'],
         'x-doNotAddToPayload': True,
     },
     'timeout': {
@@ -187,7 +187,7 @@ StandardPlanningServerRequestParameters = [
         'description': _('The id of the requested planning slave'),
         'isRequired': False,
         'schema': {
-            'type': 'integer',
+            'type': 'string',
         }
     },
     {
@@ -201,6 +201,9 @@ StandardPlanningServerRequestParameters = [
         'name': 'taskparams',
         'schema': {
             'properties': OrderedDict([
+                ('forcereload', {
+                    'type': 'boolean',
+                }),
                 ('tasktype', {
                     'type': 'string',
                 }),

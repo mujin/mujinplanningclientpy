@@ -5,15 +5,18 @@ from collections import OrderedDict
 
 from . import _
 from mujincommon.dictutil import MergeDicts
+from . import UpdateParameters
 
 from . import components
 from . import components_handeyecalibration
+from . import spec_realtimerobot
 
 
 services = [
     ('ComputeCalibrationPoses', {
         'description': _('Compute a set of calibration poses that satisfy the angle constraints using latin hypercube sampling (or stratified sampling upon failure)'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -68,12 +71,13 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('SampleCalibrationConfiguration', {
         'description': _('Sample a valid calibration pose inside the given voxel and find a corresponding IK solution.'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -131,7 +135,7 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {
             'properties': OrderedDict([
                 ('vConfig', {
@@ -153,5 +157,11 @@ calibrationSpec = {
         'description': 'The Calibration API of the Mujin Planning Server.',
         'mujinspecformatversion': '0.0.1',
     },
-    'services': OrderedDict(services),
+    'services': MergeDicts(
+        [
+            OrderedDict(services),
+            spec_realtimerobot.realtimeRobotSpec['services'],
+        ],
+        deepcopy=True
+    ),
 }

@@ -549,7 +549,7 @@ Internal_TaskBaseInitParameters = MergeDicts(
         OrderedDict([
             ('slaverequestid', {
                 'description': _('The requested planning slave'),
-                'type': 'integer',
+                'type': 'string',
             }),
             ('robot', {
                 'description': _('Name of the robot'),

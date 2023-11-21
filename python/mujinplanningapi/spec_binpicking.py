@@ -5,15 +5,18 @@ from collections import OrderedDict
 
 from . import _
 from mujincommon.dictutil import MergeDicts
+from . import UpdateParameters
 
 from . import components
 from . import components_binpicking
+from . import spec_realtimerobot
 
 
 services = [
     ('PickAndPlace', {
         'description': _('Picks up an object with the targetnamepattern and places it down at one of the goals. First computes the entire plan from robot moving to a grasp and then moving to its destination, then runs it on the real robot. Task finishes once the real robot is at the destination.'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -118,12 +121,13 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('StartPickAndPlaceThread', {
         'description': _('Start a background loop to continuously pick up objects with the targetnamepattern and place them down at the goals. The loop will check new objects arriving in and move the robot as soon as it finds a feasible grasp. The thread can be quit with StopPickPlaceThread.'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -236,12 +240,13 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('StopPickPlaceThread', {
         'description': _('stops the pick and place thread started with StartPickAndPlaceThread'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -267,7 +272,7 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('GetPickPlaceStatus', {
@@ -287,7 +292,8 @@ services = [
         },
     }),
     ('ComputeIK', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -332,7 +338,7 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {
             'properties': OrderedDict([
                 ('solutions', {
@@ -345,7 +351,8 @@ services = [
     }),
     ('InitializePartsWithPhysics', {
         'description': _('Start a physics simulation where the parts drop down into the bin. The method returns as soon as the physics is initialized, user has to wait for the "duration" or call StopPhysicsThread command.'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -386,7 +393,7 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('StopPhysicsThread', {
@@ -395,7 +402,8 @@ services = [
     }),
     ('JitterPartUntilValidGrasp', {
         'description': _("Select a part that wasn't able to be grasped and jitter its location such that a grasp set is found for it that will take it to the destination."),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -446,14 +454,15 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {
             'description': _('If failed, an empty dictionary. If succeeded, a dictionary with the following keys:\n- translation: the new translation of the target part\n- quaternion: the new quaternion of the target part\n- jointvalues: robot joint values that are grasping the part (fingers are at their preshape).\n- graspname: the grasp name used for jointvalues. If empty, then no grasp was found.\n- destikname: the name of the destination ikparam that was chosen with the grasp\n- destjointvalues: robot joint values at one of the specified destinations (fingers are at their final positions).\n- desttranslation: the new translation of the target part\n- destquaternion: the new quaternion of the target part\n'),
         },
     }),
     ('MoveToDropOff', {
         'description': _('Moves the robot to desired joint angles.'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -489,12 +498,13 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('IsRobotOccludingBody', {
         'description': _('returns if the robot is occluding body in the view of the specified camera'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -516,7 +526,7 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {
             'description': _("The occlusion state in a json dictionary, e.g. {'occluded': 0}"),
             'type': 'object',
@@ -524,7 +534,8 @@ services = [
     }),
     ('GetPickedPositions', {
         'description': _('returns the poses and the timestamps of the picked objects'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -539,14 +550,15 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {
             'description': _("The positions and the timestamps of the picked objects in a json dictionary, info of each object has the format of quaternion (w,x,y,z) followed by x,y,z translation (in mm) followed by timestamp in milisecond e.g. {'positions': [[1,0,0,0,100,200,300,1389774818.8366449],[1,0,0,0,200,200,300,1389774828.8366449]]}\n"),
         },
     }),
     ('GetPickAndPlaceLog', {
         'description': _('Gets the recent pick-and-place log executed on the binpicking server. The internal server keeps the log around until the next Pick-and-place command is executed.'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -568,14 +580,15 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {
             'description': _('A dictionary with keys, for example:\n{\n\n    total: 10\n    messages: [{\n\n            "message":"message1",\n            "type":"",\n            "level":0,\n            "data": {\n\n                "jointvalues":[0,0,0,0,0,0]\n            }\n        },\n        ...\n    ]\n}\n'),
         },
     }),
     ('MoveRobotOutOfCameraOcclusion', {
         'description': _('Moves the robot out of camera occlusion and deletes targets if it was in occlusion.'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -599,11 +612,12 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('PausePickPlace', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -616,11 +630,12 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('ResumePickPlace', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -633,11 +648,12 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('SendStateTrigger', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -656,11 +672,12 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('GetBinpickingState', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -673,12 +690,13 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('SetStopPickPlaceAfterExecutionCycle', {
         'description': _('Sets the cycle for stopping after the current pick cycle finishes.\n\nIf robot has not grabbed a part yet, then will stop the robot immediately.\nOn proper finish of the pick cycle, robot should go back to the finish position.'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -695,12 +713,13 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('PutPartsBack', {
         'description': _('Runs saved planningresult trajectories.'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -734,12 +753,13 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('GenerateGraspModelFromIkParams', {
         'description': _('Generates grasp model IK for given setup.'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -777,12 +797,13 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('CheckGraspModelIk', {
         'description': _('Checks if grasp model is generated for given setup.'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -821,12 +842,13 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('SetCurrentLayoutDataFromPLC', {
         'description': _('Sets current layout from PLC.'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -855,7 +877,7 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('ClearVisualization', {
@@ -868,7 +890,8 @@ services = [
     }),
     ('SetCurrentLayoutDataSendOnObjectUpdateData', {
         'description': _('Sets currentLayoutDataSendOnObjectUpdateData structure'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -891,12 +914,13 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('StartPackFormationComputationThread', {
         'description': _('Starts a background loop to copmute packing formation.'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -912,7 +936,7 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('StopPackFormationComputationThread', {
@@ -925,7 +949,8 @@ services = [
     }),
     ('VisualizePackFormationResult', {
         'description': _('Stops the packing computation thread thread started with StartPackFormationComputationThread'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -943,7 +968,7 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('GetPackFormationSolution', {
@@ -951,7 +976,8 @@ services = [
         'returns': {},
     }),
     ('GetPackItemPoseInWorld', {
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -964,12 +990,13 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('ManuallyPlacePackItem', {
         'description': _('Places an item according to the pack formation assuming the item is placed manually and updates robotbridge state'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -990,7 +1017,7 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {},
     }),
     ('SendPackFormationComputationResult', {
@@ -1007,7 +1034,8 @@ services = [
     }),
     ('ValidatePackFormationResultList', {
         'description': _('Validates pack formation result list and compute info (fillRatio, packageDimensions, packedItemsInfo, etc) about it.\n\nkwargs are expected to be packing parameters.\n'),
-        'parameters': components.StandardPlanningServerRequestParameters + [
+        'parameters': UpdateParameters(
+            components.StandardPlanningServerRequestParameters,
             {
                 'name': 'taskparams',
                 'schema': {
@@ -1024,7 +1052,7 @@ services = [
                     },
                 },
             },
-        ],
+        ),
         'returns': {
             'properties': OrderedDict([
                 ('validatedPackFormationResultList', {
@@ -1061,5 +1089,11 @@ binpickingSpec = {
         'description': 'The Binpicking API of the Mujin Planning Server.',
         'mujinspecformatversion': '0.0.1',
     },
-    'services': OrderedDict(services),
+    'services': MergeDicts(
+        [
+            OrderedDict(services),
+            spec_realtimerobot.realtimeRobotSpec['services'],
+        ],
+        deepcopy=True
+    ),
 }
