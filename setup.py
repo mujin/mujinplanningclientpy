@@ -35,7 +35,7 @@ setup(
     package_data={'mujinplanningapi': ['templates/*.mako']},
     api_spec = [
         'mujinplanningapi.spec_realtimerobot.realtimeRobotSpec',
-        'mujinplanningapi.spec_realtimeitl3d.realtimeITL3Spec',
+        'mujinplanningapi.spec_realtimeitl3.realtimeITL3Spec',
         'mujinplanningapi.spec_handeyecalibration.calibrationSpec',
         'mujinplanningapi.spec_binpicking.binpickingSpec',
     ],
