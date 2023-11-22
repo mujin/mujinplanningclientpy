@@ -8,4 +8,4 @@ _ = ugettext
 
 
 def UpdateTaskparams(parameters, taskparamsDict):
-    return MergeListsByKey(parameters, [taskparamsDict], lambda x: x['name'], lambda x, y: MergeDicts([x, y], deepcopy=True)[0])
+    return MergeListsByKey(parameters, [taskparamsDict], lambda x: x['name'], lambda x, y: MergeDicts([x, y], deepcopy=True))
