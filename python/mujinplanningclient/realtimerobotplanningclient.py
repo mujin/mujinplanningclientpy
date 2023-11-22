@@ -2033,7 +2033,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-
+    
     def ResetCachedRobotConfigurationState(self, timeout=10, fireandforget=False, **kwargs):
         """Resets cached robot configuration (position of the robot) in the planning slave received from slave notification. Need to perform every time robot moved not from the task slaves.
 
@@ -2043,6 +2043,15 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'ResetCachedRobotConfigurationState',
+        }
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+        
+    def StopMoveThread(self, timeout=10, fireandforget=False, **kwargs):        
+        """Stops the move thread. Should track move progress with 'statusMove' and 'statusDescMove' published messages
+        """
+        taskparameters = {
+            'command': 'StopMoveThread',
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
