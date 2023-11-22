@@ -1095,5 +1095,5 @@ binpickingSpec = {
             spec_realtimerobot.realtimeRobotSpec['services'],
         ],
         deepcopy=True
-    ),
+    )[0],
 }
