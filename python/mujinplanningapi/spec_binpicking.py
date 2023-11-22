@@ -277,6 +277,7 @@ services = [
     }),
     ('GetPickPlaceStatus', {
         'description': _('Gets the status of the pick and place thread'),
+        'parameters': components.StandardPlanningServerRequestParameters,
         'returns': {
             'description': _('Status of the pick and place thread.'),
             'properties': OrderedDict([
@@ -398,6 +399,7 @@ services = [
     }),
     ('StopPhysicsThread', {
         'description': _('stops the physics simulation started with InitializePartsWithPhysics'),
+        'parameters': components.StandardPlanningServerRequestParameters,
         'returns': {},
     }),
     ('JitterPartUntilValidGrasp', {
@@ -882,10 +884,12 @@ services = [
     }),
     ('ClearVisualization', {
         'description': _('Clears visualization.'),
+        'parameters': components.StandardPlanningServerRequestParameters,
         'returns': {},
     }),
     ('GetPlanStatistics', {
         'description': _('Gets plan and execute statistics of the last pick and place'),
+        'parameters': components.StandardPlanningServerRequestParameters,
         'returns': {},
     }),
     ('SetCurrentLayoutDataSendOnObjectUpdateData', {
@@ -941,10 +945,12 @@ services = [
     }),
     ('StopPackFormationComputationThread', {
         'description': _('Stops the packing computation thread thread started with StartPackFormationComputationThread'),
+        'parameters': components.StandardPlanningServerRequestParameters,
         'returns': {},
     }),
     ('VisualizePackingState', {
         'description': _('Stops the packing computation thread thread started with StartPackFormationComputationThread'),
+        'parameters': components.StandardPlanningServerRequestParameters,
         'returns': {},
     }),
     ('VisualizePackFormationResult', {
@@ -1022,14 +1028,17 @@ services = [
     }),
     ('SendPackFormationComputationResult', {
         'description': _('Stops the packing computation thread thread started with StartPackFormationComputationThread'),
+        'parameters': components.StandardPlanningServerRequestParameters,
         'returns': {},
     }),
     ('GetLatestPackFormationResultList', {
         'description': _('Gets latest pack formation computation result'),
+        'parameters': components.StandardPlanningServerRequestParameters,
         'returns': {},
     }),
     ('ClearPackingStateVisualization', {
         'description': _('Clears packing visualization'),
+        'parameters': components.StandardPlanningServerRequestParameters,
         'returns': {},
     }),
     ('ValidatePackFormationResultList', {
@@ -1075,10 +1084,12 @@ services = [
     }),
     ('ComputeSamePartPackResultBySimulation', {
         'description': _('Computes pack formation for single part type.'),
+        'parameters': components.StandardPlanningServerRequestParameters,
         'returns': {},
     }),
     ('HasDetectionObstacles', {
         'description': _('Checks to see if the detection obstacles have all arrived.'),
+        'parameters': components.StandardPlanningServerRequestParameters,
         'returns': {},
     }),
 ]
