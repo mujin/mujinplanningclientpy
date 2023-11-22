@@ -269,8 +269,9 @@ class PlanningClient(object):
             'userinfo': self._userinfo,
             'slaverequestid': slaverequestid,
             'stamp': time.time(),
-            'respawnopts': respawnopts,
         }
+        if respawnopts is not None:
+            command['respawnopts'] = respawnopts
         if self._callerid is not None:
             command['callerid'] = self._callerid
             if 'callerid' not in taskparameters:
