@@ -61,7 +61,16 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
                 log.warning('Could not import API spec directly. Trying to read it from a file: %s', specExportPath)
                 binpickingSpec = json.load(open(specExportPath))
 
-            self._validationQueue = ValidationQueue(apiSpec=binpickingSpec, ignoreCommandParameters=set(['command']), clientName='BinpickingPlanningClient')
+            self._validationQueue = ValidationQueue(
+                apiSpec=binpickingSpec,
+                ignoreCommandParameters=set([
+                    'command',
+                    ('taskparams', 'taskparameters', 'command'),
+                    ('taskparams', 'taskparameters', 'callerid'),
+                    ('taskparams', 'taskparameters', 'stamp'),
+                ]),
+                clientName='BinpickingPlanningClient'
+            )
 
         self.regionname = regionname
         super(BinpickingPlanningClient, self).__init__(tasktype=self.tasktype, **kwargs)

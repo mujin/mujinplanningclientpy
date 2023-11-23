@@ -179,7 +179,7 @@ StandardPlanningServerRequestParameters = [
                     'type': 'integer',
                 }),
             ]),
-            'type': 'object',
+            'type': ['object', 'null'],
         }
     },
     {

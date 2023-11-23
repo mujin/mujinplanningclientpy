@@ -234,11 +234,8 @@ class PlanningClient(object):
     def _Validate(self, commandPayload, returnValue):
         if not self._validationQueue:
             return
-        
-        commandName = commandPayload['taskparams']['taskparameters']['command']
-        del commandPayload['taskparams']['taskparameters']['command']
 
-        self._validationQueue.Add(commandName, commandPayload, returnValue)
+        self._validationQueue.Add(commandPayload['taskparams']['taskparameters']['command'], commandPayload, returnValue)
 
     def ExecuteCommand(self, taskparameters, slaverequestid=None, timeout=None, fireandforget=None, respawnopts=None, checkpreempt=True, forcereload=False):
         """Executes command with taskparameters via ZMQ.

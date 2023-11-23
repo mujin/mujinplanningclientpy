@@ -80,7 +80,15 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
                 log.warning('Could not import API spec directly. Trying to read it from a file: %s', specExportPath)
                 calibrationSpec = json.load(open(specExportPath))
 
-            self._validationQueue = ValidationQueue(apiSpec=calibrationSpec, ignoreCommandParameters=set(['command']), clientName='HandEyeCalibrationPlanningClient')
+            self._validationQueue = ValidationQueue(
+                apiSpec=calibrationSpec,
+                ignoreCommandParameters=set([
+                    'command',
+                    ('taskparams', 'taskparameters', 'command'),
+                    ('taskparams', 'taskparameters', 'callerid'),
+                ]),
+                clientName='HandEyeCalibrationPlanningClient'
+            )
 
         super(HandEyeCalibrationPlanningClient, self).__init__(
             robotname=robotname,

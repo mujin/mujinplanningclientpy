@@ -81,7 +81,16 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
                 log.warning('Could not import API spec directly. Trying to read it from a file: %s', specExportPath)
                 realtimeITL3Spec = json.load(open(specExportPath))
 
-            self._validationQueue = ValidationQueue(apiSpec=realtimeITL3Spec, ignoreCommandParameters=set(['command']), clientName='RealtimeITL3PlanningClient')
+            self._validationQueue = ValidationQueue(
+                apiSpec=realtimeITL3Spec,
+                ignoreCommandParameters=set([
+                    'command',
+                    ('taskparams', 'taskparameters', 'command'),
+                    ('taskparams', 'taskparameters', 'callerid'),
+                    ('taskparams', 'taskparameters', 'stamp'),
+                ]),
+                clientName='RealtimeITL3PlanningClient'
+            )
 
         super(RealtimeITL3PlanningClient, self).__init__(
             robotname=robotname,
