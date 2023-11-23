@@ -84,6 +84,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             self._validationQueue = ValidationQueue(
                 apiSpec=realtimeITL3Spec,
                 ignoreCommandParameters=set([
+                    'callerid',
                     'command', 
                     ('taskparams', 'taskparameters', 'command'),
                     ('taskparams', 'taskparameters', 'callerid'),
@@ -91,6 +92,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
                     ('taskparams', 'taskparameters', 'robotaccelmult'),
                     ('taskparams', 'taskparameters', 'envclearance'),
                     ('taskparams', 'taskparameters', 'robotspeed'),
+                    ('taskparams', 'taskparameters', 'robotname'),
                     ('taskparams', 'taskparameters', 'robotBridgeConnectionInfo'),
                 ]),
                 clientName='RealtimeITL3PlanningClient'

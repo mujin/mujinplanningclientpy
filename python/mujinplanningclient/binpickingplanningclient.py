@@ -64,6 +64,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             self._validationQueue = ValidationQueue(
                 apiSpec=binpickingSpec,
                 ignoreCommandParameters=set([
+                    'callerid',
                     'command', 
                     ('taskparams', 'taskparameters', 'command'),
                     ('taskparams', 'taskparameters', 'callerid'),
@@ -71,6 +72,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
                     ('taskparams', 'taskparameters', 'robotaccelmult'),
                     ('taskparams', 'taskparameters', 'envclearance'),
                     ('taskparams', 'taskparameters', 'robotspeed'),
+                    ('taskparams', 'taskparameters', 'robotname'),
                     ('taskparams', 'taskparameters', 'robotBridgeConnectionInfo'),
                 ]),
                 clientName='BinpickingPlanningClient'
