@@ -39,46 +39,46 @@ setup(
         'mujinplanningapi.spec_handeyecalibration.calibrationSpec',
         'mujinplanningapi.spec_binpicking.binpickingSpec',
     ],
-    generate_packages=[
-        (
-            '_generatedclient1',
-            'mujinclientgenerators.generateClient.GenerateClient',
-            {
-                'specDictName': 'mujinplanningapi.spec_handeyecalibration.calibrationSpec',
-                'generatorSettingsDictName': 'mujinplanningapi.generator_settings_python_handeyecalibration.generatorSettings',
-                'output': './python/mujinplanningclient/handeyecalibrationplanningclient.py',
-                'language': 'python',
-            },
-        ),
-        (
-            '_generatedclient2',
-            'mujinclientgenerators.generateClient.GenerateClient',
-            {
-                'specDictName': 'mujinplanningapi.spec_binpicking.binpickingSpec',
-                'generatorSettingsDictName': 'mujinplanningapi.generator_settings_python_binpicking.generatorSettings',
-                'output': './python/mujinplanningclient/binpickingplanningclient.py',
-                'language': 'python',
-            },
-        ),
-        (
-            '_generatedclient3',
-            'mujinclientgenerators.generateClient.GenerateClient',
-            {
-                'specDictName': 'mujinplanningapi.spec_realtimerobot.realtimeRobotSpec',
-                'generatorSettingsDictName': 'mujinplanningapi.generator_settings_python_realtimerobot.generatorSettings',
-                'output': './python/mujinplanningclient/realtimerobotplanningclient.py',
-                'language': 'python',
-            },
-        ),
-        (
-            '_generatedclient4',
-            'mujinclientgenerators.generateClient.GenerateClient',
-            {
-                'specDictName': 'mujinplanningapi.spec_realtimeitl3.realtimeITL3Spec',
-                'generatorSettingsDictName': 'mujinplanningapi.generator_settings_python_realtimeitl3.generatorSettings',
-                'output': './python/mujinplanningclient/realtimeitl3planningclient.py',
-                'language': 'python',
-            },
-        ),
-    ],
+    #generate_packages=[
+    #    (
+    #        '_generatedclient1',
+    #        'mujinclientgenerators.generateClient.GenerateClient',
+    #        {
+    #            'specDictName': 'mujinplanningapi.spec_handeyecalibration.calibrationSpec',
+    #            'generatorSettingsDictName': 'mujinplanningapi.generator_settings_python_handeyecalibration.generatorSettings',
+    #            'output': './python/mujinplanningclient/handeyecalibrationplanningclient.py',
+    #            'language': 'python',
+    #        },
+    #    ),
+    #    (
+    #        '_generatedclient2',
+    #        'mujinclientgenerators.generateClient.GenerateClient',
+    #        {
+    #            'specDictName': 'mujinplanningapi.spec_binpicking.binpickingSpec',
+    #            'generatorSettingsDictName': 'mujinplanningapi.generator_settings_python_binpicking.generatorSettings',
+    #            'output': './python/mujinplanningclient/binpickingplanningclient.py',
+    #            'language': 'python',
+    #        },
+    #    ),
+    #    (
+    #        '_generatedclient3',
+    #        'mujinclientgenerators.generateClient.GenerateClient',
+    #        {
+    #            'specDictName': 'mujinplanningapi.spec_realtimerobot.realtimeRobotSpec',
+    #            'generatorSettingsDictName': 'mujinplanningapi.generator_settings_python_realtimerobot.generatorSettings',
+    #            'output': './python/mujinplanningclient/realtimerobotplanningclient.py',
+    #            'language': 'python',
+    #        },
+    #    ),
+    #    (
+    #        '_generatedclient4',
+    #        'mujinclientgenerators.generateClient.GenerateClient',
+    #        {
+    #            'specDictName': 'mujinplanningapi.spec_realtimeitl3.realtimeITL3Spec',
+    #            'generatorSettingsDictName': 'mujinplanningapi.generator_settings_python_realtimeitl3.generatorSettings',
+    #            'output': './python/mujinplanningclient/realtimeitl3planningclient.py',
+    #            'language': 'python',
+    #        },
+    #    ),
+    #],
 )
