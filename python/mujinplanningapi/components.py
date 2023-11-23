@@ -13,11 +13,43 @@ debuglevel = {
 }
 
 dynamicEnvironmentState = {
-    'description': _('The dynamic objects in the environment that is to be used for planning/executing the task. A list of bodies.'),
-    'items': {
-        'type': 'object',
-    },
-    'type': 'array',
+    'description': _('Dynamic environment state that allows the user to set/create objects in a particular state dynamically.'),
+    'type': 'object',
+    'properties': {
+        'iscreated': {
+            'type': 'boolean',
+        },
+        'uri': {
+            'type': 'string',
+            'semanticType': 'Uri',
+        },
+        'pose': {
+            'type': 'array',
+            'items': {
+                'type': 'number',
+            }
+        },
+        'dofvalues': {
+            'type': 'array',
+            'items': {
+                'type': 'number',
+            }
+        },
+        'grabbedby': {
+            'type': 'array',
+            'additionalItems': False,
+            'maxItems': 2,
+            'minItems': 2,
+            'prefixItems': [
+                {
+                    'type': 'string',
+                },
+                {
+                    'type': 'string',
+                },
+            ],
+        }
+    }
 }
 
 envclearance = {
@@ -235,6 +267,9 @@ StandardPlanningServerRequestParameters = [
                 }),
                 ('taskparameters', {
                     'type': 'object',
+                    'properties': {
+                        'dynamicEnvironmentState': dynamicEnvironmentState,
+                    }
                 }),
             ]),
             'type': 'object',

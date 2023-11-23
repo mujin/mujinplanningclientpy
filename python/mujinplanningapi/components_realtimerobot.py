@@ -108,7 +108,30 @@ linknameOBB = {
 
 locationCollisionInfos = {
     'description': _('List of external collision IOs to be computed and sent in realtime.'),
-    'type': 'object',
+    'type': 'array',
+    'items': {
+        'type': 'object',
+        'properties': {
+            'containerName': {
+                'type': 'string',
+            },
+            'forceDisableCollisionForPlanning': {
+                'type': 'boolean',
+            },
+            'forceEnableAllLinks': {
+                'type': 'boolean',
+            },
+            'locationName': {
+                'type': 'string',
+            },
+            'setToLastPlaced': {
+                'type': 'boolean',
+            },
+            'useAABB': {
+                'type': 'boolean',
+            },
+        }
+    }
 }
 
 minimumgoalpaths = {
@@ -298,7 +321,7 @@ moveJointsParameters = OrderedDict([
         'items': {
             'type': 'number',
         },
-        'type': 'array',
+        'type': ['array', 'null'],
     }),
     ('departMinimumCompleteRatio', {
         'description': _('The ratio of the linear depart motion that needs to be possible for a pick/place to be executed. Pick/place candidate locations that do not allow sufficient space for the depart motion are discarded. Generally between 0.0 and 1.0.'),
@@ -354,7 +377,7 @@ moveJointsParameters = OrderedDict([
         'type': 'boolean',
     }),
     ('departAccel', {
-        'type': 'number',
+        'type': ['number', 'null'],
     }),
     ('maxManipAccel', {
         'type': 'number',

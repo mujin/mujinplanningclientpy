@@ -889,7 +889,10 @@ services = [
             'properties': OrderedDict([
                 ('clearedLocationNames', {
                     'description': _('clearedLocationNames'),
-                    'type': 'object',
+                    'type': 'array',
+                    'items': {
+                        'type': 'string',
+                    }
                 }),
             ]),
             'type': 'object',
