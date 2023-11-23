@@ -63,7 +63,7 @@ ikparamnames = {
 
 ioSignalsInfo = {
     'description': _('Struct for dictating if any IO signals should be written on receiving detection results'),
-    'type': 'object',
+    'type': ['object', 'null'],
 }
 
 ioname = {
@@ -114,6 +114,9 @@ locationCollisionInfos = {
         'properties': {
             'containerName': {
                 'type': 'string',
+            },
+            'externalCollisionName': {
+                'type': 'string'
             },
             'forceDisableCollisionForPlanning': {
                 'type': 'boolean',
@@ -225,6 +228,9 @@ forceTorqueBasedEstimatorParameters = OrderedDict([
     ('description', _('A set of parameters for force-torque based estimation.')),
     ('type', 'object'),
     ('properties', OrderedDict([
+        ('allowRobotMovementTowardDecreasingExternalForce', {
+            'type': 'boolean',
+        }),
         ('use', {
             'description': _('If False, forceTorqueBasedEstimatorParameters are not used.'),
             'type': 'boolean',
@@ -377,6 +383,12 @@ moveJointsParameters = OrderedDict([
         'type': 'boolean',
     }),
     ('departAccel', {
+        'type': ['number', 'null'],
+    }),
+    ('departOffsetInTool', {
+        'type': 'boolean',
+    }),
+    ('departSpeed', {
         'type': ['number', 'null'],
     }),
     ('maxManipAccel', {
