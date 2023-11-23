@@ -72,6 +72,9 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
                     ('taskparams', 'taskparameters', 'command'),
                     ('taskparams', 'taskparameters', 'callerid'),
                     ('taskparams', 'taskparameters', 'stamp'),
+                    ('taskparams', 'taskparameters', 'robotaccelmult'),
+                    ('taskparams', 'taskparameters', 'envclearance'),
+                    ('taskparams', 'taskparameters', 'robotspeed'),
                 ]),
                 clientName='RealtimeRobotPlanningClient'
             )

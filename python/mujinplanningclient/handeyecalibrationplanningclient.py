@@ -83,9 +83,13 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             self._validationQueue = ValidationQueue(
                 apiSpec=calibrationSpec,
                 ignoreCommandParameters=set([
-                    'command',
+                    'command', 
                     ('taskparams', 'taskparameters', 'command'),
                     ('taskparams', 'taskparameters', 'callerid'),
+                    ('taskparams', 'taskparameters', 'stamp'),
+                    ('taskparams', 'taskparameters', 'robotaccelmult'),
+                    ('taskparams', 'taskparameters', 'envclearance'),
+                    ('taskparams', 'taskparameters', 'robotspeed'),
                 ]),
                 clientName='HandEyeCalibrationPlanningClient'
             )
