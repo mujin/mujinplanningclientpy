@@ -91,6 +91,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
                     ('taskparams', 'taskparameters', 'robotaccelmult'),
                     ('taskparams', 'taskparameters', 'envclearance'),
                     ('taskparams', 'taskparameters', 'robotspeed'),
+                    ('taskparams', 'taskparameters', 'robotBridgeConnectionInfo'),
                 ]),
                 clientName='RealtimeITL3PlanningClient'
             )

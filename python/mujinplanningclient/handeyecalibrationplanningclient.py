@@ -90,6 +90,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
                     ('taskparams', 'taskparameters', 'robotaccelmult'),
                     ('taskparams', 'taskparameters', 'envclearance'),
                     ('taskparams', 'taskparameters', 'robotspeed'),
+                    ('taskparams', 'taskparameters', 'robotBridgeConnectionInfo'),
                 ]),
                 clientName='HandEyeCalibrationPlanningClient'
             )

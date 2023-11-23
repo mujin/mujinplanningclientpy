@@ -71,6 +71,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
                     ('taskparams', 'taskparameters', 'robotaccelmult'),
                     ('taskparams', 'taskparameters', 'envclearance'),
                     ('taskparams', 'taskparameters', 'robotspeed'),
+                    ('taskparams', 'taskparameters', 'robotBridgeConnectionInfo'),
                 ]),
                 clientName='BinpickingPlanningClient'
             )
