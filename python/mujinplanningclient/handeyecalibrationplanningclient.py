@@ -24,7 +24,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
 
     def __init__(
         self,
-        robotname,
+        robotname=None,
         robotspeed=None,
         robotaccelmult=None,
         envclearance=10.0,
