@@ -27,6 +27,7 @@ class RemoteViewerClient(planningclient.PlanningClient):
             username: string: Username for WebStack connection
             password: string: Password for WebStack connection
             remoteBodyNamePrefix: string: Prefix which will be used for every body of the environment in main environment
+            ignoreBodyPrefixes: array: List of prefixes to exclude from synchronization
             environmentIds: array: Environment IDs used for initial sync of the remote environment
             envTransform: array: Seven floating point numbers specifiying transformation to be applied to the remote environment when shown in the main one
         Example usage:
@@ -122,6 +123,10 @@ class RemoteViewerClient(planningclient.PlanningClient):
                 "address": "10.2.12.21",
                 "remoteBodyNamePrefix": "itodenki",
                 "envTransform": [1, 0, 0, 0, 0, 0, 0],
+                "ignoreBodyPrefixes": [
+                    "obs",
+                    "wall"
+                ]
             },
         ]
         self.StartRemoteViewerThread(robotBridgeConnectionInfo=robotBridgeConnectionInfo)
