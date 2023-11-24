@@ -144,6 +144,62 @@ Vector3Schema = {
     'type': 'array',
 }
 
+locationCollisionInfos = {
+    'description': _('List of external collision IOs to be computed and sent in realtime.'),
+    'type': 'array',
+    'items': {
+        'type': 'object',
+        'properties': {
+            'containerName': {
+                'type': 'string',
+            },
+            'externalCollisionName': {
+                'type': 'string'
+            },
+            'forceDisableCollisionForPlanning': {
+                'type': 'boolean',
+            },
+            'forceEnableAllLinks': {
+                'type': 'boolean',
+            },
+            'locationName': {
+                'type': 'string',
+            },
+            'setToLastPlaced': {
+                'type': 'boolean',
+            },
+            'useAABB': {
+                'type': 'boolean',
+            },
+        }
+    }
+}
+
+robotBridgeConnectionInfo = {
+    'description': _('Information to set up a client to the robot bridge.'),
+    'properties': OrderedDict([
+        ('host', {
+            'default': '172.0.0.1',
+            'description': _('The host address of the robotbridge.'),
+            'type': 'string',
+        }),
+        ('port', {
+            'default': 7000,
+            'description': _('The port of the robotbridge.'),
+            'type': 'integer',
+        }),
+        ('queueid', {
+            'description': _('The requested planning slave id.'),
+            'type': 'string',
+        }),
+        ('use', {
+            'description': _('If False, robotbridge is not used.'),
+            'type': 'boolean',
+        }),
+    ]),
+    'type': 'object',
+}
+
 Internal_ExecuteCommandParameters = {
     'fireandforget': {
         'default': False,
