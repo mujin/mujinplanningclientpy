@@ -134,6 +134,7 @@ class PlanningClient(object):
 
         self._userinfo = {
             'username': self.controllerusername,
+            'password': self.controllerpassword,
             'locale': os.environ.get('LANG', ''),
         }
 
