@@ -83,18 +83,19 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
 
             self._validationQueue = ValidationQueue(
                 apiSpec=realtimeITL3Spec,
-                ignoreCommandParameters=set([
-                    'callerid',
-                    'command', 
-                    ('taskparams', 'taskparameters', 'command'),
-                    ('taskparams', 'taskparameters', 'callerid'),
-                    ('taskparams', 'taskparameters', 'stamp'),
-                    ('taskparams', 'taskparameters', 'robotaccelmult'),
-                    ('taskparams', 'taskparameters', 'envclearance'),
-                    ('taskparams', 'taskparameters', 'robotspeed'),
-                    ('taskparams', 'taskparameters', 'robotname'),
-                    ('taskparams', 'taskparameters', 'robotBridgeConnectionInfo'),
-                ]),
+                ignoreParameters=[
+                    {'parameter': 'callerid'},
+                    {'parameter': 'command'},
+                    {'parameter': ('taskparams', 'taskparameters', 'command')},
+                    {'parameter': ('taskparams', 'taskparameters', 'callerid')},
+                    {'parameter': ('taskparams', 'taskparameters', 'stamp')},
+                    {'parameter': ('taskparams', 'taskparameters', 'robotaccelmult')},
+                    {'parameter': ('taskparams', 'taskparameters', 'envclearance')},
+                    {'parameter': ('taskparams', 'taskparameters', 'robotspeed')},
+                    {'parameter': ('taskparams', 'taskparameters', 'robotname')},
+                    {'parameter': ('taskparams', 'taskparameters', 'robotBridgeConnectionInfo')},
+                    {'parameter': ('taskparams', 'taskparameters', 'request')},
+                ],
                 clientName='RealtimeITL3PlanningClient'
             )
 
