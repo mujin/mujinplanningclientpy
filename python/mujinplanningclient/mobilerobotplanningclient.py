@@ -93,13 +93,12 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
         return self.ExecuteCommand(taskparameters)
 
     # Universal interface.
-    def ManageTaskGraph(self, newTasks=None, taskIdsToCancel=None, timeout=10.0, blockwait=True, fireandforget=False, checkPreempt=True, **kwargs):
+    def ManageTaskGraph(self, tasks=None, timeout=10.0, blockwait=True, fireandforget=False, checkPreempt=True, **kwargs):
         """
         """
         taskparameters = {
             'command': 'ManageTaskGraph',
-            'newTasks': newTasks,
-            'taskIdsToCancel': taskIdsToCancel,
+            'tasks': tasks,
         }
         return self.SendAndReceiveTaskCommand(self._PrepareTaskCommand(taskparameters, **kwargs), blockwait=blockwait, fireandforget=fireandforget, checkPreempt=checkPreempt)
 
