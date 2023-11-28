@@ -118,23 +118,7 @@ binpickingParametersSchema= MergeDicts(
                 'departoffsetdir': components.departoffsetdir,  # Moved to graspDepartOffsetDir in 20220412_planningcommon_initial.py
                 'itlParameters': {  # In conf but not in binpiskingparameters
                     'type': 'object',
-                    'properties': {
-                        'numTrajectoryBuffer': {
-                            'type': 'integer',
-                        },
-                        'saveConcatenateTrajectoryLog': {
-                            'type': 'boolean',
-                        },
-                        'saveFilterTrajectoryLog': {
-                            'type': 'boolean',
-                        },
-                        'saveRobotFeedbackLog': {
-                            'type': 'boolean',
-                        },
-                        'savetrajectorylog': {
-                            'type': 'boolean',
-                        },
-                    }
+                    'additionalProperties': True,
                 },
                 'controllerclientparameters': {
                     'type': 'object',

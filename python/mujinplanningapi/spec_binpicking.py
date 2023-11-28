@@ -497,7 +497,21 @@ services = [
             },
         ),
         'returns': {
-            'description': _('A dictionary with keys, for example:\n{\n\n    total: 10\n    messages: [{\n\n            "message":"message1",\n            "type":"",\n            "level":0,\n            "data": {\n\n                "jointvalues":[0,0,0,0,0,0]\n            }\n        },\n        ...\n    ]\n}\n'),
+            'description': _('''\
+A dictionary with keys, for example:
+{
+    total: 10
+    messages: [{
+        "message":"message1",
+        "type":"",
+        "level":0,
+        "data": {
+            "jointvalues":[0,0,0,0,0,0]
+        }
+    },
+    ...
+    ]
+}'''),
         },
     }),
     ('MoveRobotOutOfCameraOcclusion', {
