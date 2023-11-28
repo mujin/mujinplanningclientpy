@@ -16,7 +16,7 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
         """Connects to the Mujin controller, initializes task"""
         super(MobileRobotPlanningClient, self).__init__(tasktype=self.TASK_TYPE, **kwargs)
 
-    def StartMobileRobotPlanningThread(self, robotBridgeConnectionInfo=None, chargingParameters=None):
+    def StartMobileRobotPlanningThread(self, robotBridgeConnectionInfo=None, chargingParameters=None, **kwargs):
         """
         Initialize the planning thread.
         If the robotBridgeConnectionInfo is not set to use=True, no robot movement will occur as
@@ -44,6 +44,7 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
             'robotBridgeConnectionInfo': robotBridgeConnectionInfo,
             'chargingParameters': chargingParameters,
         }
+        taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters)
 
     def GetTaskGraph(self):
