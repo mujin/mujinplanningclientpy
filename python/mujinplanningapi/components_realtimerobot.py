@@ -169,44 +169,7 @@ workspeed = {
     'type': 'array',
 }
 
-forceTorqueBasedEstimatorParameters = OrderedDict([
-    ('description', _('A set of parameters for force-torque based estimation.')),
-    ('type', 'object'),
-    ('properties', OrderedDict([
-        ('allowRobotMovementTowardDecreasingExternalForce', {
-            'type': 'boolean',
-        }),
-        ('use', {
-            'description': _('If False, forceTorqueBasedEstimatorParameters are not used.'),
-            'type': 'boolean',
-        }),
-        ('handCenterOfMass', {
-            'description': _('The location of the center of mass'),
-            'items': {
-                'type': 'number',
-            },
-            'type': 'array',
-        }),
-        ('objectCenterOfMass', {
-            'description': _('The location of the center of mass'),
-            'items': {
-                'type': 'number',
-            },
-            'type': 'array',
-        }),
-        ('robotForceTorqueCalibrationPositionNames', {
-            'description': _('Names of robot positions that are suitable for calibrating the force sensor.'),
-            'items': {
-                'type': 'string',
-            },
-            'type': 'array',
-        }),
-        ('robotForceTorqueCalibrationPositionName', {
-            'description': _('Name of a robot position that is suitable for calibrating the force sensor.'),
-            'type': 'string',
-        }),
-    ])),
-])
+forceTorqueBasedEstimatorParameters = binpickingparametersschema.forceTorqueBasedEstimatorParametersSchema
 
 jittererParameters = OrderedDict([
     ('maxJitter', {
