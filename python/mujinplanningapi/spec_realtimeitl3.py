@@ -10,6 +10,7 @@ from . import UpdateTaskparams
 from . import components
 from . import components_realtimerobot
 from . import spec_realtimerobot
+from mujinbinpickingmanager.schema import binpickingparametersschema  # TODO(felixvd): Move into this repository
 
 services = [
     ('SetJointValues', {
@@ -261,13 +262,47 @@ services = [
                     'properties': {
                         'taskparameters': {
                             'type': 'object',
-                            'properties': OrderedDict([
-                                ('programName', {
-                                    'isRequired': True,
-                                }),
-                                ('robotspeed', {}),
-                                ('robotaccelmult', {}),
-                            ]),
+                            'properties': MergeDicts(
+                                [
+                                    components.Internal_SetRobotClientParameters,
+                                    OrderedDict([
+                                        ('programName', {
+                                            'isRequired': True,
+                                            'type': 'string',
+                                        }),
+                                        ('debuglevel', components.debuglevel),
+                                        ('defaultItlProgramParams', components.defaultItlProgramParamsSchema),
+                                        ('departOffsetDir', components.departoffsetdir),
+                                        ('envclearance', components.envclearance),
+                                        ('executionid', {
+                                            'type': 'string',
+                                        }),
+                                        ('itlCacheMode', {
+                                            'type': 'string',
+                                        }),
+                                        ('parameters', {
+                                            'type': 'object',
+                                            'additionalProperties': True,
+                                        }),
+                                        ('planningSmallestObjectSizeForCollision', binpickingparametersschema.planningSmallestObjectSizeForCollisionSchema),
+                                        ('programCommit', {
+                                            'type': ['string', 'null'],
+                                        }),
+                                        ('restorescene', {
+                                            'type': 'boolean',
+                                        }),
+                                        ('robotspeed', components.robotspeed),
+                                        ('robotaccelmult', components.robotaccelmult),
+                                        ('saveRobotFeedbackLog', binpickingparametersschema.saveRobotFeedbackLogSchema),
+                                        ('savetrajectorylog', binpickingparametersschema.savetrajectorylogSchema),
+                                        ('smootherParameters', binpickingparametersschema.smootherParametersSchema),
+                                        ('stamp', {
+                                            'type': 'number'
+                                        }),
+                                    ]),
+                                ],
+                                deepcopy=True,
+                            )[0],
                         },
                     },
                 },

@@ -30,7 +30,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     OrderedDict([
                                         ('executetimeout', MergeDicts(
                                             [
@@ -74,7 +74,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     OrderedDict([
                                         ('ignoreGrabbingTarget', components_realtimerobot.moveJointsParameters['ignoreGrabbingTarget']),
@@ -174,7 +174,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     components_realtimerobot.moveJointsParameters,
                                     OrderedDict([
@@ -1150,7 +1150,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     OrderedDict([
                                         ('robotname', components.robotname),
@@ -1253,7 +1253,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     OrderedDict([
                                         ('grippername', components_realtimerobot.grippername),
@@ -1291,7 +1291,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     OrderedDict([
                                         ('robotProgramName', {
@@ -1366,7 +1366,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     OrderedDict([
                                         ('robotname', MergeDicts(
                                             [
@@ -1409,7 +1409,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     components_realtimerobot.moveJointsParameters,
                                     OrderedDict([
@@ -1447,7 +1447,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     components_realtimerobot.moveJointsParameters,
                                     OrderedDict([
@@ -1500,7 +1500,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     components_realtimerobot.moveJointsParameters,
                                     OrderedDict([
@@ -1555,7 +1555,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     OrderedDict([
                                         ('ioname', MergeDicts(
                                             [
@@ -1600,7 +1600,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     OrderedDict([
                                         ('forceasync', {
                                             'type': 'boolean',
@@ -1806,7 +1806,7 @@ services = [
                     'properties': {
                         'taskparameters': {
                             'type': 'object',
-                            'properties': components_realtimerobot.Internal_SetRobotClientParameters,
+                            'properties': components.Internal_SetRobotClientParameters,
                         },
                     },
                 },
@@ -1824,7 +1824,7 @@ services = [
                     'properties': {
                         'taskparameters': {
                             'type': 'object',
-                            'properties': components_realtimerobot.Internal_SetRobotClientParameters,
+                            'properties': components.Internal_SetRobotClientParameters,
                         },
                     },
                 },
@@ -1844,7 +1844,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     OrderedDict([
                                         ('ionames', components_realtimerobot.ionames),
                                     ])
@@ -1868,7 +1868,7 @@ services = [
                     'properties': {
                         'taskparameters': {
                             'type': 'object',
-                            'properties': components_realtimerobot.Internal_SetRobotClientParameters,
+                            'properties': components.Internal_SetRobotClientParameters,
                         },
                     },
                 },
@@ -1886,7 +1886,7 @@ services = [
                     'properties': {
                         'taskparameters': {
                             'type': 'object',
-                            'properties': components_realtimerobot.Internal_SetRobotClientParameters,
+                            'properties': components.Internal_SetRobotClientParameters,
                         },
                     },
                 },
@@ -1904,7 +1904,7 @@ services = [
                     'properties': {
                         'taskparameters': {
                             'type': 'object',
-                            'properties': components_realtimerobot.Internal_SetRobotClientParameters,
+                            'properties': components.Internal_SetRobotClientParameters,
                         },
                     },
                 },
@@ -2038,7 +2038,7 @@ services = [
                                 ('approachoffset', {
                                     'type': 'number',
                                 }),
-                                ('departoffsetdir', components_realtimerobot.moveJointsParameters['departOffsetDir']),
+                                ('departoffsetdir', components.departoffsetdir),
                                 ('departoffsetintool', {
                                     'description': _(' '),
                                     'items': {
@@ -2209,7 +2209,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     OrderedDict([
                                         ('jointName', MergeDicts(
@@ -2254,7 +2254,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     OrderedDict([
                                         ('jointName', MergeDicts(
@@ -2308,7 +2308,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     OrderedDict([
                                         ('jointName', MergeDicts(
@@ -2353,7 +2353,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     OrderedDict([
                                         ('jointName', MergeDicts(
@@ -2397,7 +2397,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                 ],
                                 deepcopy=True,
@@ -2421,7 +2421,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     OrderedDict([
                                         ('jointName', components_realtimerobot.jointName),
@@ -2456,7 +2456,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     OrderedDict([
                                         ('jointName', components_realtimerobot.jointName),
@@ -2505,7 +2505,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     OrderedDict([
                                         ('jointName', {
@@ -2560,7 +2560,7 @@ services = [
                             'type': 'object',
                             'properties': MergeDicts(
                                 [
-                                    components_realtimerobot.Internal_SetRobotClientParameters,
+                                    components.Internal_SetRobotClientParameters,
                                     components_realtimerobot.Internal_MoveCommandDecoratorParameters,
                                     OrderedDict([
                                         ('jointName', MergeDicts(
@@ -2708,7 +2708,7 @@ services = [
                     'properties': {
                         'taskparameters': {
                             'type': 'object',
-                            'properties': components_realtimerobot.Internal_SetRobotClientParameters,
+                            'properties': components.Internal_SetRobotClientParameters,
                         },
                     },
                 },

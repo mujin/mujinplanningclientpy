@@ -115,18 +115,7 @@ binpickingParametersSchema= MergeDicts(
                     'description': _('If True, then the robot will add a finish position to the cycle even if "finish" is not present, unless "ignoreFinishPosition" is True in the order cycle command. "ignoreFinishPosition" overrides this parameter.'),
                     'type': 'boolean',
                 },
-                'departoffsetdir': {  # Moved to graspDepartOffsetDir in 20220412_planningcommon_initial.py
-                    'description': _('Departure offset direction. mm (x,y,z)'),
-                    'type': 'array',
-                    'minItems': 3,
-                    'maxItems': 3,
-                    'prefixItems': [
-                        {'title': _('x'), 'type': 'number', 'default': 0},
-                        {'title': _('y'), 'type': 'number', 'default': 0},
-                        {'title': _('z'), 'type': 'number', 'default': 0}
-                    ],
-                    'additionalItems': False,
-                },
+                'departoffsetdir': components.departoffsetdir,  # Moved to graspDepartOffsetDir in 20220412_planningcommon_initial.py
                 'itlParameters': {  # In conf but not in binpiskingparameters
                     'type': 'object',
                     'properties': {
@@ -264,18 +253,7 @@ binpickingParametersSchema= MergeDicts(
                         }
                     }
                 },
-                'destdepartoffsetdir': {  # Migrated in 20230505_approachDepartOffsets.py
-                    'description': _('Departure offset direction. mm (x,y,z)'),
-                    'type': 'array',
-                    'minItems': 3,
-                    'maxItems': 3,
-                    'prefixItems': [
-                        {'title': _('x'), 'type': 'number', 'default': 0},
-                        {'title': _('y'), 'type': 'number', 'default': 0},
-                        {'title': _('z'), 'type': 'number', 'default': 0}
-                    ],
-                    'additionalItems': False,
-                },
+                'destdepartoffsetdir': components.departoffsetdir,  # Migrated in 20230505_approachDepartOffsets.py
                 'deleteTargetWhenPlacedInDest': {
                     'type': ['string', 'boolean'],
                     'enum': ['DeleteInAll', 'KeepInAll', True, False],

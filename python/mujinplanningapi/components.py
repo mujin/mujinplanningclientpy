@@ -12,6 +12,19 @@ debuglevel = {
     'type': 'integer',
 }
 
+departoffsetdir = {
+    'description': _('Departure offset direction. mm (x,y,z)'),
+    'type': 'array',
+    'minItems': 3,
+    'maxItems': 3,
+    'prefixItems': [
+        {'title': _('x'), 'type': 'number', 'default': 0},
+        {'title': _('y'), 'type': 'number', 'default': 0},
+        {'title': _('z'), 'type': 'number', 'default': 0}
+    ],
+    'additionalItems': False,
+}
+
 dynamicEnvironmentState = {
     'description': _('Dynamic environment state that allows the user to set/create objects in a particular state dynamically.'),
     'type': 'object',
@@ -200,6 +213,14 @@ robotBridgeConnectionInfo = {
     'type': 'object',
 }
 
+Internal_SetRobotClientParameters = OrderedDict([
+    ('unit', unit),
+    ('robotname', robotname),
+    ('toolname', toolname),
+    ('robotBridgeConnectionInfo', robotBridgeConnectionInfo),
+    ('locationCollisionInfos', locationCollisionInfos),
+])
+
 Internal_ExecuteCommandParameters = {
     'fireandforget': {
         'default': False,
@@ -348,3 +369,10 @@ StandardPlanningServerRequestParameters = [
         }
     },
 ]
+
+defaultItlProgramParamsSchema = {
+    'type': 'object',
+    'properties': {
+        'envClearance': envclearance,
+    }
+}

@@ -46,20 +46,24 @@ services = [
                                     'description': _('Distance in millimeters to move straight to the grasp point, e.g. 30 mm'),
                                     'type': 'number',
                                 }),
-                                ('departoffsetdir', {
-                                    'description': _('The direction and distance in mm to move the part in global frame (usually along negative gravity) after it is grasped, e.g. [0,0,50]'),
-                                    'items': {
-                                        'type': 'number',
-                                    },
-                                    'type': 'array',
-                                }),
-                                ('destdepartoffsetdir', {
-                                    'description': _('The direction and distance in mm to move away from the object after it is placed, e.g. [0,0,30]. Depending on leaveoffsetintool parameter, this can in the global coordinate system or tool coordinate system.'),
-                                    'items': {
-                                        'type': 'number',
-                                    },
-                                    'type': 'array',
-                                }),
+                                ('departoffsetdir', MergeDicts(
+                                    [
+                                        components.departoffsetdir,
+                                        {
+                                            'description': _('The direction and distance in mm to move the part in global frame (usually along negative gravity) after it is grasped, e.g. [0,0,50]'),
+                                        }
+                                    ],
+                                    deepcopy=True,
+                                )[0]),
+                                ('destdepartoffsetdir', MergeDicts(
+                                    [
+                                        components.departoffsetdir,
+                                        {
+                                            'description': _('The direction and distance in mm to move away from the object after it is placed, e.g. [0,0,30]. Depending on leaveoffsetintool parameter, this can in the global coordinate system or tool coordinate system.'),
+                                        }
+                                    ],
+                                    deepcopy=True,
+                                )[0]),
                                 ('freeinc', {
                                     'description': _('planning parameter'),
                                     'items': {
@@ -338,15 +342,27 @@ services = [
                                 ('jitterangle', {
                                     'description': _("Amount to jitter the target object's orientation angle"),
                                 }),
-                                ('departoffsetdir', {
-                                    'description': _('The depart distance for simulating full grasp.'),
-                                }),
+                                ('departoffsetdir', MergeDicts(
+                                    [
+                                        components.departoffsetdir,
+                                        {
+                                            'description': _('The depart distance for simulating full grasp.'),
+                                        }
+                                    ],
+                                    deepcopy=True,
+                                )[0]),
+                                ('destdepartoffsetdir', MergeDicts(
+                                    [
+                                        components.departoffsetdir,
+                                        {
+                                            'description': _('The direction and distance in mm to move away from the object after it is placed, e.g. [0,0,30]. Depending on leaveoffsetintool parameter, this can in the global coordinate system or tool coordinate system.'),
+                                        }
+                                    ],
+                                    deepcopy=True,
+                                )[0]),
                                 ('targetname', components.targetname),
                                 ('approachoffset', {
                                     'description': _('The approach distance for simulating full grasp.'),
-                                }),
-                                ('destdepartoffsetdir', {
-                                    'description': _('the direction and distance in mm to move away from the object after it is placed, e.g. [0,0,30]. Depending on leaveoffsetintool parameter, this can in the global coordinate system or tool coordinate system.'),
                                 }),
                             ]),
                         },

@@ -116,6 +116,7 @@ moveStraightParams = MergeDicts(
         binpickingparametersschema.moveStraightParamsSchema,
         {
             'description': _('A set of parameters defining how the robot behaves during linear motions.'),
+            'type': ['object', 'null'],
         }
     ],
     deepcopy=True,
@@ -266,13 +267,16 @@ moveJointsParameters = OrderedDict([
         },
         'type': 'array',
     }),
-    ('departOffsetDir', {
-        'description': _('Direction in which to apply the offset when departing from the pick/place operation.'),
-        'items': {
-            'type': 'number',
-        },
-        'type': ['array', 'null'],
-    }),
+    ('departOffsetDir', MergeDicts(
+        [
+            components.departoffsetdir,
+            {
+                'description': _('Direction in which to apply the offset when departing from the pick/place operation.'),
+                'type': ['array', 'null'],
+            }
+        ],
+        deepcopy=True,
+    )[0]),
     ('departMinimumCompleteRatio', {
         'description': _('The ratio of the linear depart motion that needs to be possible for a pick/place to be executed. Pick/place candidate locations that do not allow sufficient space for the depart motion are discarded. Generally between 0.0 and 1.0.'),
         'type': 'number',
