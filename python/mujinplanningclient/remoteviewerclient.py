@@ -128,6 +128,16 @@ class RemoteViewerClient(planningclient.PlanningClient):
                     "wall"
                 ]
             },
+            {
+                "address": "10.2.12.61",
+                "remoteBodyNamePrefix": "c363",
+                "envTransform": [1, 0, 0, 0, 0, 8 ,0],
+            },
+            {
+                "address": "10.2.12.41",
+                "remoteBodyNamePrefix": "c428",
+                "envTransform": [1, 0, 0, 0, 0, 12 ,0],
+            }
         ]
         self.StartRemoteViewerThread(robotBridgeConnectionInfo=robotBridgeConnectionInfo)
 
@@ -139,3 +149,62 @@ class RemoteViewerClient(planningclient.PlanningClient):
             },
         ]
         self.StartRemoteViewerThread(robotBridgeConnectionInfo=robotBridgeConnectionInfo)
+
+    def GetDemoConfig(self):
+        robotBridgeConnectionInfo = [
+            {
+                "address": "172.29.120.123",
+                'remoteBodyNamePrefix': 'Trial',
+                'envTransform': [1,0,0,0,0,0,0],
+                "ignoreBodyPrefixes": [
+                    "obs",
+                    "floor",
+                ],
+            },
+            {
+                "address": "172.29.120.186",
+                'remoteBodyNamePrefix': 'CDP',
+                'envTransform': [1,0,0,0,1,-6,0],
+                "ignoreBodyPrefixes": [
+                    "obs",
+                    "floor",
+                ],
+            },
+            {
+                "address": "172.29.120.101",
+                'remoteBodyNamePrefix': 'Assembly',
+                'envTransform': [1,0,0,0,1,-11,0],
+                "ignoreBodyPrefixes": [
+                    "obs",
+                    "floor",
+                ],
+            },
+            {
+                "address": "172.29.120.118",
+                'remoteBodyNamePrefix': 'Truckbot',
+                'envTransform': [0.707107,0,0,-0.707107,8.5,-16.2,0],
+                "ignoreBodyPrefixes": [
+                    "obs",
+                    "floor",
+                ],
+            },
+            {
+                "address": "172.29.120.154",
+                'remoteBodyNamePrefix': 'Kitz',
+                'envTransform': [0,0,0,1, 10.5,1.5,0],
+                "ignoreBodyPrefixes": [
+                    "obs",
+                    "floor",
+                ],
+            },
+            # {
+            #     "address": "172.29.120.147",
+            #     'remoteBodyNamePrefix': 'Metalring',
+            #     'envTransform': [0.707107,0,0,0.707107,11.5,4,0],
+            #     "ignoreBodyPrefixes": [
+            #         "obs",
+            #         "floor",
+            #     ],
+            # }
+        ]
+        return robotBridgeConnectionInfo
