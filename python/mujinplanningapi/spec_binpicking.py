@@ -168,6 +168,9 @@ services = [
                                     'description': _("optional finish code to end the cycle with (if it doesn't end with something else beforehand)"),
                                     'type': 'string',
                                 }),
+                                ('useRobotBridge', {
+                                    'type': 'boolean',
+                                })
                             ]),
                         },
                     },

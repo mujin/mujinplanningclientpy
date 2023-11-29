@@ -484,14 +484,6 @@ Internal_RealtimeRobotTaskInitParameters = OrderedDict([
     }),
 ])
 
-Internal_SetRobotClientParameters = OrderedDict([
-    ('unit', components.unit),
-    ('robotname', components.robotname),
-    ('toolname', components.toolname),
-    ('robotBridgeConnectionInfo', components.robotBridgeConnectionInfo),
-    ('locationCollisionInfos', components.locationCollisionInfos),
-])
-
 Internal_TaskBaseInitParameters = MergeDicts(
     [
         pathPlannerParameters,

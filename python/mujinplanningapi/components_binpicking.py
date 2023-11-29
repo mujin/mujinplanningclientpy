@@ -115,6 +115,14 @@ binpickingParametersSchema= MergeDicts(
                     'description': _('If True, then the robot will add a finish position to the cycle even if "finish" is not present, unless "ignoreFinishPosition" is True in the order cycle command. "ignoreFinishPosition" overrides this parameter.'),
                     'type': 'boolean',
                 },
+                'forceStartRobotPositionConfigurationName': {  # Accepted by the server but not in conf.
+                    'description': _('If not None, then have the robot start with this position configuration regardless of what is in orderIds or robot positions/connected body active states.'),
+                    'type': ['string', 'null'],
+                },
+                'initiallyDisableRobotBridge': {
+                    'description': _('If True, stops any communication with the robotbridge until robot bridge is enabled.'),
+                    'type': 'boolean',
+                },
                 'departoffsetdir': components.departoffsetdir,  # Moved to graspDepartOffsetDir in 20220412_planningcommon_initial.py
                 'itlParameters': {  # In conf but not in binpiskingparameters
                     'type': 'object',
@@ -322,6 +330,9 @@ binpickingParametersSchema= MergeDicts(
                         }
                     }
                 },
+                'waitForStateTrigger': {
+                    'type': ['boolean', 'null'],
+                }
             },
         },
     ],
