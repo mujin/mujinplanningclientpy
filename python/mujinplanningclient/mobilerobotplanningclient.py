@@ -34,50 +34,6 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
         super(MobileRobotPlanningClient, self).__init__(tasktype=self.TASK_TYPE, **kwargs)
         self._defaultTaskCommandTimeout = 4.0
 
-    def GetTaskGraph(self):
-        """Get the current state of the task graph"""
-        taskparameters = {
-            'command': 'GetTaskGraph',
-        }
-        return self.ExecuteCommand(taskparameters)
-
-    def QueueTasks(self, newTasks):
-        """Append new tasks to the task graph"""
-        taskparameters = {
-            'command': 'QueueTasks',
-            'newTasks': newTasks,
-        }
-        return self.ExecuteCommand(taskparameters)
-
-    def ClearTaskGraph(self):
-        """Resets the current task graph. Robots will stop after finishing their current trajectories."""
-        taskparameters = {
-            'command': 'ClearTaskGraph',
-        }
-        return self.ExecuteCommand(taskparameters)
-
-    def ClearCompletedTasks(self):
-        """
-        Removes all finished tasks from the task graph that are not dependencies of active tasks.
-        Returns the set of tasks that were deleted.
-        """
-        taskparameters = {
-            'command': 'ClearCompletedTasks',
-        }
-        return self.ExecuteCommand(taskparameters)
-
-    def ClearTasksById(self, taskIdList):
-        """
-        Removes all tasks in the given list of task IDs from the task graph.
-        Returns the set of tasks that were deleted.
-        If an id is not present in the task graph, the call will throw and no changes will be made.
-        """
-        taskparameters = {
-            'command': 'ClearTasksById',
-            'taskIdList': taskIdList,
-        }
-        return self.ExecuteCommand(taskparameters)
-
     def ForceReplan(self):
         """Triggers a forced replan of the mobile robot trajectories even if the task graph hasn't changed"""
         taskparameters = {
