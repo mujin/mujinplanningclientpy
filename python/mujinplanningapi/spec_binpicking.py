@@ -575,7 +575,17 @@ A dictionary with keys, for example:
                     'properties': {
                         'taskparameters': {
                             'type': 'object',
-                            'properties': OrderedDict(),
+                            'properties': OrderedDict([
+                                ('numTargetsToPlace', {
+                                    'description': _('The number of targets that are left to place'),
+                                    'type': 'integer',
+                                }),
+                                ('enablerobotbridge', {
+                                    'description': _('If True, enables robot bridge'),
+                                    'type': 'boolean',
+                                }),
+                                # TODO(felixvd): Does this need 'use' and 'robotBridgeConnectionInfo' as well?
+                            ]),
                         },
                     },
                 },
