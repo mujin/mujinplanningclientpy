@@ -156,8 +156,8 @@ services = [
                         'taskparameters': {
                             'type': 'object',
                             'properties': OrderedDict([
-                                ('resetExecutionState', {
-                                    'description': _('if True, then reset the order state variables. By default True'),
+                                ('resetCachedRobotConfigurationState', {
+                                    'description': _('if True, then reset the cached robot configuration state. By default False'),
                                     'type': 'boolean',
                                 }),
                                 ('resetStatusPickPlace', {
