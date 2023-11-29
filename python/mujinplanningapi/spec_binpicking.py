@@ -117,7 +117,7 @@ services = [
                                     'type': 'array',
                                 }),
                                 ('graspsetname', {
-                                    'description': _('the name of the grasp set belong to the target objects to use for the target. Grasp sets are a list of ikparams'),
+                                    'description': _('The name of the grasp set that belongs that should be used to grasp the target.'),
                                     'type': 'string',
                                 }),
                             ]),
