@@ -54,6 +54,8 @@ services = [
                             'type': 'object',
                             'properties': OrderedDict([
                                 ('robotname', components.robotname),
+                                ('robotBridgeConnectionInfo', components.robotBridgeConnectionInfo),
+                                ('locationCollisionInfos', components.locationCollisionInfos),
                             ]),
                         },
                     },
