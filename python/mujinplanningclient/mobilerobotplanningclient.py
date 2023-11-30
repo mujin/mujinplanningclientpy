@@ -87,6 +87,7 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
             'robotBridgeConnectionInfo': robotBridgeConnectionInfo,
             'chargingParameters': chargingParameters,
         }
+        taskparameters.update(kwargs)
         return self.SendAndReceiveTaskCommand(self._PrepareTaskCommand(taskparameters, **kwargs), blockwait=blockwait, fireandforget=fireandforget, checkPreempt=checkPreempt)
 
     #
