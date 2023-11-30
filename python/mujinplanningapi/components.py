@@ -28,39 +28,83 @@ departoffsetdir = {
 dynamicEnvironmentState = {
     'description': _('Dynamic environment state that allows the user to set/create objects in a particular state dynamically.'),
     'type': 'object',
-    'properties': {
-        'iscreated': {
-            'type': 'boolean',
-        },
-        'uri': {
-            'type': 'string',
-            'semanticType': 'Uri',
-        },
-        'pose': {
-            'type': 'array',
-            'items': {
-                'type': 'number',
-            }
-        },
-        'dofvalues': {
-            'type': 'array',
-            'items': {
-                'type': 'number',
-            }
-        },
-        'grabbedby': {
-            'type': 'array',
-            'additionalItems': False,
-            'maxItems': 2,
-            'minItems': 2,
-            'prefixItems': [
-                {
-                    'type': 'string',
-                },
-                {
-                    'type': 'string',
-                },
-            ],
+    'additionalProperties': {
+        'type': 'object',
+        'properties': {
+            'animate': {
+                'description': _('Animate value is a update stamp, when it changes, we need to restart animation.'),
+                'type': 'integer',
+            },
+            'boxFullSize': {
+                'type': 'array',
+                'minItems': 3,
+                'maxItems': 3,
+                'items': {
+                    'type': 'number',
+                }
+            },
+            'cloneOriginalBodyName': {
+                'type': 'boolean',
+            },
+            'collision': {
+                'type': 'boolean',
+            },
+            'dofvalues': {
+                'type': 'array',
+                'items': {
+                    'type': 'number',
+                }
+            },
+            'grabbedby': {
+                'type': 'array',
+                'additionalItems': False,
+                'maxItems': 2,
+                'minItems': 2,
+                'prefixItems': [
+                    {
+                        'type': 'string',
+                    },
+                    {
+                        'type': 'string',
+                    },
+                ],
+            },
+            'iscreated': {
+                'type': 'boolean',
+            },
+            'linkstates': {
+                'type': 'object',
+                'additionalProperties': {
+                    'type': 'object'
+                }
+            },
+            'linkenable': {
+                'description': _('Link name.'),
+                'type': 'string',
+            },
+            'linkvisible': {
+                'description': _('Set link to have visibility as specified by "visible".'),
+                'type': 'string',
+            },
+            'pose': {
+                'type': 'array',
+                'items': {
+                    'type': 'number',
+                }
+            },
+            'restore': {
+                'type': 'boolean',
+            },
+            'templateinfos': {
+                'type': 'object',
+            },
+            'uri': {
+                'type': 'string',
+                'semanticType': 'Uri',
+            },
+            'visible': {
+                'type': 'boolean',
+            },
         }
     }
 }

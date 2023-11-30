@@ -70,6 +70,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
         self._validateapi = os.environ.get('MUJIN_VALIDATE_APIS', 'false') in ['True', 'true']
         if self._validateapi and not self._validationQueue:
             from mujinapispecvalidation.apiSpecServicesValidation import ValidationQueue
+            from mujinapispecvalidation.apiSpecServicesValidation import IgnoreParameterOptions
             try:
                 from mujinplanningapi.spec_handeyecalibration import calibrationSpec
             except ImportError:
@@ -83,17 +84,22 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             self._validationQueue = ValidationQueue(
                 apiSpec=calibrationSpec,
                 ignoreParameters=[
-                    {'parameter': 'callerid'},
-                    {'parameter': 'command'},
-                    {'parameter': ('taskparams', 'taskparameters', 'command')},
-                    {'parameter': ('taskparams', 'taskparameters', 'callerid')},
-                    {'parameter': ('taskparams', 'taskparameters', 'stamp')},
-                    {'parameter': ('taskparams', 'taskparameters', 'robotaccelmult')},
-                    {'parameter': ('taskparams', 'taskparameters', 'envclearance')},
-                    {'parameter': ('taskparams', 'taskparameters', 'robotspeed')},
-                    {'parameter': ('taskparams', 'taskparameters', 'robotname')},
-                    {'parameter': ('taskparams', 'taskparameters', 'robotBridgeConnectionInfo')},
-                    {'parameter': ('taskparams', 'taskparameters', 'request')},
+                    IgnoreParameterOptions(parameter = 'callerid'),
+                    IgnoreParameterOptions(parameter = 'command'),
+                    IgnoreParameterOptions(parameter = ('taskparams', 'taskparameters', 'command')),
+                    IgnoreParameterOptions(parameter = ('taskparams', 'taskparameters', 'callerid')),
+                    IgnoreParameterOptions(parameter = ('taskparams', 'taskparameters', 'stamp')),
+                    IgnoreParameterOptions(parameter = ('taskparams', 'taskparameters', 'robotaccelmult')),
+                    IgnoreParameterOptions(parameter = ('taskparams', 'taskparameters', 'envclearance')),
+                    IgnoreParameterOptions(parameter = ('taskparams', 'taskparameters', 'robotspeed')),
+                    IgnoreParameterOptions(parameter = ('taskparams', 'taskparameters', 'robotname')),
+                    IgnoreParameterOptions(parameter = ('taskparams', 'taskparameters', 'robotBridgeConnectionInfo')),
+                    IgnoreParameterOptions(parameter = ('taskparams', 'taskparameters', 'request')),
+                    IgnoreParameterOptions(parameterSuffix = '-'),
+                    IgnoreParameterOptions(parameterSuffix = '--'),
+                    IgnoreParameterOptions(parameterSuffix = '_'),
+                    IgnoreParameterOptions(parameterSuffix = '__'),
+                    IgnoreParameterOptions(parameterSuffix = '__CANNOTUSE'),
                 ],
                 clientName='HandEyeCalibrationPlanningClient'
             )

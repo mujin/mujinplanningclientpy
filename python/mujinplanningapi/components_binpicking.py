@@ -7,6 +7,7 @@ from mujincommon.dictutil import MergeDicts
 from . import components
 
 from mujinbinpickingmanager.schema import binpickingparametersschema  # TODO(felixvd): Move into this repository
+from mujinbinpickingmanager.schema import destGoalsSchema  # TODO(felixvd): Move into this repository
 
 
 regionname = {
@@ -15,11 +16,63 @@ regionname = {
     'type': 'string',
 }
 
+# TODO(andriy.logvin): Remove after these changes are landed to schema in https://git.mujin.co.jp/dev/binpickingui/-/merge_requests/2411
+pieceInspectionInfoSchema = {
+    "typeName": "PieceInspectionInfo",
+    "title":_("Piece Inspection Info"),
+    "description":_("Piece inspection settings at the middest"),
+    "type": "object",
+    "properties": {
+        "expectedIOValue": {
+            "title": _("Expected Piece Inspection IO Value"),
+            "description": _("The expected value of the IO specified by 'ioName'."),
+            "type": "number",
+            "tags":["motion", "medium", "si"]
+        },
+        "ioCheckStartDelay": {
+            "title": _("Piece Inspection IO Check Start Delay"),
+            "description": _("seconds. Sometimes it takes time to read the piece inspection IO value, and this config compensates for the delay. The value should be smaller than midDestWaitTime."),
+            "type": "number",
+            "tags":["motion", "advanced", "si"]
+        },
+        "ioName": {
+            "title": _("Piece Inspection IO Name"),
+            "description": _("The IO name to check its value during piece inspection. 'expectedIOValue' should also be set."),
+            "type": "string",
+            "tags":["motion", "medium", "si"]
+        },
+        "use":{
+            "title": _("Use Piece Inspection Info"),
+            "description": _("If True and the 'moveToMidDest' is also True, then does piece inspection at the mid dest specified by 'midDestIkparamNames' and 'midDestCoordType' for 'midDestWaitTime'."),
+            "type": "boolean",
+            "default": False,
+            "tags":["motion", "medium", "si"]
+        }
+    },
+    "tags":["motion", "medium", "si"]
+}
+
 binpickingParametersSchema= MergeDicts(
     [
         binpickingparametersschema.binpickingParametersSchema,
         {
             'properties': {
+                'jittererParametersOld': {  # In configs but not used in the actual code.
+                    'type': 'object',
+                    'deprecated': True,
+                    'properties': {
+                        'maxJitterLinkDist': {
+                            'type': 'number',
+                        }
+                    }
+                },
+                'pickContainerHasOnlyOnePart': {
+                    'type': 'boolean',
+                },
+                'finalPlanRobotConfiguration': {
+                    'type': 'string',
+                },
+                'destGoals': destGoalsSchema.destGoalsSchema, # Was migrated out of binpickingParametersSchema to containerProperties, but is still a valid property of this function.
                 'registrationInfo': {
                     'type': 'object',
                     'properties': {
@@ -62,6 +115,7 @@ binpickingParametersSchema= MergeDicts(
                         'type': 'string',
                     }
                 },
+                'pieceInspectionInfo': pieceInspectionInfoSchema,
                 'gripperInfo0': {  # In conf but it looks suspicious and I don't know if it should be added
                     'type': 'object',
                     'properties': {

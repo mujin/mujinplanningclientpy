@@ -157,15 +157,20 @@ services = [
                             'type': 'object',
                             'properties': OrderedDict([
                                 ('resetCachedRobotConfigurationState', {
-                                    'description': _('if True, then reset the cached robot configuration state. By default False'),
+                                    'description': _('If True, then reset the cached robot configuration state. By default False.'),
                                     'type': 'boolean',
                                 }),
+                                ('resetExecutionState', {
+                                    'description': _('If True, then reset the order state variables. By default True.'),
+                                    'type': 'boolean',
+                                    'deprecated': True,
+                                }),
                                 ('resetStatusPickPlace', {
-                                    'description': _('if True, then reset the statusPickPlace field of hte planning slave.'),
+                                    'description': _('If True, then reset the statusPickPlace field of hte planning slave.'),
                                     'type': 'boolean',
                                 }),
                                 ('finishCode', {
-                                    'description': _("optional finish code to end the cycle with (if it doesn't end with something else beforehand)"),
+                                    'description': _("Optional finish code to end the cycle with (if it doesn't end with something else beforehand)."),
                                     'type': 'string',
                                 }),
                                 ('useRobotBridge', {
