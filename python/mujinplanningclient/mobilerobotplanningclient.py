@@ -48,18 +48,19 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
         }
         return self.ExecuteCommand(taskparameters)
 
-    # Universal interface.
-    def ManageTaskGraph(self, tasks=None, timeout=10.0, blockwait=True, fireandforget=False, checkPreempt=True, **kwargs):
+    # TODO: Adding optional parameters only for dev purpose, should be spreaded out to arg list.
+    def ManageTaskGraph(self, tasks=None, optionalParameters={}, timeout=10.0, blockwait=True, fireandforget=False, checkPreempt=True, **kwargs):
         """
         """
         taskparameters = {
             'command': 'ManageTaskGraph',
             'tasks': tasks,
         }
+        taskparameters.update(optionalParameters)
         return self.SendAndReceiveTaskCommand(self._PrepareTaskCommand(taskparameters, **kwargs), blockwait=blockwait, fireandforget=fireandforget, checkPreempt=checkPreempt)
 
-    # Universal interface.
-    def StartMobileRobotPlanningThread(self, robotBridgeConnectionInfo=None, chargingParameters=None, timeout=10.0, blockwait=True, fireandforget=False, checkPreempt=True, **kwargs):
+    # TODO: Adding optional parameters only for dev purpose, should be spreaded out to arg list.
+    def StartMobileRobotPlanningThread(self, robotBridgeConnectionInfo=None, chargingParameters=None, saveDebugResouresEveryPlanningLoop=False, optionalParameters={}, timeout=10.0, blockwait=True, fireandforget=False, checkPreempt=True, **kwargs):
         """
         Initialize the planning thread.
         If the robotBridgeConnectionInfo is not set to use=True, no robot movement will occur as
@@ -86,8 +87,9 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
             'command': 'StartMobileRobotPlanningThread',
             'robotBridgeConnectionInfo': robotBridgeConnectionInfo,
             'chargingParameters': chargingParameters,
+            'saveDebugResouresEveryPlanningLoop': saveDebugResouresEveryPlanningLoop,
         }
-        taskparameters.update(kwargs)
+        taskparameters.update(optionalParameters)
         return self.SendAndReceiveTaskCommand(self._PrepareTaskCommand(taskparameters, **kwargs), blockwait=blockwait, fireandforget=fireandforget, checkPreempt=checkPreempt)
 
     #
