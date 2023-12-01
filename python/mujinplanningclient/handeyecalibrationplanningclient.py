@@ -24,7 +24,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
 
     def __init__(
         self,
-        robotname,
+        robotname=None,
         robotspeed=None,
         robotaccelmult=None,
         envclearance=10.0,
@@ -42,7 +42,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
         callerid='',
         **ignoredArgs
     ):
-        # type: (str, Optional[float], Optional[float], float, Optional[str], int, int, float, Optional[zmq.Context], Optional[str], str, str, str, str, str, str, Any) -> None
+        # type: (Optional[str], Optional[float], Optional[float], float, Optional[str], int, int, float, Optional[zmq.Context], Optional[str], str, str, str, str, str, str, Any) -> None
         """Connects to the Mujin controller, initializes HandEyeCalibration task and sets up parameters
 
         Args:
