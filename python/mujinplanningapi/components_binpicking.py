@@ -321,6 +321,15 @@ binpickingParametersSchema= MergeDicts(
                                 }
                             }
                         },
+                        # TODO(andriy.logvin): Move to schema after https://git.mujin.co.jp/dev/packingcommon/-/merge_requests/10 is merged.
+                        'enableWallSwitchingApproach': {
+                            'type': 'boolean',
+                        },
+                        # TODO(andriy.logvin): Remove after configs are migrated. Was deprecated in https://git.mujin.co.jp/dev/binpickingui/-/commit/125686b0531590c212fc97198c2936c13f5e72e5 .
+                        'usePlacementPriorities': {
+                            'deprecated': True,
+                            'type': 'boolean',
+                        },
                         "edgedetectorThresh": {
                             '$comment': 'Deprecated 2023/07/10.',
                             "title": _("Edge detector threshold"),
@@ -385,7 +394,7 @@ binpickingParametersSchema= MergeDicts(
                     }
                 },
                 'waitForStateTrigger': {
-                    'type': ['boolean', 'null'],
+                    'type': ['string', 'null'],
                 }
             },
         },

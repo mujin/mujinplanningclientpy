@@ -174,6 +174,44 @@ translation = {
     'type': 'array',
 }
 
+transformSchema = {
+    'typeName': 'transform',
+    'type': 'array',
+    'additionalItems': False,
+    'maxItems': 7,
+    'minItems': 7,
+    'prefixItems': [
+        {
+            'description': _('Rotation w'),
+            'type': 'number',
+        },
+        {
+            'description': _('Rotation x'),
+            'type': 'number',
+        },
+        {
+            'description': _('Rotation y'),
+            'type': 'number',
+        },
+        {
+            'description': _('Rotation z'),
+            'type': 'number',
+        },
+        {
+            'description': _('Translation x'),
+            'type': 'number',
+        },
+        {
+            'description': _('Translation y'),
+            'type': 'number',
+        },
+        {
+            'description': _('Translation z'),
+            'type': 'number',
+        },
+    ],
+}
+
 unit = {
     'default': 'mm',
     'description': _('The unit of the given values.'),

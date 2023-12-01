@@ -360,6 +360,43 @@ smootherParameters = OrderedDict([
     }),
 ])
 
+# TODO(andriy.logvin): Its a copy of schema from robotbridge. Reference schema instead of copying.
+releaseTargetData = {
+    'description': _('Keys representing what to release and where to release it to.'),
+    'type': ['object', 'null'],
+    'properties': {
+        'releaseTargetNames': {
+            'description': _('Names of targets to release'),
+            'type': 'array',
+            'items': {
+                'type': 'string',
+            }
+        },
+        'releaseToObjectName': {
+            'description': _('Optional name of object that should be grabbing the new target'),
+            'type': 'string',
+        },
+        'onReleaseNewName': {
+            'description': _('Optional, when releasing the target, rename it to this name'),
+            'type': 'string',
+        },
+        'onReleaseNewPose': MergeDicts(
+            [
+                components.transformSchema,
+                {
+                    'description': _('Optional, when releasing the target, set it to this transform'),
+                }
+            ],
+            deepcopy=True,
+        )[0],
+        'placedDynamicProperties': {
+            'description': _('Optional, dynamic properties to be associated with the target once placed'),
+            'type': 'object',
+            'additionalProperties': True,
+        },
+    }
+}
+
 CanAcceptUpdateOnLocationParameters = OrderedDict([
     ('locationName', {
         'description': _('Name of the location to update.'),

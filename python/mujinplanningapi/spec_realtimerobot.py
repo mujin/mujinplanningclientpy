@@ -17,6 +17,21 @@ from mujinbinpickingmanager.schema import binpickingparametersschema  # TODO(fel
 
 
 services = [
+    ('Ping', {
+        'description': _('Ping the server.'),
+        'parameters': components.StandardPlanningServerRequestParameters,
+        'returns': {
+            'type': 'object',
+            'properties': {
+                'timestamp': {
+                    'type': 'number',
+                },
+                'slaverequestid': {
+                    'type': 'string',
+                },
+            }
+        },
+    }),
     ('GetJointValues', {
         'description': _('Gets the current robot joint values'),
         'parameters': UpdateTaskparams(
@@ -1172,6 +1187,7 @@ services = [
                                             'description': _('If 1, removes the target object from the environment after releasing. (Default: 1)'),
                                             'type': 'integer',
                                         }),
+                                        ('releaseTargetData', components_realtimerobot.releaseTargetData),
                                     ])
                                 ],
                                 deepcopy=True,

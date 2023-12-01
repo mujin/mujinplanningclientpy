@@ -81,6 +81,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
                     IgnoreParameterOptions(parameterSuffix = '_'),
                     IgnoreParameterOptions(parameterSuffix = '__'),
                     IgnoreParameterOptions(parameterSuffix = '__CANNOTUSE'),
+                    IgnoreParameterOptions(parameterSuffix = '_~20211001'),
                 ],
                 clientName='BinpickingPlanningClient'
             )
