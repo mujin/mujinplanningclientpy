@@ -451,10 +451,3 @@ StandardPlanningServerRequestParameters = [
         }
     },
 ]
-
-defaultItlProgramParamsSchema = {
-    'type': 'object',
-    'properties': {
-        'envClearance': envclearance,
-    }
-}

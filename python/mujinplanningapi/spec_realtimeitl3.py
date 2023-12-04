@@ -11,6 +11,7 @@ from . import components
 from . import components_realtimerobot
 from . import spec_realtimerobot
 from mujinbinpickingmanager.schema import binpickingparametersschema  # TODO(felixvd): Move into this repository
+from mujinteachworkermanager.itlprogramparameterschema import itlProgramParameterSchema
 
 services = [
     ('SetJointValues', {
@@ -273,7 +274,7 @@ services = [
                                             'type': 'string',
                                         }),
                                         ('debuglevel', components.debuglevel),
-                                        ('defaultItlProgramParams', components.defaultItlProgramParamsSchema),
+                                        ('defaultItlProgramParams', itlProgramParameterSchema),
                                         ('departOffsetDir', components.departoffsetdir),
                                         ('envclearance', components.envclearance),
                                         ('executionid', {
