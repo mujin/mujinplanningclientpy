@@ -60,7 +60,7 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
         return self.SendAndReceiveTaskCommand(self._PrepareTaskCommand(taskparameters, **kwargs), blockwait=blockwait, fireandforget=fireandforget, checkPreempt=checkPreempt)
 
     # TODO: Adding optional parameters only for dev purpose, should be spreaded out to arg list.
-    def StartMobileRobotPlanningThread(self, robotBridgeConnectionInfo=None, chargingParameters=None, saveDebugResouresEveryPlanningLoop=False, optionalParameters={}, timeout=10.0, blockwait=True, fireandforget=False, checkPreempt=True, **kwargs):
+    def StartMobileRobotPlanningThread(self, robotBridgeConnectionInfo=None, chargingParameters=None, saveDebugResourcesEveryPlanningLoop=False, optionalParameters={}, timeout=10.0, blockwait=True, fireandforget=False, checkPreempt=True, **kwargs):
         """
         Initialize the planning thread.
         If the robotBridgeConnectionInfo is not set to use=True, no robot movement will occur as
@@ -87,7 +87,7 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
             'command': 'StartMobileRobotPlanningThread',
             'robotBridgeConnectionInfo': robotBridgeConnectionInfo,
             'chargingParameters': chargingParameters,
-            'saveDebugResouresEveryPlanningLoop': saveDebugResouresEveryPlanningLoop,
+            'saveDebugResourcesEveryPlanningLoop': saveDebugResourcesEveryPlanningLoop,
         }
         taskparameters.update(optionalParameters)
         return self.SendAndReceiveTaskCommand(self._PrepareTaskCommand(taskparameters, **kwargs), blockwait=blockwait, fireandforget=fireandforget, checkPreempt=checkPreempt)
