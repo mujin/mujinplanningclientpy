@@ -55,6 +55,9 @@ dynamicEnvironmentState = {
                     'type': 'number',
                 }
             },
+            'exclusive': {
+                'type': 'boolean',
+            },
             'grabbedby': {
                 'type': 'array',
                 'additionalItems': False,

@@ -18,38 +18,38 @@ regionname = {
 
 # TODO(andriy.logvin): Remove after these changes are landed to schema in https://git.mujin.co.jp/dev/binpickingui/-/merge_requests/2411
 pieceInspectionInfoSchema = {
-    "typeName": "PieceInspectionInfo",
-    "title":_("Piece Inspection Info"),
-    "description":_("Piece inspection settings at the middest"),
-    "type": "object",
-    "properties": {
-        "expectedIOValue": {
-            "title": _("Expected Piece Inspection IO Value"),
-            "description": _("The expected value of the IO specified by 'ioName'."),
-            "type": "number",
-            "tags":["motion", "medium", "si"]
+    'typeName': 'PieceInspectionInfo',
+    'title':_('Piece Inspection Info'),
+    'description':_('Piece inspection settings at the middest'),
+    'type': 'object',
+    'properties': {
+        'expectedIOValue': {
+            'title': _('Expected Piece Inspection IO Value'),
+            'description': _('The expected value of the IO specified by "ioName".'),
+            'type': 'number',
+            'tags':['motion', 'medium', 'si']
         },
-        "ioCheckStartDelay": {
-            "title": _("Piece Inspection IO Check Start Delay"),
-            "description": _("seconds. Sometimes it takes time to read the piece inspection IO value, and this config compensates for the delay. The value should be smaller than midDestWaitTime."),
-            "type": "number",
-            "tags":["motion", "advanced", "si"]
+        'ioCheckStartDelay': {
+            'title': _('Piece Inspection IO Check Start Delay'),
+            'description': _('seconds. Sometimes it takes time to read the piece inspection IO value, and this config compensates for the delay. The value should be smaller than midDestWaitTime.'),
+            'type': 'number',
+            'tags':['motion', 'advanced', 'si']
         },
-        "ioName": {
-            "title": _("Piece Inspection IO Name"),
-            "description": _("The IO name to check its value during piece inspection. 'expectedIOValue' should also be set."),
-            "type": "string",
-            "tags":["motion", "medium", "si"]
+        'ioName': {
+            'title': _('Piece Inspection IO Name'),
+            'description': _('The IO name to check its value during piece inspection. "expectedIOValue" should also be set.'),
+            'type': 'string',
+            'tags':['motion', 'medium', 'si']
         },
-        "use":{
-            "title": _("Use Piece Inspection Info"),
-            "description": _("If True and the 'moveToMidDest' is also True, then does piece inspection at the mid dest specified by 'midDestIkparamNames' and 'midDestCoordType' for 'midDestWaitTime'."),
-            "type": "boolean",
-            "default": False,
-            "tags":["motion", "medium", "si"]
+        'use':{
+            'title': _('Use Piece Inspection Info'),
+            'description': _('If True and the "moveToMidDest" is also True, then does piece inspection at the mid dest specified by "midDestIkparamNames" and "midDestCoordType" for "midDestWaitTime".'),
+            'type': 'boolean',
+            'default': False,
+            'tags':['motion', 'medium', 'si']
         }
     },
-    "tags":["motion", "medium", "si"]
+    'tags':['motion', 'medium', 'si']
 }
 
 binpickingParametersSchema= MergeDicts(
@@ -304,8 +304,33 @@ binpickingParametersSchema= MergeDicts(
                     'type': ['string', 'boolean'],
                     'enum': ['DeleteInAll', 'KeepInAll', True, False],
                 },
+                'randomBoxInfo': {
+                    'properties': {
+                        'objectWeight': {
+                            '$comment': 'Deprecated 2022/01/08, use objectMass.',
+                            'title': 'Object weight',
+                            'description': _('kg, specifies weight of random box. Same as objectMass.'),
+                            'deprecated': True,
+                            'type': 'number',
+                            'minimum': 0.01,
+                            'default': 1.0,
+                            'tags':['motion', 'advanced', 'dev', 'target']
+                        },
+                        'generateCornerOffsets': {
+                            '$comment': 'Present in some configs but not used in the code.',
+                            'type': 'boolean',
+                            'deprecated': True,
+                        },
+                    }
+                },
                 'dynamicGoalsGeneratorParameters': {
                     'properties': {
+                        'ignoreToolWallCorners': {
+                            '$comment': 'Deprecated 2023/07/10.',
+                            'type': 'boolean',
+                            'description': _('If true, then ignore CPF_ToolWallCorner errors.'),
+                            'deprecated': True,
+                        },
                         'moduleConfigurationParameters': {
                             'properties': {
                                 'useLayoutData': {
@@ -330,47 +355,56 @@ binpickingParametersSchema= MergeDicts(
                             'deprecated': True,
                             'type': 'boolean',
                         },
-                        "edgedetectorThresh": {
+                        'edgedetectorThresh': {
                             '$comment': 'Deprecated 2023/07/10.',
-                            "title": _("Edge detector threshold"),
-                            "description": _("discrete gradient, threshold for magnitude of gradient depth map image for determining edges"),
-                            "type": "number",
-                            "minimum": 0,
-                            "maximum": 1,
-                            "default": 0.1,
-                            "tags":["advanced", "si", "dynamicGoals", "target"]
+                            'title': _('Edge detector threshold'),
+                            'description': _('discrete gradient, threshold for magnitude of gradient depth map image for determining edges'),
+                            'type': 'number',
+                            'minimum': 0,
+                            'maximum': 1,
+                            'default': 0.1,
+                            'tags':['advanced', 'si', 'dynamicGoals', 'target']
                         },
-                        "intToolXYSize": {
+                        'intToolXYSize': {
                             '$comment': 'Deprecated 2019/05/23.',
-                            "title": _("voxels, tool XY size"),
-                            "description": _("The target will be grabbed by a tool when it is placed inside the container. By specifying the tool XY size, can assure that the target will not be placed too close to walls so that it is impossible for the tool to place."),
-                            "type": "array",
-                            "minItems": 2,
-                            "maxItems": 2,
-                            "items" :[
-                                {"title": _("x"), "type":"integer", "default":0 },
-                                {"title": _("y"), "type":"integer", "default":0 }
+                            'title': _('voxels, tool XY size'),
+                            'description': _('The target will be grabbed by a tool when it is placed inside the container. By specifying the tool XY size, can assure that the target will not be placed too close to walls so that it is impossible for the tool to place.'),
+                            'type': 'array',
+                            'minItems': 2,
+                            'maxItems': 2,
+                            'items' :[
+                                {'title': _('x'), 'type':'integer', 'default':0 },
+                                {'title': _('y'), 'type':'integer', 'default':0 }
                             ],
-                            "additionalItems": False,
-                            "tags":["basic", "si", "dynamicGoals"]
+                            'additionalItems': False,
+                            'tags':['basic', 'si', 'dynamicGoals']
                         },
-                        "minCOMEdgeDistance": {
+                        'minCOMEdgeDistance': {
                             '$comment': 'Deprecated 2018/03/05, use jitterCOMRatioOffset.',
-                            "title": _("Minimum COM Distance from Edge"),
-                            "description": _("mm, the minimum allowed distance of the placed item COM from the edge of the supporting convex hull region under it"),
-                            "type": "number",
-                            "minimum": 0,
-                            "default": 5,
-                            "tags":["medium", "si", "dynamicGoals","target"]
+                            'title': _('Minimum COM Distance from Edge'),
+                            'description': _('mm, the minimum allowed distance of the placed item COM from the edge of the supporting convex hull region under it'),
+                            'type': 'number',
+                            'minimum': 0,
+                            'default': 5,
+                            'tags':['medium', 'si', 'dynamicGoals','target']
                         },
-                        "supportingWallTargetHeightRatio": {
+                        'supportingWallTargetHeightRatio': {
                             '$comment': 'Deprecated in schema 20190523.',
-                            "title": _("Supporting wall target height ratio"),
-                            "description": _("ratio, how much of the box side has to be near the wall or another box."),
-                            "type": "number",
-                            "minimum": 0.0,
-                            "default": 0.3,
+                            'title': _('Supporting wall target height ratio'),
+                            'description': _('ratio, how much of the box side has to be near the wall or another box.'),
+                            'type': 'number',
+                            'minimum': 0.0,
+                            'default': 0.3,
                         },
+                    }
+                },
+                'predictDetectionInfo': {
+                    'properties': {
+                        'isAllowPredictedMovementBeforeDetection': {
+                            '$comment': 'Set in some configs but not used in the code.',
+                            'type': 'boolean',
+                            'deprecated': True,
+                        }
                     }
                 },
                 'saveDynamicGoalGeneratorState': {
