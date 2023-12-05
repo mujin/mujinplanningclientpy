@@ -475,7 +475,7 @@ startItlParameters = {
         ('startline', {  # TODO(felixvd): This does not seem to be implemented.
             'default': 0,
             'description': _('Line of the ITL program to start at. This setting may be ignored by the server.'),
-            'type': 'integer',
+            'type': ['integer', 'null'],
         }),
         ('stepping', {
             'default': False,
