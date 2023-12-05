@@ -268,6 +268,7 @@ services = [
                             'properties': MergeDicts(
                                 [
                                     components.Internal_SetRobotClientParameters,
+                                    components.startItlParameters['properties'],
                                     OrderedDict([
                                         ('programName', {
                                             'isRequired': True,
@@ -275,8 +276,6 @@ services = [
                                         }),
                                         ('debuglevel', components.debuglevel),
                                         ('defaultItlProgramParams', itlProgramParameterSchema),
-                                        ('departOffsetDir', components.departoffsetdir),
-                                        ('envclearance', components.envclearance),
                                         ('executionid', {
                                             'type': 'string',
                                         }),
@@ -287,7 +286,6 @@ services = [
                                             'type': 'object',
                                             'additionalProperties': True,
                                         }),
-                                        ('planningSmallestObjectSizeForCollision', binpickingparametersschema.planningSmallestObjectSizeForCollisionSchema),
                                         ('programCommit', {
                                             'type': ['string', 'null'],
                                         }),
@@ -296,9 +294,6 @@ services = [
                                         }),
                                         ('robotspeed', components.robotspeed),
                                         ('robotaccelmult', components.robotaccelmult),
-                                        ('saveRobotFeedbackLog', binpickingparametersschema.saveRobotFeedbackLogSchema),
-                                        ('savetrajectorylog', binpickingparametersschema.savetrajectorylogSchema),
-                                        ('smootherParameters', binpickingparametersschema.smootherParametersSchema),
                                         ('stamp', {
                                             'type': 'number'
                                         }),

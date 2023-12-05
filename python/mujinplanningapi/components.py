@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 from . import _
 from mujincommon.dictutil import MergeDicts
-
+from mujinbinpickingmanager.schema import binpickingparametersschema  # TODO(felixvd): Fix this dependency
 
 debuglevel = {
     'description': _('Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE.'),
@@ -451,3 +451,38 @@ StandardPlanningServerRequestParameters = [
         }
     },
 ]
+
+startItlParameters = {
+    # NOTE: This is currently defined in the user config in the key 'itlParameters' and unpacked into the `StartITLProgram` call, but it should be in its own field in the call.
+    'description': _('Planning parameters for ITL programs.'),
+    'properties': OrderedDict([
+        ('allowGrabWithoutTemplateTarget', {
+            'default': False,
+            'description': _('Deprecated. Only for backwards compatibility.'),  # Only used in test_aurotek.
+            'type': 'boolean',
+        }),
+        ('departOffsetDir', departoffsetdir),
+        ('disallowSteppingBackwardAfterGrabRelease', {
+            'default': True,
+            'description': _('Deprecated. Only for backwards compatibility.'),  # Only used in test_aurotek.
+            'type': 'boolean',
+        }),
+        ('envclearance', envclearance),
+        ('planningSmallestObjectSizeForCollision', binpickingparametersschema.planningSmallestObjectSizeForCollisionSchema),
+        ('saveRobotFeedbackLog', binpickingparametersschema.saveRobotFeedbackLogSchema),
+        ('savetrajectorylog', binpickingparametersschema.savetrajectorylogSchema),
+        ('smootherParameters', binpickingparametersschema.smootherParametersSchema),
+        ('startline', {  # TODO(felixvd): This does not seem to be implemented.
+            'default': 0,
+            'description': _('Line of the ITL program to start at. This setting may be ignored by the server.'),
+            'type': 'integer',
+        }),
+        ('stepping', {
+            'default': False,
+            'description': _('If queue mode is "Stepping" (line-by-line execution) or not.'),
+            'type': 'boolean',
+        }),
+        ('toolposes', binpickingparametersschema.toolPosesSchema),
+    ]),
+    'type': 'object',
+}
