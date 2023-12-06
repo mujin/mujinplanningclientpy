@@ -200,15 +200,9 @@ services = [
                                         ('instobjectname', components_realtimerobot.Internal_MoveToParameters['instobjectname']),
                                         ('ikparamname', components_realtimerobot.Internal_MoveToParameters['ikparamname']),
                                         ('ikparamoffset', components_realtimerobot.Internal_MoveToParameters['ikparamoffset']),
-                                        ('pathPlannerParameters', {
-                                            'properties': components_realtimerobot.pathPlannerParameters,
-                                            'type': 'object',
-                                        }),
-                                        ('smootherParameters', {
-                                            'properties': components_realtimerobot.smootherParameters,
-                                            'type': 'object',
-                                        }),
-                                        ('moveStraightParams', components_realtimerobot.moveStraightParams),
+                                        ('pathPlannerParameters', binpickingparametersschema.pathPlannerParametersSchema),
+                                        ('smootherParameters', binpickingparametersschema.smootherParametersSchema),
+                                        ('moveStraightParams', binpickingparametersschema.moveStraightParamsSchema),
                                         ('goaltype', MergeDicts(
                                             [
                                                 components_realtimerobot.goaltype,
@@ -1485,7 +1479,7 @@ services = [
                                             'description': _('List of corresponding joint names for jointvalues.'),
                                             'type': 'string',
                                         }),
-                                        ('forceTorqueBasedEstimatorParameters', components_realtimerobot.forceTorqueBasedEstimatorParameters),
+                                        ('forceTorqueBasedEstimatorParameters', binpickingparametersschema.forceTorqueBasedEstimatorParametersSchema),
                                         ('jointindices', components_realtimerobot.jointindices),
                                         ('robotname', components.robotname),
                                         ('startvalues', components_realtimerobot.startvalues),
@@ -1530,7 +1524,7 @@ services = [
                                         ('robotProgramName', {
                                             'type': 'string',
                                         }),
-                                        ('forceTorqueBasedEstimatorParameters', components_realtimerobot.forceTorqueBasedEstimatorParameters),
+                                        ('forceTorqueBasedEstimatorParameters', binpickingparametersschema.forceTorqueBasedEstimatorParametersSchema),
                                         ('positionConfigurationName', {
                                             'description': _('If specified, the name of position configuration to move to. If it does not exist, will raise an error.'),
                                             'type': 'string',

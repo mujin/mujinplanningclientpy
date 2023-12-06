@@ -7,6 +7,23 @@ from . import _
 from mujincommon.dictutil import MergeDicts
 from mujinbinpickingmanager.schema import binpickingparametersschema  # TODO(felixvd): Fix this dependency
 
+
+constraintToolDirectionSchema = {
+    'description': _('Contains 7 params: manipdir, globaldir, cosangle.'),
+    'type': 'array',
+    'minItems': 7,
+    'maxItems': 7,
+    'prefixItems': [
+        {'title': _('manipdirX'), 'type': 'number'},
+        {'title': _('manipdirY'), 'type': 'number'},
+        {'title': _('manipdirZ'), 'type': 'number'},
+        {'title': _('globaldirX'), 'type': 'number'},
+        {'title': _('globaldirY'), 'type': 'number'},
+        {'title': _('globaldirZ'), 'type': 'number'},
+        {'title': _('cosangle'), 'type': 'number'},
+    ],
+}
+
 debuglevel = {
     'description': _('Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE.'),
     'type': 'integer',
@@ -142,6 +159,13 @@ quaternion = {
 
 robotaccelmult = {
     'description': _('Value in (0,1] defining the percentage of acceleration the robot should move at.'),
+    'maximum': 1.0,
+    'minimum': 0.0001,
+    'type': 'number',
+}
+
+robotspeedmult = {
+    'description': _('Value in (0,1] defining the percentage of speed the robot should move at.'),
     'maximum': 1.0,
     'minimum': 0.0001,
     'type': 'number',

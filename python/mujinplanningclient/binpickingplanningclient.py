@@ -83,6 +83,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
                     ParameterIgnoreRule(parameterSuffix = '__CANNOTUSE'),
                     ParameterIgnoreRule(parameterSuffix = '_~20211001'),
                     ParameterIgnoreRule(parameterSuffix = '_ignore'),
+                    ParameterIgnoreRule(parameterSuffix = '_disable'),
                     ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'randomBoxInfo', 'objectSize_smallbox')),
                 ],
                 clientName='BinpickingPlanningClient'

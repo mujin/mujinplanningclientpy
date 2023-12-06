@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2023 Mujin, Inc.
 
+from collections import OrderedDict
+
 from . import _
 from mujincommon.dictutil import MergeDicts
 
@@ -15,6 +17,62 @@ regionname = {
     'mapsTo': 'containername',
     'type': 'string',
 }
+
+detectionInfosSchema = {
+    'type': 'array',
+    'items': {
+        'type': 'object',
+        'properties': {
+            'containerDetectionMode': {
+                'type': 'string',
+            },
+            'locationName': {
+                'type': 'string',
+            },
+        }
+    }
+}
+
+destSensorSelectionInfosSchema = {
+    'type': 'array',
+    'items': {
+        'type': 'object',
+        'properties': {
+            'sensorName': {
+                'type': 'string',
+            },
+            'sensorLinkName': {
+                'type': 'string',
+            }
+        }
+    }
+}
+
+forceMoveToFinishSchema = {
+    'description': _('If True, then the robot will add a finish position to the cycle even if "finish" is not present, unless "ignoreFinishPosition" is True in the order cycle command. "ignoreFinishPosition" overrides this parameter.'),
+    'type': 'boolean',
+}
+
+ignoreStartPositionSchema = {
+    'description': _('True if the robot should ignore going to start position'),
+    'type': 'boolean',
+}
+
+predictDetectionInfoSchema = MergeDicts(
+    [
+        binpickingparametersschema.predictDetectionInfoSchema,
+        {
+            'properties': {
+                'isAllowPredictedMovementBeforeDetection': {
+                    '$comment': 'Set in some configs but not used in the code.',
+                    'type': 'boolean',
+                    'deprecated': True,
+                }
+            }
+        }
+    ],
+    deepcopy=True,
+)[0]
 
 # TODO(andriy.logvin): Remove after these changes are landed to schema in https://git.mujin.co.jp/dev/binpickingui/-/merge_requests/2411
 pieceInspectionInfoSchema = {
@@ -165,10 +223,7 @@ binpickingParametersSchema= MergeDicts(
                         }
                     }
                 },
-                'forceMoveToFinish': {  # In conf but not in binpiskingparameters
-                    'description': _('If True, then the robot will add a finish position to the cycle even if "finish" is not present, unless "ignoreFinishPosition" is True in the order cycle command. "ignoreFinishPosition" overrides this parameter.'),
-                    'type': 'boolean',
-                },
+                'forceMoveToFinish': forceMoveToFinishSchema,  # In conf but not in binpiskingparameters
                 'forceStartRobotPositionConfigurationName': {  # Accepted by the server but not in conf.
                     'description': _('If not None, then have the robot start with this position configuration regardless of what is in orderIds or robot positions/connected body active states.'),
                     'type': ['string', 'null'],
@@ -230,20 +285,7 @@ binpickingParametersSchema= MergeDicts(
                     }
                 },
                 # 'checkObstacleNames',
-                'detectionInfos': {
-                    'type': 'array',
-                    'items': {
-                        'type': 'object',
-                        'properties': {
-                            'containerDetectionMode': {
-                                'type': 'string',
-                            },
-                            'locationName': {
-                                'type': 'string',
-                            },
-                        }
-                    }
-                },
+                'detectionInfos': detectionInfosSchema,
                 #'destikparamnames',
                 'toolname': {  # In conf but not in binpiskingparameters
                     'type': 'string',
@@ -270,10 +312,7 @@ binpickingParametersSchema= MergeDicts(
                         }
                     }
                 },
-                'ignoreStartPosition': {  # In conf but not in binpiskingparameters
-                    'description': _('True if the robot should ignore going to start position'),
-                    'type': 'boolean',
-                },
+                'ignoreStartPosition': ignoreStartPositionSchema,  # In conf but not in binpiskingparameters
                 'locationCollisionInfos': components.locationCollisionInfos,
                 'sourcecontainernames': {  # In conf but not in binpiskingparameters
                     'type': 'array',
@@ -285,20 +324,7 @@ binpickingParametersSchema= MergeDicts(
                     'description': _('True if the robot should go to the tool position rather than joint values at the start of the cycle'),
                     'type': 'boolean',
                 },
-                'destSensorSelectionInfos': {
-                    'type': 'array',
-                    'items': {
-                        'type': 'object',
-                        'properties': {
-                            'sensorName': {
-                                'type': 'string',
-                            },
-                            'sensorLinkName': {
-                                'type': 'string',
-                            }
-                        }
-                    }
-                },
+                'destSensorSelectionInfos': destSensorSelectionInfosSchema,
                 'destdepartoffsetdir': components.departoffsetdir,  # Migrated in 20230505_approachDepartOffsets.py
                 'deleteTargetWhenPlacedInDest': {
                     'type': ['string', 'boolean'],
@@ -398,15 +424,7 @@ binpickingParametersSchema= MergeDicts(
                         },
                     }
                 },
-                'predictDetectionInfo': {
-                    'properties': {
-                        'isAllowPredictedMovementBeforeDetection': {
-                            '$comment': 'Set in some configs but not used in the code.',
-                            'type': 'boolean',
-                            'deprecated': True,
-                        }
-                    }
-                },
+                'predictDetectionInfo': predictDetectionInfoSchema,
                 'saveDynamicGoalGeneratorState': {
                     'type': 'boolean',
                     'enum': [0, 1, False, True],
@@ -435,3 +453,127 @@ binpickingParametersSchema= MergeDicts(
     ],
     deepcopy=True,
 )[0]
+
+hasDetectionObstaclesParametersSchema = {
+    'type': 'object',
+    'properties': OrderedDict([
+        ('minDetectionImageTimeMS', {
+            'type': 'integer',
+        }),
+        ('detectionInfos', detectionInfosSchema),
+        ('pickLocationInfo', binpickingparametersschema.pickLocationInfoSchema),
+        ('placeLocationInfos', binpickingparametersschema.placeLocationInfosSchema),
+        ('packLocationInfo', {
+            'type': 'object',
+            'properties': {
+                'containerId': {
+                    'type': 'string',
+                },
+                'containerType': {
+                    'type': 'string',
+                },
+                'locationName': {
+                    'type': 'string',
+                }
+            }
+        }),
+        ('predictDetectionInfo', predictDetectionInfoSchema),
+        ('useLocationState', {
+            'type': 'boolean',
+        }),
+        ('sourcecontainername', {
+            'type': 'string',
+        }),
+        ('bodyOcclusionInfos', {
+            'type': 'array',
+            'items': {
+                'type': 'object',
+            }
+        }),
+        ('forceWaitDestContainer', {
+            'type': 'boolean'
+        }),
+        ('waitUpdateStampTimeout', {
+            'type': 'integer',
+        }),
+        ('manipname', {
+            'type': 'string',
+        }),
+        ('constraintToolDirection', components.constraintToolDirectionSchema),
+        ('constraintToolOptions', {
+            'type': 'integer',
+        }),
+        ('envclearance', components.envclearance),
+        ('cameraOcclusionOffset', {
+            'type': 'number',
+        }),
+        ('robotspeedmult', components.robotspeedmult),
+        ('robotaccelmult', components.robotaccelmult),
+        ('executionFilterFactor', {
+            'type': 'number',
+        }),
+        ('executionConnectingTrajDecelMult', {
+            'type': 'number',
+        }),
+        ('executionConnectingTrajReverseMult', {
+            'type': 'number',
+        }),
+        ('executionReverseRecoveryDistance', {
+            'type': 'number',
+        }),
+        ('locationCollisionInfos', components.locationCollisionInfos),
+        ('destSensorSelectionInfos', destSensorSelectionInfosSchema),
+        ('finalPlanMode', {
+            'type': 'string',
+        }),
+        ('pathPlannerParameters', binpickingparametersschema.pathPlannerParametersSchema),
+        ('jittererParameters', binpickingparametersschema.jittererParametersSchema),
+        ('forceTorqueBasedEstimatorParameters', binpickingparametersschema.forceTorqueBasedEstimatorParametersSchema),
+        ('smootherParameters', binpickingparametersschema.smootherParametersSchema),
+        ('homePositionConfigurationName', {
+            'type': 'string',
+        }),
+        ('cycleStartPositionConfigurationName', {
+            'type': 'string',
+        }),
+        ('recoveryPositionConfigurationName', {
+            'type': 'string',
+        }),
+        ('finalPlanPositionConfigurationName', {
+            'type': 'string',
+        }),
+        ('ignoreStartPosition', ignoreStartPositionSchema),
+        ('forceMoveToFinish', forceMoveToFinishSchema),
+        ('ignoreFinishPosition', {
+            'type': 'boolean',
+        }),
+        ('ignoreFinishPositionUnlessPackFormationComplete', {
+            'type': 'boolean',
+        }),
+        ('justInTimeToolChangePlanning', {
+            'type': 'object',
+            'properties': {
+                'toolNames': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'string',
+                    }
+                }
+            },
+        }),
+        ('constraintDuringGrabbingToolDirection', components.constraintToolDirectionSchema),
+        ('maxGrabbingManipSpeed', {
+            'type': 'number',
+        }),
+        ('maxGrabbingManipAccel', {
+            'type': 'number',
+        }),
+        ('maxFreeManipSpeed', {
+            'type': 'number',
+        }),
+        ('maxFreeManipAccel', {
+            'type': 'number',
+        }),
+        ('constraintToolInfo', binpickingparametersschema.constraintToolInfoSchema),
+    ]),
+}

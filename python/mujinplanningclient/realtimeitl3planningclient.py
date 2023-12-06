@@ -102,6 +102,8 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
                     ParameterIgnoreRule(parameterSuffix = '__'),
                     ParameterIgnoreRule(parameterSuffix = '__CANNOTUSE'),
                     ParameterIgnoreRule(parameterSuffix = '_~20211001'),
+                    ParameterIgnoreRule(parameterSuffix = '_ignore'),
+                    ParameterIgnoreRule(parameterSuffix = '_disable'),
                 ],
                 clientName='RealtimeITL3PlanningClient'
             )

@@ -169,67 +169,9 @@ workspeed = {
     'type': 'array',
 }
 
-forceTorqueBasedEstimatorParameters = binpickingparametersschema.forceTorqueBasedEstimatorParametersSchema
-
-jittererParameters = OrderedDict([
-    ('maxJitter', {
-        'description': _('Maximum amount of jitter applied to a joint during one iteration.'),
-        'type': 'number',
-    }),
-    ('maxJitterIterations', {
-        'description': _('Maximum number of iterations to use during jittering.'),
-        'type': 'number',
-    }),
-    ('maxJitterLinkDist', {
-        'description': _('mm.'),
-        'type': 'number',
-    }),
-    ('jitterBiasDirection', {
-        'description': _('mm. Not normalized'),
-        'items': {
-            'type': 'number',
-        },
-        'type': 'array',
-    }),
-    ('jitterNeighDistThresh', {
-        'type': 'number',
-    }),
-    ('useWorkspaceJitterer', {
-        'type': 'boolean',
-    }),
-])
-
-pathPlannerParameters = OrderedDict([
-    ('pathPlannerName', {
-        'description': _('The name of the path planner. Needs to be one of the following: birrt, BasicRRT, DualSpaceTreeSearch,  (Default: birrt)'),
-        'type': 'string',
-    }),
-    ('dynamicsConstraintsType', {
-        'description': _('If given, has to be a string. Possible values: IgnoreTorque, NominalTorque, InstantaneousTorque, Unknown. (reference: ConvertDynamicsConstraints function in controllercommon)'),
-        'type': 'string',
-    }),
-    ('maxiter', {
-        'description': _('Maximum number of path planning iterations. (Default: 4000)'),
-        'type': 'string',
-    }),
-    ('maxPlanningTime', {
-        'description': _('Maximum amount of time to spend in path planning.'),
-        'type': 'string',
-    }),
-    ('steplength', {
-        'description': _('Maximum step length of the resulting trajectory.'),
-        'type': 'string',
-    }),
-])
-
 moveJointsParameters = OrderedDict([
     ('unit', components.unit),
-    ('constraintToolDirection', {
-        'items': {
-            'type': 'number',
-        },
-        'type': 'array',
-    }),
+    ('constraintToolDirection', components.constraintToolDirectionSchema,),
     ('departOffsetDir', MergeDicts(
         [
             components.departoffsetdir,
@@ -305,10 +247,10 @@ moveJointsParameters = OrderedDict([
     ('maxManipAccel', {
         'type': 'number',
     }),
-    ('maxJitterLinkDist', jittererParameters['maxJitterLinkDist']),
-    ('pathPlannerParameters', pathPlannerParameters),
-    ('moveStraightParams', moveStraightParams),
-    ('forceTorqueBasedEstimatorParameters', forceTorqueBasedEstimatorParameters),
+    ('maxJitterLinkDist', binpickingparametersschema.jittererParametersSchema['properties']['maxJitterLinkDist']),
+    ('pathPlannerParameters', binpickingparametersschema.pathPlannerParametersSchema),
+    ('moveStraightParams', binpickingparametersschema.moveStraightParamsSchema),
+    ('forceTorqueBasedEstimatorParameters', binpickingparametersschema.forceTorqueBasedEstimatorParametersSchema),
     ('dynamicEnvironmentState', components.dynamicEnvironmentState),
     ('savetrajectorylog', {
         'description': _('If True, will save the commanded (input) trajectories before they are executed'),
@@ -339,24 +281,10 @@ moveJointsParameters = OrderedDict([
         'type': 'number',
     }),
     ('debuglevel', components.debuglevel),
-    ('jittererParameters', {
-        'type': 'object',
-        'properties': jittererParameters,
-    }),
+    ('jittererParameters', binpickingparametersschema.jittererParametersSchema),
     ('gripperInfo', {
         'description': _('TODO(felixvd): Check if this really propagates.'),
         'type': 'object',
-    }),
-])
-
-smootherParameters = OrderedDict([
-    ('smootherplannername', {
-        'description': _('Name of the smoother (planner) (Default: parabolicsmoother2)'),
-        'type': 'string',
-    }),
-    ('smootheriterations', {
-        'description': _('Maximum number of iterations for the smoother (Default: 3000)'),
-        'type': 'string',
     }),
 ])
 
@@ -523,8 +451,8 @@ Internal_RealtimeRobotTaskInitParameters = OrderedDict([
 
 Internal_TaskBaseInitParameters = MergeDicts(
     [
-        pathPlannerParameters,
-        smootherParameters,
+        binpickingparametersschema.pathPlannerParametersSchema['properties'],
+        binpickingparametersschema.smootherParametersSchema['properties'],
         OrderedDict([
             ('slaverequestid', {
                 'description': _('The requested planning slave'),

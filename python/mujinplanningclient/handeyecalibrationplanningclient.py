@@ -101,6 +101,8 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
                     ParameterIgnoreRule(parameterSuffix = '__'),
                     ParameterIgnoreRule(parameterSuffix = '__CANNOTUSE'),
                     ParameterIgnoreRule(parameterSuffix = '_~20211001'),
+                    ParameterIgnoreRule(parameterSuffix = '_ignore'),
+                    ParameterIgnoreRule(parameterSuffix = '_disable'),
                 ],
                 clientName='HandEyeCalibrationPlanningClient'
             )

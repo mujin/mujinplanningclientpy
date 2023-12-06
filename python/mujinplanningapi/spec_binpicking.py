@@ -1034,7 +1034,18 @@ A dictionary with keys, for example:
     }),
     ('HasDetectionObstacles', {
         'description': _('Checks to see if the detection obstacles have all arrived.'),
-        'parameters': components.StandardPlanningServerRequestParameters,
+        'parameters': UpdateTaskparams(
+            components.StandardPlanningServerRequestParameters,
+            {
+                'name': 'taskparams',
+                'schema': {
+                    'type': 'object',
+                    'properties': {
+                        'taskparameters': components_binpicking.hasDetectionObstaclesParametersSchema,
+                    },
+                },
+            },
+        ),
         'returns': {},
     }),
 ]
