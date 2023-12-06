@@ -191,55 +191,6 @@ binpickingParametersSchema= MergeDicts(
                     }
                 },
                 'pieceInspectionInfo': pieceInspectionInfoSchema,
-                'gripperInfo0': {  # In conf but it looks suspicious and I don't know if it should be added
-                    'type': 'object',
-                    'properties': {
-                        'airchannels': {
-                            'type': 'array',
-                            'items': {
-                                'type': 'object',
-                                'properties': {
-                                    'controlType': {
-                                        'type': 'string',
-                                    },
-                                    'description': {
-                                        'type': 'string',
-                                    },
-                                    'haveValve': {
-                                        'type': 'boolean',
-                                    },
-                                    'maxIncidenceAngle': {
-                                        'type': 'integer',
-                                    },
-                                    'maxWeights': {
-                                        'type': 'array',
-                                        'items': {
-                                            'type': 'number'
-                                        }
-                                    },
-                                    'suctionCupPartTypes': {
-                                        'type': 'array',
-                                        'items': {
-                                            'type': 'string'
-                                        }
-                                    },
-                                    'useLinkNames': {
-                                        'type': 'array',
-                                        'items': {
-                                            'type': 'string'
-                                        }
-                                    },
-                                }
-                            }
-                        },
-                        'gripperModelId': {
-                            'type': 'string',
-                        },
-                        'use': {
-                            'type': 'boolean',
-                        }
-                    }
-                },
                 'forceMoveToFinish': forceMoveToFinishSchema,  # In conf but not in binpiskingparameters
                 'forceStartRobotPositionConfigurationName': {  # Accepted by the server but not in conf.
                     'description': _('If not None, then have the robot start with this position configuration regardless of what is in orderIds or robot positions/connected body active states.'),
