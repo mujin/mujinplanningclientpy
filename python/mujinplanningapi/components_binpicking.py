@@ -582,7 +582,7 @@ hasDetectionObstaclesParametersSchema = {
     ]),
 }
 
-startPackFormationComputationThreadSchema = MergeDicts(
+startPackFormationComputationThreadParametersSchema = MergeDicts(
     [
         hasDetectionObstaclesParametersSchema,
         {
