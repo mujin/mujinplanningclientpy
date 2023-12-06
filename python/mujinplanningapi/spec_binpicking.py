@@ -416,6 +416,7 @@ services = [
                                 ('robotname', components.robotname),
                                 ('robotspeed', components.robotspeed),
                                 ('robotaccelmult', components.robotaccelmult),
+                                # TODO(felixvd): Add MoveJointsParameters + toolname
                             ]),
                         },
                     },
