@@ -875,13 +875,7 @@ A dictionary with keys, for example:
                 'schema': {
                     'type': 'object',
                     'properties': {
-                        'taskparameters': {
-                            'type': 'object',
-                            'properties': OrderedDict([
-                                ('debuglevel', components.debuglevel),
-                                ('toolname', components.toolname),
-                            ]),
-                        },
+                        'taskparameters': components_binpicking.startPackFormationComputationThreadParametersSchema,
                     },
                 },
             },

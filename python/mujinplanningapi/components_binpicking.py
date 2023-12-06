@@ -8,8 +8,8 @@ from mujincommon.dictutil import MergeDicts
 
 from . import components
 
-from mujinbinpickingmanager.schema import binpickingparametersschema  # TODO(felixvd): Move into this repository
-from mujinbinpickingmanager.schema import destGoalsSchema  # TODO(felixvd): Move into this repository
+# TODO(felixvd): Move into this repository
+from mujinbinpickingmanager.schema import binpickingparametersschema, destGoalsSchema, distanceMeasurementInfoSchema, dynamicgoalsconfigschema, packformationparametersschema
 
 
 regionname = {
@@ -30,6 +30,13 @@ detectionInfosSchema = {
                 'type': 'string',
             },
         }
+    }
+}
+
+destcontainernamesSchema = {
+    'type': 'array',
+    'items': {
+        'type': 'string'
     }
 }
 
@@ -56,6 +63,21 @@ forceMoveToFinishSchema = {
 ignoreStartPositionSchema = {
     'description': _('True if the robot should ignore going to start position'),
     'type': 'boolean',
+}
+
+packLocationInfoSchema = {
+    'type': 'object',
+    'properties': {
+        'containerId': {
+            'type': 'string',
+        },
+        'containerType': {
+            'type': 'string',
+        },
+        'locationName': {
+            'type': 'string',
+        }
+    }
 }
 
 predictDetectionInfoSchema = MergeDicts(
@@ -154,12 +176,7 @@ binpickingParametersSchema= MergeDicts(
                         },
                     },
                 },
-                'destcontainernames': {  # In 20220127_binpicking.py migrated to destContainerInfo
-                    'type': 'array',
-                    'items': {
-                        'type': 'string'
-                    }
-                },
+                'destcontainernames': destcontainernamesSchema,  # In 20220127_binpicking.py migrated to destContainerInfo
                 'worksteplength': {  # In 20220412_planningcommon_initial.py was deleted
                     'type': 'number',
                 },
@@ -463,20 +480,7 @@ hasDetectionObstaclesParametersSchema = {
         ('detectionInfos', detectionInfosSchema),
         ('pickLocationInfo', binpickingparametersschema.pickLocationInfoSchema),
         ('placeLocationInfos', binpickingparametersschema.placeLocationInfosSchema),
-        ('packLocationInfo', {
-            'type': 'object',
-            'properties': {
-                'containerId': {
-                    'type': 'string',
-                },
-                'containerType': {
-                    'type': 'string',
-                },
-                'locationName': {
-                    'type': 'string',
-                }
-            }
-        }),
+        ('packLocationInfo', packLocationInfoSchema),
         ('predictDetectionInfo', predictDetectionInfoSchema),
         ('useLocationState', {
             'type': 'boolean',
@@ -577,3 +581,66 @@ hasDetectionObstaclesParametersSchema = {
         ('constraintToolInfo', binpickingparametersschema.constraintToolInfoSchema),
     ]),
 }
+
+startPackFormationComputationThreadSchema = MergeDicts(
+    [
+        hasDetectionObstaclesParametersSchema,
+        {
+            'properties': OrderedDict([
+                ('debuglevel', components.debuglevel),
+                ('robotname', components.robotname),
+                ('toolname', components.toolname),
+                ('executionmode', {
+                    'type': 'string',
+                }),
+                ('unit', components.unit),
+                ('destcontainernames', destcontainernamesSchema),
+                ('destcontainername', {
+                    'type': 'string',
+                }),
+                ('containername', {
+                    'type': 'string',
+                }),
+                ('packLocationInfo', packLocationInfoSchema),
+                ('locationName', {
+                    'type': 'string',
+                }),
+                ('packInputPartInfos', {
+                    'type': 'array',
+                    'items': {
+                        'type': 'object',
+                    }
+                }),
+                ('packFormationParameters', packformationparametersschema.packFormationParametersSchema),
+                ('packContainerType', {
+                    'type': 'string',
+                }),
+                ('dynamicGoalsGeneratorParameters', dynamicgoalsconfigschema.dynamicGoalsConfigSchema),
+                ('targetMinBottomPaddingForInitialTransfer', binpickingparametersschema.targetMinBottomPaddingForInitialTransferSchema),
+                ('targetMinSafetyHeightForInitialTransfer', binpickingparametersschema.targetMinSafetyHeightForInitialTransferSchema),
+                ('distanceMeasurementInfo', distanceMeasurementInfoSchema.distanceMeasurementInfoSchema),
+                ('constraintToolInfo', binpickingparametersschema.constraintToolInfoSchema),
+                ('checkObstacleNames', {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }),
+                ('saveDynamicGoalGeneratorState', {
+                    'type': 'boolean',
+                }),
+                ('saveDynamicGoalGeneratorStateFailed', {
+                    'type': 'boolean',
+                }),
+                ('savePackingState', {
+                    'type': 'boolean',
+                }),
+                ('unitMass', {
+                    'type': 'string',
+                    'default': 'kg',
+                }),
+            ]),
+        },
+    ],
+    deepcopy=True,
+)[0]
