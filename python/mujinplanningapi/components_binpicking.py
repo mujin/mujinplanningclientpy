@@ -137,15 +137,6 @@ binpickingParametersSchema= MergeDicts(
         binpickingparametersschema.binpickingParametersSchema,
         {
             'properties': {
-                'jittererParametersOld': {  # In configs but not used in the actual code.
-                    'type': 'object',
-                    'deprecated': True,
-                    'properties': {
-                        'maxJitterLinkDist': {
-                            'type': 'number',
-                        }
-                    }
-                },
                 'pickContainerHasOnlyOnePart': {
                     'type': 'boolean',
                 },
