@@ -581,6 +581,29 @@ startPackFormationComputationThreadParametersSchema = MergeDicts(
                     'type': 'string',
                     'default': 'kg',
                 }),
+                ('csvHeader', {
+                    '$commend': 'Ignored by the server. Only passed because its is mixed up with useful parameters.',
+                    'type': 'array',
+                    'items': {
+                        'type': 'string',
+                    },
+                    'deprecated': True,
+                }),
+                ('packContainerId', {
+                    '$commend': 'Ignored by the server. Only passed because its is mixed up with useful parameters.',
+                    'type': 'string',
+                    'deprecated': True,
+                }),
+                ('packLocationName', {
+                    '$commend': 'Ignored by the server. Only passed because its is mixed up with useful parameters.',
+                    'type': 'string',
+                    'deprecated': True,
+                }),
+                ('containerNameTemplate', {
+                    '$commend': 'Ignored by the server. Only passed because its is mixed up with useful parameters.',
+                    'type': 'string',
+                    'deprecated': True,
+                }),
             ]),
         },
     ],
