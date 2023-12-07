@@ -82,31 +82,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
                 log.warning('Could not import API spec directly. Trying to read it from a file: %s', specExportPath)
                 realtimeITL3Spec = json.load(open(specExportPath))
 
-            self._validationQueue = ValidationQueue(
-                apiSpec=realtimeITL3Spec,
-                parameterIgnoreRules=[
-                    ParameterIgnoreRule(parameter = 'callerid'),
-                    ParameterIgnoreRule(parameter = 'command'),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'command')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'callerid')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'stamp')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'robotaccelmult')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'envclearance')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'robotspeed')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'robotname')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'robotBridgeConnectionInfo')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'request')),
-                    ParameterIgnoreRule(parameterSuffix = '-'),
-                    ParameterIgnoreRule(parameterSuffix = '--'),
-                    ParameterIgnoreRule(parameterSuffix = '_'),
-                    ParameterIgnoreRule(parameterSuffix = '__'),
-                    ParameterIgnoreRule(parameterSuffix = '__CANNOTUSE'),
-                    ParameterIgnoreRule(parameterSuffix = '_~20211001'),
-                    ParameterIgnoreRule(parameterSuffix = '_ignore'),
-                    ParameterIgnoreRule(parameterSuffix = '_disable'),
-                ],
-                clientName='RealtimeITL3PlanningClient'
-            )
+            self._validationQueue = ValidationQueue(apiSpec=realtimeITL3Spec, clientName='RealtimeITL3PlanningClient')
 
         super(RealtimeITL3PlanningClient, self).__init__(
             robotname=robotname,

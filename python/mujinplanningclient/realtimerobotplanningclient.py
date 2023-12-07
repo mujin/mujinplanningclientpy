@@ -66,31 +66,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
                 log.warning('Could not import API spec directly. Trying to read it from a file: %s', specExportPath)
                 realtimeRobotSpec = json.load(open(specExportPath))
 
-            self._validationQueue = ValidationQueue(
-                apiSpec=realtimeRobotSpec,
-                parameterIgnoreRules=[
-                    ParameterIgnoreRule(parameter = 'callerid'),
-                    ParameterIgnoreRule(parameter = 'command'),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'command')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'callerid')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'stamp')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'robotaccelmult')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'envclearance')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'robotspeed')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'robotname')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'robotBridgeConnectionInfo')),
-                    ParameterIgnoreRule(parameter = ('taskparams', 'taskparameters', 'request')),
-                    ParameterIgnoreRule(parameterSuffix = '-'),
-                    ParameterIgnoreRule(parameterSuffix = '--'),
-                    ParameterIgnoreRule(parameterSuffix = '_'),
-                    ParameterIgnoreRule(parameterSuffix = '__'),
-                    ParameterIgnoreRule(parameterSuffix = '__CANNOTUSE'),
-                    ParameterIgnoreRule(parameterSuffix = '_~20211001'),
-                    ParameterIgnoreRule(parameterSuffix = '_ignore'),
-                    ParameterIgnoreRule(parameterSuffix = '_disable'),
-                ],
-                clientName='RealtimeRobotPlanningClient'
-            )
+            self._validationQueue = ValidationQueue(apiSpec=realtimeRobotSpec, clientName='RealtimeRobotPlanningClient')
 
         super(RealtimeRobotPlanningClient, self).__init__(**kwargs)
 
