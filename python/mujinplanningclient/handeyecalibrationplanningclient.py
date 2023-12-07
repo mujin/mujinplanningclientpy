@@ -70,7 +70,6 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
         self._validateapi = os.environ.get('MUJIN_VALIDATE_APIS', 'false') in ['True', 'true']
         if self._validateapi and not self._validationQueue:
             from mujinapispecvalidation.apiSpecServicesValidation import ValidationQueue
-            from mujinapispecvalidation.apiSpecServicesValidation import ParameterIgnoreRule
             try:
                 from mujinplanningapi.spec_handeyecalibration import calibrationSpec
             except ImportError:
