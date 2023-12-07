@@ -169,6 +169,10 @@ workspeed = {
     'type': 'array',
 }
 
+jitter = {
+    'type': 'number',
+}
+
 moveJointsParameters = OrderedDict([
     ('unit', components.unit),
     ('constraintToolDirection', components.constraintToolDirectionSchema,),
@@ -203,9 +207,7 @@ moveJointsParameters = OrderedDict([
         'type': 'number',
     }),
     ('envclearance', components.envclearance),
-    ('jitter', {
-        'type': 'number',
-    }),
+    ('jitter', jitter),
     ('execute', components.execute),
     ('executionFilterFactor', {
         'type': 'number',
