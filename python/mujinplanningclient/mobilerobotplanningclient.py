@@ -2,25 +2,12 @@
 # Copyright (C) 2023 MUJIN Inc.
 
 import time
-from mujincommon import MujinExceptionBase
 
-from . import planningclient, TimeoutError
+from . import planningclient, TimeoutError, MobileRobotPlanningTimeoutError, MobileRobotPlanningClientError, MobileRobotPlanningExecutionError
 
 # logging
 import logging
 log = logging.getLogger(__name__)
-
-
-class MobileRobotPlanningClientError(MujinExceptionBase):
-    pass
-
-
-class MobileRobotPlanningExecutionError(MujinExceptionBase):
-    pass
-
-
-class MobileRobotPlanningTimeoutError(MujinExceptionBase):
-    pass
 
 
 class MobileRobotPlanningClient(planningclient.PlanningClient):
