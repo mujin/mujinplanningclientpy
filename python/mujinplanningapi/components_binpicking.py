@@ -77,10 +77,10 @@ packLocationInfoSchema = {
     'type': 'object',
     'properties': {
         'containerId': {
-            'type': 'string',
+            'type': ['string', 'null'],
         },
         'containerType': {
-            'type': 'string',
+            'type': ['string', 'null'],
         },
         'locationName': {
             'type': 'string',
