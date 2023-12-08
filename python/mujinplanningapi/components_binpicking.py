@@ -310,12 +310,6 @@ binpickingParametersSchema= MergeDicts(
                 },
                 'dynamicGoalsGeneratorParameters': {
                     'properties': {
-                        'ignoreToolWallCorners': {
-                            '$comment': 'Deprecated 2023/07/10.',
-                            'type': 'boolean',
-                            'description': _('If true, then ignore CPF_ToolWallCorner errors.'),
-                            'deprecated': True,
-                        },
                         'moduleConfigurationParameters': {
                             'properties': {
                                 'useLayoutData': {
@@ -339,47 +333,6 @@ binpickingParametersSchema= MergeDicts(
                         'usePlacementPriorities': {
                             'deprecated': True,
                             'type': 'boolean',
-                        },
-                        'edgedetectorThresh': {
-                            '$comment': 'Deprecated 2023/07/10.',
-                            'title': _('Edge detector threshold'),
-                            'description': _('discrete gradient, threshold for magnitude of gradient depth map image for determining edges'),
-                            'type': 'number',
-                            'minimum': 0,
-                            'maximum': 1,
-                            'default': 0.1,
-                            'tags':['advanced', 'si', 'dynamicGoals', 'target']
-                        },
-                        'intToolXYSize': {
-                            '$comment': 'Deprecated 2019/05/23.',
-                            'title': _('voxels, tool XY size'),
-                            'description': _('The target will be grabbed by a tool when it is placed inside the container. By specifying the tool XY size, can assure that the target will not be placed too close to walls so that it is impossible for the tool to place.'),
-                            'type': 'array',
-                            'minItems': 2,
-                            'maxItems': 2,
-                            'items' :[
-                                {'title': _('x'), 'type':'integer', 'default':0 },
-                                {'title': _('y'), 'type':'integer', 'default':0 }
-                            ],
-                            'additionalItems': False,
-                            'tags':['basic', 'si', 'dynamicGoals']
-                        },
-                        'minCOMEdgeDistance': {
-                            '$comment': 'Deprecated 2018/03/05, use jitterCOMRatioOffset.',
-                            'title': _('Minimum COM Distance from Edge'),
-                            'description': _('mm, the minimum allowed distance of the placed item COM from the edge of the supporting convex hull region under it'),
-                            'type': 'number',
-                            'minimum': 0,
-                            'default': 5,
-                            'tags':['medium', 'si', 'dynamicGoals','target']
-                        },
-                        'supportingWallTargetHeightRatio': {
-                            '$comment': 'Deprecated in schema 20190523.',
-                            'title': _('Supporting wall target height ratio'),
-                            'description': _('ratio, how much of the box side has to be near the wall or another box.'),
-                            'type': 'number',
-                            'minimum': 0.0,
-                            'default': 0.3,
                         },
                     }
                 },
