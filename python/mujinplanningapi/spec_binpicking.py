@@ -990,14 +990,7 @@ A dictionary with keys, for example:
                 'schema': {
                     'type': 'object',
                     'properties': {
-                        'taskparameters': {
-                            'type': 'object',
-                            'properties': OrderedDict([
-                                ('packFormationResultList', {
-                                    'isRequired': True,
-                                }),
-                            ]),
-                        },
+                        'taskparameters': components_binpicking.validatePackFormationResultListParametersSchema,
                     },
                 },
             },

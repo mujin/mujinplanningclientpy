@@ -4,6 +4,7 @@
 from collections import OrderedDict
 
 from . import _
+from . import AsRequired
 from mujincommon.dictutil import MergeDicts
 
 from . import components
@@ -16,6 +17,13 @@ regionname = {
     'description': _('Name of the region of the objects.'),
     'mapsTo': 'containername',
     'type': 'string',
+}
+
+checkObstacleNamesSchema = {
+    "type": "array",
+    "items": {
+        "type": "string"
+    }
 }
 
 detectionInfosSchema = {
@@ -366,6 +374,30 @@ binpickingParametersSchema= MergeDicts(
     deepcopy=True,
 )[0]
 
+validatePackFormationResultListParametersSchema = {
+    'type': 'object',
+    'properties': OrderedDict([
+        ('packFormationResultList', {
+            'type': 'array',
+            'isRequired': True,
+            'items': {
+                'type': 'object',
+            }
+        }),
+        ('robotname', AsRequired(components.robotname)),
+        ('toolname', AsRequired(components.toolname)),
+        ('packLocationInfo', packLocationInfoSchema),
+        ('doPlacementValidation', {
+            'description': 'If True will do placmeent validation by calling FindNextFreePlacementGoals for each placed item.',
+            'type': 'boolean',
+        }),
+        ('forceValidatePackContainerType', {
+            'type': 'boolean',
+        }),
+        ('checkObstacleNames', checkObstacleNamesSchema),
+    ]),
+}
+
 hasDetectionObstaclesParametersSchema = {
     'type': 'object',
     'properties': OrderedDict([
@@ -515,12 +547,7 @@ startPackFormationComputationThreadParametersSchema = MergeDicts(
                 ('targetMinSafetyHeightForInitialTransfer', binpickingparametersschema.targetMinSafetyHeightForInitialTransferSchema),
                 ('distanceMeasurementInfo', distanceMeasurementInfoSchema.distanceMeasurementInfoSchema),
                 ('constraintToolInfo', binpickingparametersschema.constraintToolInfoSchema),
-                ('checkObstacleNames', {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }),
+                ('checkObstacleNames', checkObstacleNamesSchema),
                 ('saveDynamicGoalGeneratorState', {
                     'type': 'boolean',
                 }),
