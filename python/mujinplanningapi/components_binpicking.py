@@ -73,6 +73,10 @@ ignoreStartPositionSchema = {
     'type': 'boolean',
 }
 
+packFormationResultSchema = {
+    'type': 'object',
+}
+
 packLocationInfoSchema = {
     'type': 'object',
     'properties': {
@@ -103,6 +107,27 @@ predictDetectionInfoSchema = MergeDicts(
     ],
     deepcopy=True,
 )[0]
+
+validatedPackFormationResultListSchema = {
+    'type': 'array',
+    'items': {
+        'type': 'object',
+        'properties': OrderedDict([
+            ('validationStatus', {}),
+            ('errorCode', {}),
+            ('errorDesc', {}),
+            ('packFormationResult', MergeDicts(
+                [
+                    packFormationResultSchema,
+                    {
+                        'description': _('Optional.'),
+                    }
+                ],
+                deepcopy=True,
+            )[0]),
+        ]),
+    },
+}
 
 # TODO(andriy.logvin): Remove after these changes are landed to schema in https://git.mujin.co.jp/dev/binpickingui/-/merge_requests/2411
 pieceInspectionInfoSchema = {
@@ -380,9 +405,7 @@ validatePackFormationResultListParametersSchema = {
         ('packFormationResultList', {
             'type': 'array',
             'isRequired': True,
-            'items': {
-                'type': 'object',
-            }
+            'items': packFormationResultSchema,
         }),
         ('robotname', AsRequired(components.robotname)),
         ('toolname', AsRequired(components.toolname)),

@@ -997,20 +997,7 @@ A dictionary with keys, for example:
         ),
         'returns': {
             'properties': OrderedDict([
-                ('validatedPackFormationResultList', {
-                    'items': {
-                        'properties': OrderedDict([
-                            ('validationStatus', {}),
-                            ('errorCode', {}),
-                            ('errorDesc', {}),
-                            ('packFormationResult', {
-                                'description': _('Optional.'),
-                            }),
-                        ]),
-                        'type': 'object',
-                    },
-                    'type': 'array',
-                }),
+                ('validatedPackFormationResultList', components_binpicking.validatedPackFormationResultListSchema),
             ]),
             'type': 'object',
         },
