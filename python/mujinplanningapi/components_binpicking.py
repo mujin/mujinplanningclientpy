@@ -7,8 +7,11 @@ from . import _
 from . import AsRequired
 from mujincommon.dictutil import MergeDicts
 
-from . import components
+import sys
+if sys.version_info[0] >= 3:
+    raise ImportError("This file cannot be used until binpickingui is ported to python3, or we put the binpicking schemas in a separate module")
 
+from . import components
 # TODO(felixvd): Move into this repository
 from mujinbinpickingmanager.schema import binpickingparametersschema, destGoalsSchema, distanceMeasurementInfoSchema, dynamicgoalsconfigschema, packformationparametersschema
 
