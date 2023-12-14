@@ -480,7 +480,9 @@ packFormationResultSchema = {
         'containerName': containerNameSchema,
         'destContainerName': containerNameSchema,
         'innerEmptyRegionPose': poseSchema,
+        'packContainerName': containerNameSchema,
         'packContainerType': packContainerTypeSchema,
+        'packContainerPose': poseSchema,
         'packageDimensions': components.Vector3Schema,
         'vContainerInnerExtents': {
             'type': 'array',
@@ -493,6 +495,9 @@ packFormationResultSchema = {
             'items': {
                 'type': 'object',
             },
+        },
+        'fillRatio': {
+            'type': 'number',
         },
         'useAutoPackFormationComputation': {
             'type': 'boolean',
@@ -520,11 +525,12 @@ packFormationResultSchema = {
     }
 }
 
-validatedPackFormationResultSchema = {
-    'type': 'object',
-    'properties': MergeDicts(
-        [
-            OrderedDict([
+validatedPackFormationResultSchema = MergeDicts(
+    [
+        packFormationResultSchema,
+        {
+            'type': 'object',
+            'properties': OrderedDict([
                 ('validationStatus', {
                     'type': 'string',
                 }),
@@ -534,16 +540,11 @@ validatedPackFormationResultSchema = {
                 ('validationErrorDesc', {
                     'type': 'string'
                 }),
-                ('fillRatio', {
-                    'type': 'number',
-                }),
-                ('packContainerPose', poseSchema),
             ]),
-            packFormationResultSchema['properties'],
-        ],
-        deepcopy=True,
-    )[0]
-}
+        }
+    ],
+    deepcopy=True,
+)[0]
 
 validatePackFormationResultListParametersSchema = MergeDicts(
     [
