@@ -982,7 +982,23 @@ A dictionary with keys, for example:
     }),
     ('ClearPackingStateVisualization', {
         'description': _('Clears packing visualization'),
-        'parameters': components.StandardPlanningServerRequestParameters,
+        'parameters': UpdateTaskparams(
+            components.StandardPlanningServerRequestParameters,
+            {
+                'name': 'taskparams',
+                'schema': {
+                    'type': 'object',
+                    'properties': {
+                        'taskparameters': {
+                            'type': 'object',
+                            'properties': {
+                                'containername': components_binpicking.containerNameSchema,
+                            }
+                        },
+                    },
+                },
+            },
+        ),
         'returns': {},
     }),
     ('ValidatePackFormationResultList', {
