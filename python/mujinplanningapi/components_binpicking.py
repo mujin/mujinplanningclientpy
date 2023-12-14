@@ -22,11 +22,25 @@ regionname = {
     'type': 'string',
 }
 
+unitMassSchema = {
+    'type': 'string',
+    'default': 'kg',
+}
+
 checkObstacleNamesSchema = {
     "type": "array",
     "items": {
         "type": "string"
     }
+}
+
+csvHeaderDeprecatedSchema = {
+    '$commend': 'Ignored by the server. Only passed because its is mixed up with useful parameters.',
+    'type': 'array',
+    'items': {
+        'type': 'string',
+    },
+    'deprecated': True,
 }
 
 detectionInfosSchema = {
@@ -76,8 +90,17 @@ ignoreStartPositionSchema = {
     'type': 'boolean',
 }
 
-packFormationResultSchema = {
-    'type': 'object',
+packContainerTypeSchema = {
+    'type': 'string',
+}
+
+packInputPartInfoSchema = {
+    'type': 'object'
+}
+
+packInputPartInfosSchema = {
+    'type': 'array',
+    'items': packInputPartInfoSchema
 }
 
 packLocationInfoSchema = {
@@ -92,6 +115,13 @@ packLocationInfoSchema = {
         'locationName': {
             'type': 'string',
         }
+    }
+}
+
+poseSchema = {
+    'type': 'array',
+    'items': {
+        'type': 'number',
     }
 }
 
@@ -110,27 +140,6 @@ predictDetectionInfoSchema = MergeDicts(
     ],
     deepcopy=True,
 )[0]
-
-validatedPackFormationResultListSchema = {
-    'type': 'array',
-    'items': {
-        'type': 'object',
-        'properties': OrderedDict([
-            ('validationStatus', {}),
-            ('errorCode', {}),
-            ('errorDesc', {}),
-            ('packFormationResult', MergeDicts(
-                [
-                    packFormationResultSchema,
-                    {
-                        'description': _('Optional.'),
-                    }
-                ],
-                deepcopy=True,
-            )[0]),
-        ]),
-    },
-}
 
 # TODO(andriy.logvin): Remove after these changes are landed to schema in https://git.mujin.co.jp/dev/binpickingui/-/merge_requests/2411
 pieceInspectionInfoSchema = {
@@ -373,10 +382,6 @@ binpickingParametersSchema= MergeDicts(
                     }
                 },
                 'predictDetectionInfo': predictDetectionInfoSchema,
-                'saveDynamicGoalGeneratorState': {
-                    'type': 'boolean',
-                    'enum': [0, 1, False, True],
-                },
                 'savetrajectorylog': {
                     'type': 'boolean',
                     'enum': [0, 1, False, True],
@@ -402,6 +407,91 @@ binpickingParametersSchema= MergeDicts(
     deepcopy=True,
 )[0]
 
+packFormationResultSchema = {
+    'type': 'object',
+    'properties': {
+        'containerInnerFullSize': {
+            'type': 'array',
+            'items': {
+                'type': 'number'
+            }
+        },
+        'comPackedItems': components.Vector3Schema,
+        'containerName': {
+            'type': 'string',
+        },
+        'destContainerName': {
+            'type': 'string',
+        },
+        'innerEmptyRegionPose': poseSchema,
+        'packContainerType': packContainerTypeSchema,
+        'packageDimensions': components.Vector3Schema,
+        'vContainerInnerExtents': {
+            'type': 'array',
+            'items': {
+                'type': 'number',
+            }
+        },
+        'vPackingItems': {
+            'type': 'array',
+            'items': {
+                'type': 'object',
+            },
+        },
+        'useAutoPackFormationComputation': {
+            'type': 'boolean',
+        },
+        'useComputePackFormationFromState': {
+            'type': 'boolean',
+        },
+        'unit': components.unit,
+        'clientID': {
+            '$commend': 'Ignored by the server. Only passed because its is mixed up with useful parameters.',
+            'type': 'string',
+            'deprecated': True,
+        },
+        'csvHeader': csvHeaderDeprecatedSchema,
+        'unitMass': MergeDicts(
+            [
+                unitMassSchema,
+                {
+                    '$commend': 'Ignored by the server. Only passed because its is mixed up with useful parameters.',
+                    'deprecated': True,
+                }
+            ],
+            deepcopy=True,
+        )[0],
+    }
+}
+
+validatedPackFormationResultListSchema = {
+    'type': 'array',
+    'items': {
+        'type': 'object',
+        'properties': MergeDicts(
+            [
+                OrderedDict([
+                    ('validationStatus', {
+                        'type': 'string',
+                    }),
+                    ('validationErrorCode', {
+                        'type': 'integer',
+                    }),
+                    ('validationErrorDesc', {
+                        'type': 'string'
+                    }),
+                    ('fillRatio', {
+                        'type': 'number',
+                    }),
+                    ('packContainerPose', poseSchema),
+                ]),
+                packFormationResultSchema['properties'],
+            ],
+            deepcopy=True,
+        )[0]
+    },
+}
+
 validatePackFormationResultListParametersSchema = {
     'type': 'object',
     'properties': OrderedDict([
@@ -421,6 +511,37 @@ validatePackFormationResultListParametersSchema = {
             'type': 'boolean',
         }),
         ('checkObstacleNames', checkObstacleNamesSchema),
+        ('unit', components.unit),
+        ('destcontainernames', destcontainernamesSchema),
+        ('containername', {
+            'type': 'string',
+        }),
+        ('destcontainername', {
+            'type': 'string',
+        }),
+        ('locationName', {
+            'type': 'string',
+        }),
+        ('packInputPartInfos', packInputPartInfosSchema),
+        ('packFormationParameters', packformationparametersschema.packFormationParametersSchema),
+        ('packContainerType', packContainerTypeSchema),
+        ('dynamicGoalsGeneratorParameters', dynamicgoalsconfigschema.dynamicGoalsConfigSchema),
+        ('targetMinBottomPaddingForInitialTransfer', binpickingparametersschema.targetMinBottomPaddingForInitialTransferSchema),
+        ('targetMinSafetyHeightForInitialTransfer', binpickingparametersschema.targetMinSafetyHeightForInitialTransferSchema),
+        ('distanceMeasurementInfo', distanceMeasurementInfoSchema.distanceMeasurementInfoSchema),
+        ('constraintToolInfo', binpickingparametersschema.constraintToolInfoSchema),
+        ('saveDynamicGoalGeneratorState', binpickingparametersschema.saveDynamicGoalGeneratorStateSchema),
+        ('saveDynamicGoalGeneratorStateFailed', binpickingparametersschema.saveDynamicGoalGeneratorStateFailedSchema),
+        ('savePackingState', {
+            'type': 'boolean',
+        }),
+        ('unitMass', unitMassSchema),
+        ('debuglevel', components.debuglevel),
+        ('packLocationName', {
+            '$commend': 'Ignored by the server. Only passed because its is mixed up with useful parameters.',
+            'type': 'string',
+            'deprecated': True,
+        }),
     ]),
 }
 
@@ -558,12 +679,7 @@ startPackFormationComputationThreadParametersSchema = MergeDicts(
                 ('locationName', {
                     'type': 'string',
                 }),
-                ('packInputPartInfos', {
-                    'type': 'array',
-                    'items': {
-                        'type': 'object',
-                    }
-                }),
+                ('packInputPartInfos', packInputPartInfosSchema),
                 ('packFormationParameters', packformationparametersschema.packFormationParametersSchema),
                 ('packContainerType', {
                     'type': 'string',
@@ -574,27 +690,13 @@ startPackFormationComputationThreadParametersSchema = MergeDicts(
                 ('distanceMeasurementInfo', distanceMeasurementInfoSchema.distanceMeasurementInfoSchema),
                 ('constraintToolInfo', binpickingparametersschema.constraintToolInfoSchema),
                 ('checkObstacleNames', checkObstacleNamesSchema),
-                ('saveDynamicGoalGeneratorState', {
-                    'type': 'boolean',
-                }),
-                ('saveDynamicGoalGeneratorStateFailed', {
-                    'type': 'boolean',
-                }),
+                ('saveDynamicGoalGeneratorState', binpickingparametersschema.saveDynamicGoalGeneratorStateSchema),
+                ('saveDynamicGoalGeneratorStateFailed', binpickingparametersschema.saveDynamicGoalGeneratorStateFailedSchema),
                 ('savePackingState', {
                     'type': 'boolean',
                 }),
-                ('unitMass', {
-                    'type': 'string',
-                    'default': 'kg',
-                }),
-                ('csvHeader', {
-                    '$commend': 'Ignored by the server. Only passed because its is mixed up with useful parameters.',
-                    'type': 'array',
-                    'items': {
-                        'type': 'string',
-                    },
-                    'deprecated': True,
-                }),
+                ('unitMass', unitMassSchema),
+                ('csvHeader', csvHeaderDeprecatedSchema),
                 ('packContainerId', {
                     '$commend': 'Ignored by the server. Only passed because its is mixed up with useful parameters.',
                     'type': 'string',
