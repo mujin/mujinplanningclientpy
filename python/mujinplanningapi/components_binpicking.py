@@ -58,11 +58,13 @@ detectionInfosSchema = {
     }
 }
 
-destcontainernamesSchema = {
+containerNameSchema = {
+    'type': 'string',
+}
+
+containerNamesSchema = {
     'type': 'array',
-    'items': {
-        'type': 'string'
-    }
+    'items': containerNameSchema
 }
 
 destSensorSelectionInfosSchema = {
@@ -122,6 +124,39 @@ poseSchema = {
     'type': 'array',
     'items': {
         'type': 'number',
+    }
+}
+
+packedItemInfoSchema = {
+    'type': 'object',
+    'properties': {
+        'globalPose': poseSchema,
+        'localPose': poseSchema,
+        'isVisualize': {
+            'type': 'boolean',
+        },
+        'isPackItem': {
+            'type': 'boolean',
+        },
+        'partType': {
+            'type': 'string',
+        },
+        'color': {
+            'type': 'array',
+            'items': {
+                'type': 'number',
+            }
+        },
+        'fullSize': {
+            'type': 'array',
+            'items': {
+                'type': 'number'
+            }
+        },
+        'name': {
+            'type': 'string',
+        },
+        'uri': components.uriSchema,
     }
 }
 
@@ -212,7 +247,7 @@ binpickingParametersSchema= MergeDicts(
                         },
                     },
                 },
-                'destcontainernames': destcontainernamesSchema,  # In 20220127_binpicking.py migrated to destContainerInfo
+                'destcontainernames': containerNamesSchema,  # In 20220127_binpicking.py migrated to destContainerInfo
                 'worksteplength': {  # In 20220412_planningcommon_initial.py was deleted
                     'type': 'number',
                 },
@@ -318,12 +353,7 @@ binpickingParametersSchema= MergeDicts(
                 },
                 'ignoreStartPosition': ignoreStartPositionSchema,  # In conf but not in binpiskingparameters
                 'locationCollisionInfos': components.locationCollisionInfos,
-                'sourcecontainernames': {  # In conf but not in binpiskingparameters
-                    'type': 'array',
-                    'items': {
-                        'type': 'string',
-                    }
-                },
+                'sourcecontainernames': containerNamesSchema,  # In conf but not in binpiskingparameters
                 'cycleStartUseToolPose': {  # In conf but not in binpiskingparameters
                     'description': _('True if the robot should go to the tool position rather than joint values at the start of the cycle'),
                     'type': 'boolean',
@@ -407,6 +437,36 @@ binpickingParametersSchema= MergeDicts(
     deepcopy=True,
 )[0]
 
+ensurePackingComputatorParametersSchema = {
+    'type': 'object',
+    'properties': OrderedDict([
+        ('unit', components.unit),
+        ('unitMass', unitMassSchema),
+        ('robotname', components.robotname),
+        ('toolname', components.toolname),
+        ('destcontainernames', containerNamesSchema),
+        ('packLocationInfo', packLocationInfoSchema),
+        ('locationName', {
+            'type': 'string',
+        }),
+        ('containername', containerNameSchema),
+        ('packContainerType', packContainerTypeSchema),
+        ('packInputPartInfos', packInputPartInfosSchema),
+        ('packFormationParameters', packformationparametersschema.packFormationParametersSchema),
+        ('dynamicGoalsGeneratorParameters', dynamicgoalsconfigschema.dynamicGoalsConfigSchema),
+        ('constraintToolInfo', binpickingparametersschema.constraintToolInfoSchema),
+        ('distanceMeasurementInfo', distanceMeasurementInfoSchema.distanceMeasurementInfoSchema),
+        ('savePackingState', {
+            'type': 'boolean',
+        }),
+        ('checkObstacleNames', checkObstacleNamesSchema),
+        ('targetMinBottomPaddingForInitialTransfer', binpickingparametersschema.targetMinBottomPaddingForInitialTransferSchema),
+        ('targetMinSafetyHeightForInitialTransfer', binpickingparametersschema.targetMinSafetyHeightForInitialTransferSchema),
+        ('saveDynamicGoalGeneratorState', binpickingparametersschema.saveDynamicGoalGeneratorStateSchema),
+        ('saveDynamicGoalGeneratorStateFailed', binpickingparametersschema.saveDynamicGoalGeneratorStateFailedSchema),
+    ]),
+}
+
 packFormationResultSchema = {
     'type': 'object',
     'properties': {
@@ -417,12 +477,8 @@ packFormationResultSchema = {
             }
         },
         'comPackedItems': components.Vector3Schema,
-        'containerName': {
-            'type': 'string',
-        },
-        'destContainerName': {
-            'type': 'string',
-        },
+        'containerName': containerNameSchema,
+        'destContainerName': containerNameSchema,
         'innerEmptyRegionPose': poseSchema,
         'packContainerType': packContainerTypeSchema,
         'packageDimensions': components.Vector3Schema,
@@ -464,86 +520,119 @@ packFormationResultSchema = {
     }
 }
 
-validatedPackFormationResultListSchema = {
-    'type': 'array',
-    'items': {
-        'type': 'object',
-        'properties': MergeDicts(
-            [
-                OrderedDict([
-                    ('validationStatus', {
-                        'type': 'string',
-                    }),
-                    ('validationErrorCode', {
-                        'type': 'integer',
-                    }),
-                    ('validationErrorDesc', {
-                        'type': 'string'
-                    }),
-                    ('fillRatio', {
-                        'type': 'number',
-                    }),
-                    ('packContainerPose', poseSchema),
-                ]),
-                packFormationResultSchema['properties'],
-            ],
-            deepcopy=True,
-        )[0]
-    },
+validatedPackFormationResultSchema = {
+    'type': 'object',
+    'properties': MergeDicts(
+        [
+            OrderedDict([
+                ('validationStatus', {
+                    'type': 'string',
+                }),
+                ('validationErrorCode', {
+                    'type': 'integer',
+                }),
+                ('validationErrorDesc', {
+                    'type': 'string'
+                }),
+                ('fillRatio', {
+                    'type': 'number',
+                }),
+                ('packContainerPose', poseSchema),
+            ]),
+            packFormationResultSchema['properties'],
+        ],
+        deepcopy=True,
+    )[0]
 }
 
-validatePackFormationResultListParametersSchema = {
-    'type': 'object',
-    'properties': OrderedDict([
-        ('packFormationResultList', {
-            'type': 'array',
-            'isRequired': True,
-            'items': packFormationResultSchema,
-        }),
-        ('robotname', AsRequired(components.robotname)),
-        ('toolname', AsRequired(components.toolname)),
-        ('packLocationInfo', packLocationInfoSchema),
-        ('doPlacementValidation', {
-            'description': 'If True will do placmeent validation by calling FindNextFreePlacementGoals for each placed item.',
-            'type': 'boolean',
-        }),
-        ('forceValidatePackContainerType', {
-            'type': 'boolean',
-        }),
-        ('checkObstacleNames', checkObstacleNamesSchema),
-        ('unit', components.unit),
-        ('destcontainernames', destcontainernamesSchema),
-        ('containername', {
-            'type': 'string',
-        }),
-        ('destcontainername', {
-            'type': 'string',
-        }),
-        ('locationName', {
-            'type': 'string',
-        }),
-        ('packInputPartInfos', packInputPartInfosSchema),
-        ('packFormationParameters', packformationparametersschema.packFormationParametersSchema),
-        ('packContainerType', packContainerTypeSchema),
-        ('dynamicGoalsGeneratorParameters', dynamicgoalsconfigschema.dynamicGoalsConfigSchema),
-        ('targetMinBottomPaddingForInitialTransfer', binpickingparametersschema.targetMinBottomPaddingForInitialTransferSchema),
-        ('targetMinSafetyHeightForInitialTransfer', binpickingparametersschema.targetMinSafetyHeightForInitialTransferSchema),
-        ('distanceMeasurementInfo', distanceMeasurementInfoSchema.distanceMeasurementInfoSchema),
-        ('constraintToolInfo', binpickingparametersschema.constraintToolInfoSchema),
-        ('saveDynamicGoalGeneratorState', binpickingparametersschema.saveDynamicGoalGeneratorStateSchema),
-        ('saveDynamicGoalGeneratorStateFailed', binpickingparametersschema.saveDynamicGoalGeneratorStateFailedSchema),
-        ('savePackingState', {
-            'type': 'boolean',
-        }),
-        ('unitMass', unitMassSchema),
-        ('debuglevel', components.debuglevel),
-        ('packLocationName', {
-            '$commend': 'Ignored by the server. Only passed because its is mixed up with useful parameters.',
-            'type': 'string',
-            'deprecated': True,
-        }),
-    ]),
-}
+validatePackFormationResultListParametersSchema = MergeDicts(
+    [
+        ensurePackingComputatorParametersSchema,
+        {
+            'type': 'object',
+            'properties': OrderedDict([
+                ('packFormationResultList', {
+                    'type': 'array',
+                    'isRequired': True,
+                    'items': packFormationResultSchema,
+                }),
+                ('robotname', AsRequired(components.robotname)),
+                ('toolname', AsRequired(components.toolname)),
+                ('packLocationInfo', packLocationInfoSchema),
+                ('doPlacementValidation', {
+                    'description': 'If True will do placmeent validation by calling FindNextFreePlacementGoals for each placed item.',
+                    'type': 'boolean',
+                }),
+                ('forceValidatePackContainerType', {
+                    'type': 'boolean',
+                }),
+                ('checkObstacleNames', checkObstacleNamesSchema),
+                ('debuglevel', components.debuglevel),
+                ('packLocationName', {
+                    '$commend': 'Ignored by the server. Only passed because its is mixed up with useful parameters.',
+                    'type': 'string',
+                    'deprecated': True,
+                }),
+            ]),
+        }
+    ],
+    deepcopy=True,
+)[0]
+
+visualizePackFormationResultParametersSchema = MergeDicts(
+    [
+        ensurePackingComputatorParametersSchema,
+        {
+            'type': 'object',
+            'properties': OrderedDict([
+                ('initializeCameraPosition', {
+                    'description': _('Reset camera position'),
+                    'type': 'boolean',
+                }),
+                ('robotname', components.robotname),
+                ('packFormationResult', validatedPackFormationResultSchema),
+                ('indicesToShow', {
+                    'type': ['array', 'null'],
+                    'items': {
+                        'type': 'integer',
+                    }
+                }),
+                ('maxPlacedIndex', {
+                    'type': 'integer',
+                }),
+                ('destContainerName', containerNameSchema),
+                ('destcontainername', MergeDicts(
+                    [
+                        containerNameSchema,
+                        {
+                            'description': _('Use `destContainerName` instead.'),
+                            'deprecated': True,
+                        }
+                    ],
+                    deepcopy=True,
+                )[0]),
+                ('destcontainernames', containerNamesSchema),
+                ('prefix', {
+                    'type': 'string',
+                }),
+                ('cameraRelativeToContainerPose', poseSchema),
+                ('isEnabled', {
+                    'type': 'boolean',
+                }),
+                ('isShowLastSolution', {
+                    'type': 'boolean',
+                }),
+                ('isShowInnerContainerCoordinates', {
+                    'type': 'boolean',
+                }),
+                ('normalizePackToEmptyRegion', {
+                    'type': 'boolean',
+                }),
+            ]),
+        }
+    ],
+    deepcopy=True,
+)[0]
 
 hasDetectionObstaclesParametersSchema = {
     'type': 'object',
@@ -559,9 +648,7 @@ hasDetectionObstaclesParametersSchema = {
         ('useLocationState', {
             'type': 'boolean',
         }),
-        ('sourcecontainername', {
-            'type': 'string',
-        }),
+        ('sourcecontainername', containerNameSchema),
         ('bodyOcclusionInfos', {
             'type': 'array',
             'items': {
@@ -659,7 +746,9 @@ hasDetectionObstaclesParametersSchema = {
 startPackFormationComputationThreadParametersSchema = MergeDicts(
     [
         hasDetectionObstaclesParametersSchema,
+        ensurePackingComputatorParametersSchema,
         {
+            'type': 'object',
             'properties': OrderedDict([
                 ('debuglevel', components.debuglevel),
                 ('robotname', components.robotname),
@@ -667,35 +756,6 @@ startPackFormationComputationThreadParametersSchema = MergeDicts(
                 ('executionmode', {
                     'type': 'string',
                 }),
-                ('unit', components.unit),
-                ('destcontainernames', destcontainernamesSchema),
-                ('destcontainername', {
-                    'type': 'string',
-                }),
-                ('containername', {
-                    'type': 'string',
-                }),
-                ('packLocationInfo', packLocationInfoSchema),
-                ('locationName', {
-                    'type': 'string',
-                }),
-                ('packInputPartInfos', packInputPartInfosSchema),
-                ('packFormationParameters', packformationparametersschema.packFormationParametersSchema),
-                ('packContainerType', {
-                    'type': 'string',
-                }),
-                ('dynamicGoalsGeneratorParameters', dynamicgoalsconfigschema.dynamicGoalsConfigSchema),
-                ('targetMinBottomPaddingForInitialTransfer', binpickingparametersschema.targetMinBottomPaddingForInitialTransferSchema),
-                ('targetMinSafetyHeightForInitialTransfer', binpickingparametersschema.targetMinSafetyHeightForInitialTransferSchema),
-                ('distanceMeasurementInfo', distanceMeasurementInfoSchema.distanceMeasurementInfoSchema),
-                ('constraintToolInfo', binpickingparametersschema.constraintToolInfoSchema),
-                ('checkObstacleNames', checkObstacleNamesSchema),
-                ('saveDynamicGoalGeneratorState', binpickingparametersschema.saveDynamicGoalGeneratorStateSchema),
-                ('saveDynamicGoalGeneratorStateFailed', binpickingparametersschema.saveDynamicGoalGeneratorStateFailedSchema),
-                ('savePackingState', {
-                    'type': 'boolean',
-                }),
-                ('unitMass', unitMassSchema),
                 ('csvHeader', csvHeaderDeprecatedSchema),
                 ('packContainerId', {
                     '$commend': 'Ignored by the server. Only passed because its is mixed up with useful parameters.',

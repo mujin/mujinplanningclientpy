@@ -13,6 +13,11 @@ if sys.version_info[0] >= 3:
 from mujinbinpickingmanager.schema import binpickingparametersschema  # TODO(felixvd): Fix this dependency
 
 
+uriSchema = {
+    'type': 'string',
+    'semanticType': 'Uri',
+}
+
 constraintToolDirectionSchema = {
     'description': _('Contains 7 params: manipdir, globaldir, cosangle.'),
     'type': 'array',
@@ -123,10 +128,7 @@ dynamicEnvironmentState = {
             'templateinfos': {
                 'type': 'object',
             },
-            'uri': {
-                'type': 'string',
-                'semanticType': 'Uri',
-            },
+            'uri': uriSchema,
             'visible': {
                 'type': 'boolean',
             },

@@ -906,20 +906,20 @@ A dictionary with keys, for example:
                 'schema': {
                     'type': 'object',
                     'properties': {
-                        'taskparameters': {
-                            'type': 'object',
-                            'properties': OrderedDict([
-                                ('initializeCameraPosition', {
-                                    'description': _('Reset camera position'),
-                                    'type': 'boolean',
-                                }),
-                            ]),
-                        },
+                        'taskparameters': components_binpicking.visualizePackFormationResultParametersSchema,
                     },
                 },
             },
         ),
-        'returns': {},
+        'returns': {
+            'type': 'object',
+            'properties': {
+                'packedItemsInfo': {
+                    'type': 'array',
+                    'items': components_binpicking.packedItemInfoSchema,
+                }
+            }
+        },
     }),
     ('GetPackFormationSolution', {
         'description': _('Stops the packing computation thread thread started with StartPackFormationComputationThread'),
@@ -1001,7 +1001,10 @@ A dictionary with keys, for example:
         ),
         'returns': {
             'properties': OrderedDict([
-                ('validatedPackFormationResultList', components_binpicking.validatedPackFormationResultListSchema),
+                ('validatedPackFormationResultList', {
+                    'type': 'array',
+                    'items': components_binpicking.validatedPackFormationResultSchema,
+                }),
             ]),
             'type': 'object',
         },
