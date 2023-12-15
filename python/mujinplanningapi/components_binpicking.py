@@ -212,11 +212,14 @@ pieceInspectionInfoSchema = {
     'tags':['motion', 'medium', 'si']
 }
 
-binpickingParametersSchema= MergeDicts(
+binpickingParametersSchema = MergeDicts(
     [
         binpickingparametersschema.binpickingParametersSchema,
         {
             'properties': {
+                'inputPartIndex': {  # Seems to be unused. Not in configs either.
+                    'type': 'integer',
+                },
                 'pickContainerHasOnlyOnePart': {
                     'type': 'boolean',
                 },
