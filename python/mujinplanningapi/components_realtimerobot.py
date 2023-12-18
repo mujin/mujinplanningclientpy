@@ -251,7 +251,7 @@ moveJointsParameters = OrderedDict([
     }),
     ('maxJitterLinkDist', binpickingparametersschema.jittererParametersSchema['properties']['maxJitterLinkDist']),
     ('pathPlannerParameters', binpickingparametersschema.pathPlannerParametersSchema),
-    ('moveStraightParams', binpickingparametersschema.moveStraightParamsSchema),
+    ('moveStraightParams', moveStraightParams),
     ('forceTorqueBasedEstimatorParameters', binpickingparametersschema.forceTorqueBasedEstimatorParametersSchema),
     ('dynamicEnvironmentState', components.dynamicEnvironmentState),
     ('savetrajectorylog', {

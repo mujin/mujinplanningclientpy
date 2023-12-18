@@ -279,7 +279,18 @@ services = [
                                             'type': 'string',
                                         }),
                                         ('debuglevel', components.debuglevel),
-                                        ('defaultItlProgramParams', itlProgramParameterSchema),
+                                        ('defaultItlProgramParams', MergeDicts(
+                                            [
+                                                itlProgramParameterSchema,
+                                                {
+                                                    'required': [],
+                                                    'properties': {
+                                                        'envClearance': components.envclearance,
+                                                    }
+                                                }
+                                            ],
+                                            deepcopy=True,
+                                        )[0]),
                                         ('executionid', {
                                             'type': 'string',
                                         }),
