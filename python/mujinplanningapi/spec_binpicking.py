@@ -933,10 +933,7 @@ A dictionary with keys, for example:
                 'schema': {
                     'type': 'object',
                     'properties': {
-                        'taskparameters': {
-                            'type': 'object',
-                            'properties': OrderedDict(),
-                        },
+                        'taskparameters': components_binpicking.getPackItemPoseInWorldParametersSchema,
                     },
                 },
             },
@@ -952,18 +949,7 @@ A dictionary with keys, for example:
                 'schema': {
                     'type': 'object',
                     'properties': {
-                        'taskparameters': {
-                            'type': 'object',
-                            'properties': OrderedDict([
-                                ('packFormationComputationResult', {}),
-                                ('inputPartIndex', {}),
-                                ('placeLocationNames', {}),
-                                ('orderNumber', {}),
-                                ('numLeftToPick', {}),
-                                ('placedTargetPrefix', {}),
-                                ('dynamicGoalsGeneratorParameters', {}),
-                            ]),
-                        },
+                        'taskparameters': components_binpicking.manuallyPlacePackItemParametersSchema,
                     },
                 },
             },

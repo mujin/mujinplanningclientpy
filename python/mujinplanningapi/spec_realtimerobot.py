@@ -2743,6 +2743,11 @@ services = [
                                     'isRequired': True,
                                     'type': 'integer',
                                 }),
+                                ('webapi', {
+                                    'description': _('Deprecated. Will be fully removed once orchestrator is merged.'),
+                                    'deprecated': True,
+                                    'type': 'boolean',
+                                }),
                             ]),
                         },
                     },

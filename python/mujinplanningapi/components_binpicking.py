@@ -375,7 +375,7 @@ binpickingParametersSchema = MergeDicts(
                             'description': _('kg, specifies weight of random box. Same as objectMass.'),
                             'deprecated': True,
                             'type': 'number',
-                            'minimum': 0.01,
+                            'minimum': 0.001,
                             'default': 1.0,
                             'tags':['motion', 'advanced', 'dev', 'target']
                         },
@@ -438,6 +438,57 @@ binpickingParametersSchema = MergeDicts(
         },
     ],
     deepcopy=True,
+)[0]
+
+validateGetPackItemPoseInWorldParametersSchema = {
+    'type': 'object',
+    'properties': OrderedDict([
+        ('packFormationComputationResult', {
+            'type': 'object',
+            # TODO(felixvd): Link to pack formation computation result schema when it is written.
+        }),
+        ('inputPartIndex', {
+            'type': 'integer'
+        }),
+        ('placeLocationNames', {
+            "type": "array",
+            "items": {
+                "type": "string",
+            },
+        }),
+    ]),
+}
+
+getPackItemPoseInWorldParametersSchema = MergeDicts(
+    [
+        validateGetPackItemPoseInWorldParametersSchema,
+        {
+            'properties': OrderedDict([
+                ('unit', components.unit),
+            ]),
+        }
+    ],
+    deepcopy=True
+)[0]
+
+manuallyPlacePackItemParametersSchema = MergeDicts(
+    [
+        validateGetPackItemPoseInWorldParametersSchema,
+        {
+            'properties': OrderedDict([
+                ('unit', components.unit),
+                ('placedTargetPrefix', {
+                    'type': 'string',
+                }),
+                ('sizeRoundUp', {
+                    'type': 'boolean',
+                }),
+                ('sizePrecisionXYZ', components.Vector3Schema),
+                ('randomBoxOrigin', components.Vector3Schema),
+            ]),
+        }
+    ],
+    deepcopy=True
 )[0]
 
 ensurePackingComputatorParametersSchema = {
