@@ -246,6 +246,28 @@ transformSchema = {
     ],
 }
 
+toolPosesSchema = {
+    "title": _("Tool poses"),
+    "description": _("Tool poses for the robot."),
+    "type": "object",
+    "properties": {
+        "cycleStart": {
+            "type": "object",
+            "properties": {
+                "ikparamname": {
+                    "type": "string",
+                },
+                "toolname": {
+                    "type": "string",
+                },
+                "useSourceContainerIkParams": {
+                    "type": "boolean",
+                },
+            }
+        }
+    }
+}
+
 unit = {
     'default': 'mm',
     'description': _('The unit of the given values.'),
@@ -516,7 +538,7 @@ startItlParameters = {
             'description': _('If queue mode is "Stepping" (line-by-line execution) or not.'),
             'type': 'boolean',
         }),
-        ('toolposes', binpickingparametersschema.toolPosesSchema),
+        ('toolposes', toolPosesSchema),
     ]),
     'type': 'object',
 }
