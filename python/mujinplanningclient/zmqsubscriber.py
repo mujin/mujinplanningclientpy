@@ -149,7 +149,8 @@ class ZmqSubscriber(object):
         """
         checkpreemptfn = checkpreemptfn or self._checkpreemptfn
         starttime = GetMonotonicTime()
-
+        haveReceivedMessage = False
+        
         self._UpdateEndpoint()
 
         while True:
@@ -167,6 +168,7 @@ class ZmqSubscriber(object):
                 while True:
                     try:
                         message = self._socket.recv(zmq.NOBLOCK)
+                        haveReceivedMessage = True
                     except zmq.ZMQError as e:
                         if e.errno != zmq.EAGAIN:
                             log.exception('caught exception while trying to receive from subscription socket for endpoint "%s": %s', self._socketEndpoint, e)
@@ -179,7 +181,10 @@ class ZmqSubscriber(object):
                     return message
 
                 if now - self._lastReceivedTimestamp > self._timeout:
-                    log.debug('have not received message on subscription socket for endpoint "%s" in %.03f seconds, closing socket and re-creating', self._socketEndpoint, now - self._lastReceivedTimestamp)
+                    # only log when there's a change in the haveReceivedMessage state
+                    if haveReceivedMessage:
+                        log.debug('have not received message on subscription socket for endpoint "%s" in %.03f seconds, closing socket and re-creating', self._socketEndpoint, now - self._lastReceivedTimestamp)
+                        haveReceivedMessage = False
                     self._CloseSocket()
                     endpoint = self._endpoint
                     if endpoint is not None:
@@ -263,11 +268,11 @@ class ZmqThreadedSubscriber(ZmqSubscriber):
                     self.SpinOnce(timeout=self._timeout, checkpreemptfn=self._CheckPreempt)
                     loggedTimeoutError = False
                 except UserInterrupt as e:
-                    log.exception('subscriber thread "%s" preempted: %s', self._threadName, e)
+                    log.error('subscriber thread "%s" preempted: %s', self._threadName, e)
                     break # preempted
                 except TimeoutError as e:
                     if not loggedTimeoutError:
-                        log.exception('timed out in subscriber thread "%s": %s', self._threadName, e)
+                        log.error('timed out in subscriber thread "%s": %s', self._threadName, e)
                         loggedTimeoutError = True
                 except Exception as e:
                     log.exception('exception caught in subscriber thread "%s": %s', self._threadName, e)

@@ -27,7 +27,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
 
     def __init__(
         self,
-        robotname='',
+        robotname=None,
         robotspeed=None,
         robotaccelmult=None,
         envclearance=10.0,
@@ -45,7 +45,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
         callerid='',
         **ignoredArgs
     ):
-        # type: (str, Optional[float], Optional[float], float, Optional[str], int, int, float, Optional[zmq.Context], Optional[str], str, str, str, str, str, str, Any) -> None
+        # type: (Optional[str], Optional[float], Optional[float], float, Optional[str], int, int, float, Optional[zmq.Context], Optional[str], str, str, str, str, str, str, Any) -> None
         """Connects to the Mujin controller, initializes RealtimeITL3 task and sets up parameters
 
         Args:

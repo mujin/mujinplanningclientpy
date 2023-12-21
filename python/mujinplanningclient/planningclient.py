@@ -181,7 +181,15 @@ class PlanningClient(object):
             except Exception:
                 pass
             self._ctxown = None
-
+    
+    @property
+    def commandport(self):
+        return self.taskzmqport
+    
+    @property
+    def hostname(self):
+        return self.controllerIp
+    
     def SetDestroy(self):
         commandsocket = self._commandsocket
         if commandsocket is not None:
@@ -344,7 +352,20 @@ class PlanningClient(object):
         if error is not None:
             raise error
         return response['output']
+    
+    def TerminateSlaves(self, slaverequestids, timeout=None, fireandforget=None, checkpreempt=True):
+        """terminate slaves with specific slaverequestids
+        """
+        return self.SendConfig({'command':'TerminateSlaves', 'slaverequestids':slaverequestids}, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
 
+    def CancelSlaves(self, slaverequestids, timeout=None, fireandforget=None, checkpreempt=True):
+        """cancel the current commands on the slaves with specific slaverequestids
+        """
+        return self.SendConfig({'command':'cancel', 'slaverequestids':slaverequestids}, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
+
+    def Quit(self,timeout=None, fireandforget=None, checkpreempt=True):
+        return self.SendConfig({'command':'quit'}, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
+    
     #
     # Viewer Parameters Related
     #

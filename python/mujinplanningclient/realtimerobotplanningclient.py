@@ -1257,6 +1257,93 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
 
+    def StartMoveThread(
+        self,
+        positionConfigurationName=None,
+        positionConfigurationCandidateNames=None,
+        robotname=None,
+        robotspeed=None,
+        robotaccelmult=None,
+        execute=1,
+        startvalues=None,
+        envclearance=None,
+        timeout=10,
+        **kwargs
+    ):
+        """Moves the robot to desired position configuration specified in positionConfigurationName
+
+        Args:
+            positionConfigurationName (str, optional): If specified, the name of position configuration to move to. If it does not exist, will raise an error.
+            positionConfigurationCandidateNames (list[str], optional): If specified, goes to the first position that is defined for the robot. If no positions exist, returns without moving the robot.
+            robotname (str, optional): Name of the robot
+            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
+            robotaccelmult (float, optional): Value in (0,1] defining the percentage of acceleration the robot should move at.
+            execute (int, optional): If 1, execute the motion. (Default: 1)
+            startvalues (list[float], optional): The robot joint values to start the motion from.
+            envclearance (float, optional): Environment clearance in millimeters.
+            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            unit (str, optional): The unit of the given values. (Default: 'mm')
+            toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
+            robotBridgeConnectionInfo (dict, optional): Information to set up a client to the robot bridge.
+            locationCollisionInfos (dict, optional): List of external collision IOs to be computed and sent in realtime.
+            speed: **deprecated** Use robotspeed instead.
+            ionames (list, optional): A list of IO names to read/write
+            constraintToolDirection (list[float], optional):
+            departOffsetDir (list[float], optional): Direction in which to apply the offset when departing from the pick/place operation.
+            departMinimumCompleteRatio (float, optional): The ratio of the linear depart motion that needs to be possible for a pick/place to be executed. Pick/place candidate locations that do not allow sufficient space for the depart motion are discarded. Generally between 0.0 and 1.0.
+            departOffsetAwayFromGravity (float, optional): The distance to depart vertically upwards after picking/placing. Overridden by departOffsetDir.
+            trajname (str, optional):
+            disablebodies (bool, optional):
+            ignoreGrabbingTarget (bool, optional):
+            jointthresh (float, optional):
+            jitter (float, optional):
+            executionFilterFactor (float, optional):
+            filtertraj (bool, optional):
+            currentlimitratios (list[float], optional): The joints' current limit ratios.
+            goalJointThreshold (list[float], optional): Threshold of the sum of abs joint differences between what the robot is able to achieve and where the goal is, in degrees. If not within this threshold, robot tries to reach goal, during some time.
+            goalWorkspaceThreshold (float, optional): Threshold in mm. If the robot manipulator is within this threshold to the goal position, then trajectory is assumed to be successful.
+            calibrategripper (bool, optional):
+            departAccel (float, optional):
+            maxManipAccel (float, optional):
+            maxJitterLinkDist (float, optional): mm.
+            pathPlannerParameters:
+            moveStraightParams (dict, optional): A set of parameters defining how the robot behaves during linear motions.
+            forceTorqueBasedEstimatorParameters (dict, optional): A set of parameters for force-torque based estimation.
+            dynamicEnvironmentState (list[dict], optional): The dynamic objects in the environment that is to be used for planning/executing the task. A list of bodies.
+            savetrajectorylog (bool, optional): If True, will save the commanded (input) trajectories before they are executed
+            saveRobotFeedbackLog (bool, optional): If True, will tell robotbridge to save trajectory files
+            loadRobotFeedbackLog (bool, optional): If True, will tell robotbridge to load the robot feedback log after trajectory ends
+            saveConcatenateTrajectoryLog (bool, optional): If True, will save trajectories used for inputs of concatenate trajectory functions
+            saveFilterTrajectoryLog (bool, optional): If True, will save trajectories used for filtering, such as SmartFilter
+            executionConnectingTrajReverseMult (float, optional): Used for several code paths such as MoveToolLinear, MoveJointsNoDec, MoveToHandPosition. This is passed to robotbridge. If None, robotbridge uses default value internally.
+            executionReverseRecoveryDistance (float, optional): Specifies the reversing distance for trajectories to recover from collision/position error. This is passed to robotbridge. If None, robotbridge uses default internally (most likely 50 mm).
+            debuglevel (int, optional): Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE.
+            jittererParameters (dict, optional):
+            startJointConfigurationStates (list[dict], optional): List of dicts for each joint.
+            robotProgramName (str, optional):
+
+        Returns:
+            dict: Dictionary with keys goalPositionName and values goalConfiguration
+
+                An unstructured dictionary.
+        """
+        taskparameters = {
+            'command': 'StartMoveThread',
+            'execute': execute,
+        }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        if positionConfigurationName:
+            taskparameters['positionConfigurationName'] = positionConfigurationName
+        if positionConfigurationCandidateNames:
+            taskparameters['positionConfigurationCandidateNames'] = positionConfigurationCandidateNames
+        if envclearance is not None:
+            taskparameters['envclearance'] = envclearance
+        if startvalues is not None:
+            taskparameters['startvalues'] = list(startvalues)
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
+    
     def GetRobotBridgeIOVariables(self, ioname=None, ionames=None, robotname=None, timeout=10, **kwargs):
         """Returns the data of the IO in ASCII hex as a string
 
@@ -1964,7 +2051,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-
+    
     def ResetCachedRobotConfigurationState(self, timeout=10, fireandforget=False, **kwargs):
         """Resets cached robot configuration (position of the robot) in the planning slave received from slave notification. Need to perform every time robot moved not from the task slaves.
 
@@ -1974,6 +2061,15 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'ResetCachedRobotConfigurationState',
+        }
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+        
+    def StopMoveThread(self, timeout=10, fireandforget=False, **kwargs):        
+        """Stops the move thread. Should track move progress with 'statusMove' and 'statusDescMove' published messages
+        """
+        taskparameters = {
+            'command': 'StopMoveThread',
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
