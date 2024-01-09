@@ -113,9 +113,10 @@ class ZmqSubscriber(object):
         socket.setsockopt(zmq.TCP_KEEPALIVE_INTVL, 2) # the interval between subsequential keepalive probes, regardless of what the connection has exchanged in the meantime
         socket.setsockopt(zmq.TCP_KEEPALIVE_CNT, 2) # the number of unacknowledged probes to send before considering the connection dead and notifying the application layer
         socket.connect(endpoint)
-        socket.setsockopt(zmq.SUBSCRIBE, b'') # have to use b'' to make python3 compatible
         self._socket = socket
         self._socketEndpoint = endpoint
+        # subscribe to all messages by default
+        self.SubscribeTopic(b'')  # have to use b'' to make python3 compatible
         return socket
 
     def _CloseSocket(self):
@@ -136,6 +137,12 @@ class ZmqSubscriber(object):
         if self._socket is not None and self._socketEndpoint != endpoint:
             log.debug('subscription endpoint changed "%s" -> "%s", so closing previous subscription socket', self._socketEndpoint, endpoint)
             self._CloseSocket()
+
+    def SubscribeTopic(self, topic):
+        self._socket.setsockopt(zmq.SUBSCRIBE, topic)
+
+    def UnsubscribeTopic(self, topic):
+        self._socket.setsockopt(zmq.UNSUBSCRIBE, topic)
 
     def SpinOnce(self, timeout=None, checkpreemptfn=None):
         """Spin subscription once, ensure that each subscription is received at least once. Block up to supplied timeout duration. If timeout is None, then receive what we can receive without blocking or raising any timeout error.
@@ -167,7 +174,7 @@ class ZmqSubscriber(object):
                 message = None
                 while True:
                     try:
-                        message = self._socket.recv(zmq.NOBLOCK)
+                        message = self._socket.recv_multipart(zmq.NOBLOCK)
                         haveReceivedMessage = True
                     except zmq.ZMQError as e:
                         if e.errno != zmq.EAGAIN:
@@ -176,6 +183,8 @@ class ZmqSubscriber(object):
                             raise
                         break # got EAGAIN, so break
                 if message is not None:
+                    if len(message) == 1:
+                        message = message[0]  # backward compatibility
                     self._HandleReceivedMessage(message=message, endpoint=self._socketEndpoint, elapsedTime=now - self._lastReceivedTimestamp)
                     self._lastReceivedTimestamp = now
                     return message
