@@ -266,7 +266,7 @@ class PlanningClient(object):
                 taskparameters['callerid'] = self._callerid
         if self.tasktype == 'binpicking':
             command['fnname'] = '%s.%s' % (self.tasktype, command['fnname'])
-        response = self._commandsocket.SendCommand(command, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
+        response = self._commandsocket.SendCommand(command, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt, blockwait=blockwait)
 
         if not blockwait or fireandforget:
             # For fire and forget commands, no response will be available
