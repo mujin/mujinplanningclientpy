@@ -11,6 +11,10 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
 
     tasktype = 'mobilerobotplanning'
 
+    def __init__(self, **kwargs):
+        kwargs['tasktype'] = self.tasktype # override task type
+        super(MobileRobotPlanningClient, self).__init__(**kwargs)
+
     # TODO: Adding optional parameters only for dev purpose, should be spreaded out to arg list.
     def ManageMobileRobotTasks(self, tasks, slaverequestid=None, timeout=None, fireandforget=None, respawnopts=None, checkpreempt=True, forcereload=False, blockwait=True, **kwargs):
         """
