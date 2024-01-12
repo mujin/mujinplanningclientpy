@@ -45,18 +45,8 @@ _ = ugettext
 class TimeoutError(ClientExceptionBase):
     pass
 
-
 class UserInterrupt(ClientExceptionBase):
     pass
 
-
-class MobileRobotPlanningClientError(ClientExceptionBase):
-    pass
-
-
-class MobileRobotPlanningExecutionError(ClientExceptionBase):
-    pass
-
-
-class MobileRobotPlanningTimeoutError(ClientExceptionBase):
+class PlanningClientError(ClientExceptionBase):
     pass
