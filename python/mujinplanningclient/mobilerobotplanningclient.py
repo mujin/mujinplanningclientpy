@@ -12,13 +12,13 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
     tasktype = 'mobilerobotplanning'
 
     # TODO: Adding optional parameters only for dev purpose, should be spreaded out to arg list.
-    def ManageMobileRobotTasks(self, tasks=None, timeout=10.0, blockwait=True, fireandforget=False, checkPreempt=True, **kwargs):
+    def ManageMobileRobotTasks(self, tasks, slaverequestid=None, timeout=None, fireandforget=None, respawnopts=None, checkpreempt=True, forcereload=False, blockwait=True, **kwargs):
         """
         This function will initialize the planning thread if it's not started.
         If the robotBridgeConnectionInfo is not set to use=True, no robot movement will occur as
         there will be no way to fetch updated information from the robot bridge server.
         Arguments:
-            tasks: list of MobileRobotTask.
+            tasks (list[dict]): list of MobileRobotTask.
             robotBridgeConnectionInfo: specified as a dictionary with the following fields:
                 use: bool: Whether the planning task should connect to robot bridges. Defaults to false.
                 host: string: Hostname of the robot bridge server to communicate with
@@ -36,4 +36,4 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
             'tasks': tasks,
         }
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, blockwait=blockwait, fireandforget=fireandforget, checkPreempt=checkPreempt)
+        return self.ExecuteCommand(taskparameters, slaverequestid=slaverequestid, timeout=timeout, fireandforget=fireandforget, respawnopts=respawnopts, checkpreempt=checkpreempt, forcereload=forcereload, blockwait=blockwait)
