@@ -120,8 +120,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             destikparamnames (list[list[str]], optional): A list of lists of ikparam names for the destinations of the target. Only destikparamnames[0] is looked at and tells the system to place the part in any of the ikparams in destikparamnames[0]
             graspsetname (str, optional): the name of the grasp set belong to the target objects to use for the target. Grasp sets are a list of ikparams
         """
-        if worksteplength is None:
-            worksteplength = 0.01
         assert (targetnamepattern is not None)
         if regionname is None:
             regionname = self.regionname
@@ -193,8 +191,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             forceStartRobotValues (list[float], optional): planning loop should always start from these values rather than reading from robot
             initiallyDisableRobotBridge (bool, optional): If True, stops any communication with the robotbridge until robot bridge is enabled. (Default: False)
         """
-        if worksteplength is None:
-            worksteplength = 0.01
         assert (targetnamepattern is not None)
         if regionname is None:
             regionname = self.regionname
