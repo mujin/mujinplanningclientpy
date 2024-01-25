@@ -9,17 +9,11 @@ from . import realtimerobotplanningclient
 import logging
 log = logging.getLogger(__name__)
 
-
 class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningClient):
     """Mujin planning client for the Packing task"""
-
     tasktype = 'packing'
-
-    regionname = None  # The default region for Pick/Place calls
-
-    _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
-
-    def __init__(self, regionname=None, **kwargs):
+    
+    def __init__(self, **kwargs):
         """Connects to the Mujin controller, initializes Packing task and sets up parameters
 
         Args:
@@ -45,7 +39,6 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             callerid (str, optional): Caller identifier to send to server on every command
             ignoredArgs: Additional keyword args are not used, but allowed for easy initialization from a dictionary
         """
-        self.regionname = regionname
         super(PackingPlanningClient, self).__init__(tasktype=self.tasktype, **kwargs)
     
     def StartPackFormationComputationThread(self, timeout=10, debuglevel=4, toolname=None, **kwargs):
@@ -88,21 +81,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-
-    def VisualizePackFormationResult(self, timeout=10, fireandforget=False, **kwargs):
-        """Stops the packing computation thread thread started with StartPackFormationComputationThread
-
-        Args:
-            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
-            initializeCameraPosition (bool, optional): Reset camera position
-        """
-        taskparameters = {
-            'command': 'VisualizePackFormationResult',
-        }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-
+    
     def GetPackFormationSolution(self, timeout=10, fireandforget=False, **kwargs):
         """Stops the packing computation thread thread started with StartPackFormationComputationThread
 
@@ -141,20 +120,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-
-    def ClearPackingStateVisualization(self, timeout=10, fireandforget=False, **kwargs):
-        """Clears packing visualization
-
-        Args:
-            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
-        """
-        taskparameters = {
-            'command': 'ClearPackingStateVisualization',
-        }
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-
+    
     def ValidatePackFormationResultList(self, packFormationResultList, timeout=10, fireandforget=False, **kwargs):
         """Validates pack formation result list and compute info (fillRatio, packageDimensions, packedItemsInfo, etc) about it.
 
@@ -205,3 +171,14 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+    
+    def GetPackingState(self, timeout=10, fireandforget=False, **kwargs):
+        """
+        Args:
+            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
+        """
+        taskparameters = {'command': 'GetPackingState'}
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+    
