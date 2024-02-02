@@ -55,7 +55,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
                 log.warning('Could not import API spec directly. Trying to read it from a file: %s', specExportPath)
                 packingSpec = json.load(open(specExportPath))
 
-            self._validationQueue = ValidationQueue(apiSpec=packingSpec, clientName='RealtimeRobotPlanningClient')
+            self._validationQueue = ValidationQueue(apiSpec=packingSpec, clientName='PackingPlanningClient')
         super(PackingPlanningClient, self).__init__(tasktype=self.tasktype, **kwargs)
     
     def StartPackFormationComputationThread(self, timeout=10, debuglevel=4, toolname=None, **kwargs):
