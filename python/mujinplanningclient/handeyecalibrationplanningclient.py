@@ -90,7 +90,25 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
     #
 
 
-    def ComputeCalibrationPoses(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, numsamples, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, gridindex=None, toolname=None, calibboardObjectName=None, minPatternTiltAngle=None, maxPatternTiltAngle=None, dynamicEnvironmentState=None, robot=None, **kwargs):
+    def ComputeCalibrationPoses(
+            self,
+            primarySensorSelectionInfo,
+            secondarySensorSelectionInfos,
+            numsamples,
+            calibboardvisibility,
+            calibboardLinkName=None,
+            calibboardGeomName=None,
+            timeout=3000,
+            gridindex=None,
+            toolname=None,
+            calibboardObjectName=None,
+            minPatternTiltAngle=None,
+            maxPatternTiltAngle=None,
+            dynamicEnvironmentState=None,
+            fixCurrentManipulatorOrientation=False,
+            robot=None,
+            **kwargs
+    ):
         # type: (Dict, List[Dict], int, Dict, Optional[str], Optional[str], float, Optional[int], Optional[str], Optional[str], Optional[float], Optional[float], Optional[List[Dict]], Optional[str], Any) -> Any
         """Compute a set of calibration poses that satisfy the angle constraints using latin hypercube sampling (or stratified sampling upon failure)
 
@@ -108,6 +126,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             minPatternTiltAngle (float, optional): The minimum tilt of the pattern in degrees. Default: 10 degrees
             maxPatternTiltAngle (float, optional): The maximum tilt of the pattern in degrees. Default: 30 degrees
             dynamicEnvironmentState (list[dict], optional): The dynamic objects in the environment that is to be used for planning/executing the task. A list of bodies.
+            fixCurrentManipulatorOrientation (bool, optional): If enabled, all the poses generated will have the current manipulator orientation
             robot (str, optional): The name of the robot (modelName). If not specified - the value used for client initialization will be applied.
         """
         taskparameters = {
@@ -116,6 +135,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             'secondarySensorSelectionInfos': secondarySensorSelectionInfos,
             'numsamples': numsamples,
             'calibboardvisibility': calibboardvisibility,
+            'fixCurrentManipulatorOrientation': fixCurrentManipulatorOrientation,
         }  # type: Dict[str, Any]
         if calibboardLinkName is not None:
             taskparameters['calibboardLinkName'] = calibboardLinkName
@@ -140,7 +160,24 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SampleCalibrationConfiguration(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, gridindex, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, minPatternTiltAngle=None, maxPatternTiltAngle=None, toolname=None, calibboardObjectName=None, dynamicEnvironmentState=None, robot=None, **kwargs):
+    def SampleCalibrationConfiguration(
+            self,
+            primarySensorSelectionInfo,
+            secondarySensorSelectionInfos,
+            gridindex,
+            calibboardvisibility,
+            calibboardLinkName=None,
+            calibboardGeomName=None,
+            timeout=3000,
+            minPatternTiltAngle=None,
+            maxPatternTiltAngle=None,
+            toolname=None,
+            calibboardObjectName=None,
+            dynamicEnvironmentState=None,
+            fixCurrentManipulatorOrientation=False,
+            robot=None,
+            **kwargs
+    ):
         # type: (Dict, List[Dict], int, Dict, Optional[str], Optional[str], float, Optional[float], Optional[float], Optional[str], Optional[str], Optional[List[Dict]], Optional[str], Any) -> Optional[Dict[str, List[float]]]
         """Sample a valid calibration pose inside the given voxel and find a corresponding IK solution.
 
@@ -157,6 +194,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             toolname (str, optional):
             calibboardObjectName (str, optional):
             dynamicEnvironmentState (list[dict], optional): The dynamic objects in the environment that is to be used for planning/executing the task. A list of bodies.
+            fixCurrentManipulatorOrientation (bool, optional): If enabled, all the poses generated will have the current manipulator orientation
             robot (str, optional): The name of the robot (modelName). If not specified - the value used for client initialization will be applied.
 
         Returns:
@@ -170,6 +208,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             'secondarySensorSelectionInfos': secondarySensorSelectionInfos,
             'gridindex': gridindex,
             'calibboardvisibility': calibboardvisibility,
+            'fixCurrentManipulatorOrientation': fixCurrentManipulatorOrientation,
         }  # type: Dict[str, Any]
         if calibboardLinkName is not None:
             taskparameters['calibboardLinkName'] = calibboardLinkName
