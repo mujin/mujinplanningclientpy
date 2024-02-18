@@ -259,7 +259,12 @@ class ZmqThreadedSubscriber(ZmqSubscriber):
         self._StopSubscriberThread()
 
         super(ZmqThreadedSubscriber, self).Destroy()
-
+    
+    def SetThreadInterval(self, threadInterval):
+        """sets the thread interval of querying for data from the socket
+        """
+        self._threadInterval = threadInterval
+    
     def _StartSubscriberThread(self):
         self._StopSubscriberThread()
 
