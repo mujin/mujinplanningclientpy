@@ -30,8 +30,9 @@ class ZmqSubscriber(object):
     _timeout = 4.0 # beyond this number of seconds, the socket is considered dead and should be recreated
     _checkpreemptfn = None # function for checking for preemptions
     _conflate = True # whether to conflate received messages to avoid parsing stale message
+    _subscribedTopics = None  # set of topics subscribed to
 
-    def __init__(self, endpoint=None, getEndpointFn=None, callbackFn=None, timeout=4.0, ctx=None, checkpreemptfn=None, conflate=True):
+    def __init__(self, endpoint=None, getEndpointFn=None, callbackFn=None, timeout=4.0, ctx=None, checkpreemptfn=None, conflate=True, topics=None):
         """Subscribe to zmq endpoint.
 
         Args:
@@ -41,6 +42,7 @@ class ZmqSubscriber(object):
             timeout: number of seconds, after this duration, the subscription socket is considered dead and will be recreated automatically to handle network changes (Default: 4.0)
             checkpreemptfn: The function for checking for preemptions
             conflate: whether to conflate received messages to avoid parsing stale message
+            topics: topics to subscribe to, if None will subscribe to all topics
         """
         self._timeout = timeout
         self._endpoint = endpoint
@@ -54,6 +56,10 @@ class ZmqSubscriber(object):
 
         self._checkpreemptfn = checkpreemptfn
         self._conflate = conflate
+        if topics is None:
+            self._subscribedTopics = {b''}  # by default, subscribe to everything
+        else:
+            self._subscribedTopics = set(topics)
 
     def __del__(self):
         self.Destroy()
@@ -113,7 +119,8 @@ class ZmqSubscriber(object):
         socket.setsockopt(zmq.TCP_KEEPALIVE_INTVL, 2) # the interval between subsequential keepalive probes, regardless of what the connection has exchanged in the meantime
         socket.setsockopt(zmq.TCP_KEEPALIVE_CNT, 2) # the number of unacknowledged probes to send before considering the connection dead and notifying the application layer
         socket.connect(endpoint)
-        socket.setsockopt(zmq.SUBSCRIBE, b'') # have to use b'' to make python3 compatible
+        for topic in self._subscribedTopics:
+            socket.setsockopt(zmq.SUBSCRIBE, topic)
         self._socket = socket
         self._socketEndpoint = endpoint
         return socket
@@ -136,6 +143,17 @@ class ZmqSubscriber(object):
         if self._socket is not None and self._socketEndpoint != endpoint:
             log.debug('subscription endpoint changed "%s" -> "%s", so closing previous subscription socket', self._socketEndpoint, endpoint)
             self._CloseSocket()
+
+    def SubscribeToTopics(self, *topics):
+        """Subscribes to topics specified"""
+        newTopics = set(topics)
+        if self._socket is not None:
+            # do diff if socket is already created
+            for topic in self._subscribedTopics - newTopics:
+                self._socket.setsockopt(zmq.UNSUBSCRIBE, topic)
+            for topic in newTopics - self._subscribedTopics:
+                self._socket.setsockopt(zmq.SUBSCRIBE, topic)
+        self._subscribedTopics = newTopics
 
     def SpinOnce(self, timeout=None, checkpreemptfn=None):
         """Spin subscription once, ensure that each subscription is received at least once. Block up to supplied timeout duration. If timeout is None, then receive what we can receive without blocking or raising any timeout error.
@@ -167,7 +185,7 @@ class ZmqSubscriber(object):
                 message = None
                 while True:
                     try:
-                        message = self._socket.recv(zmq.NOBLOCK)
+                        message = self._socket.recv_multipart(zmq.NOBLOCK)
                         haveReceivedMessage = True
                     except zmq.ZMQError as e:
                         if e.errno != zmq.EAGAIN:
@@ -176,6 +194,8 @@ class ZmqSubscriber(object):
                             raise
                         break # got EAGAIN, so break
                 if message is not None:
+                    if len(message) == 1:
+                        message = message[0]  # backward compatibility
                     self._HandleReceivedMessage(message=message, endpoint=self._socketEndpoint, elapsedTime=now - self._lastReceivedTimestamp)
                     self._lastReceivedTimestamp = now
                     return message
@@ -226,6 +246,7 @@ class ZmqThreadedSubscriber(ZmqSubscriber):
     _threadName = None # thread name for the background thread
     _thread = None # a background thread for handling subscription
     _stopThread = False # flag to preempt the background thread
+    _pendingTopics = None  # topics pending to subscribe to in the next spin
 
     def __init__(self, threadName='zmqSubscriber', threadInterval=None, **kwargs):
         self._threadName = threadName
@@ -238,7 +259,12 @@ class ZmqThreadedSubscriber(ZmqSubscriber):
         self._StopSubscriberThread()
 
         super(ZmqThreadedSubscriber, self).Destroy()
-
+    
+    def SetThreadInterval(self, threadInterval):
+        """sets the thread interval of querying for data from the socket
+        """
+        self._threadInterval = threadInterval
+    
     def _StartSubscriberThread(self):
         self._StopSubscriberThread()
 
@@ -258,6 +284,10 @@ class ZmqThreadedSubscriber(ZmqSubscriber):
         if self._checkpreemptfn is not None:
             self._checkpreemptfn()
 
+    def SubscribeToTopics(self, *topics):
+        # have to wait until the next spin because thread-safety
+        self._pendingTopics = topics
+
     def _RunSubscriberThread(self):
         log.debug('subscriber thread "%s" started', self._threadName)
         loggedTimeoutError = False # whether time out error has been logged once already
@@ -265,6 +295,9 @@ class ZmqThreadedSubscriber(ZmqSubscriber):
             while not self._stopThread:
                 starttime = GetMonotonicTime()
                 try:
+                    if self._pendingTopics is not None:
+                        super(ZmqThreadedSubscriber, self).SubscribeToTopics(*self._pendingTopics)
+                        self._pendingTopics = None
                     self.SpinOnce(timeout=self._timeout, checkpreemptfn=self._CheckPreempt)
                     loggedTimeoutError = False
                 except UserInterrupt as e:
