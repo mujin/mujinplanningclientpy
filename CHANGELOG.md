@@ -4,6 +4,12 @@
 
 - Add master functions TerminateSlaves, CancelSlaves, Quit
 
+## 0.3.0 (2024-02-24)
+
+### Changes
+
+- Add support for async command call.
+
 ## 0.1.6 (2023-06-09)
 
 ### Changes
