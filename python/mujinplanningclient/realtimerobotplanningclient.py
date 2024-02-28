@@ -2056,6 +2056,18 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
+    def GetPackItemPoseInWorld(self, timeout=10, fireandforget=False, **kwargs):
+        """
+        Args:
+            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
+        """
+        taskparameters = {
+            'command': 'GetPackItemPoseInWorld',
+        }
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def VisualizePackFormationResult(self, timeout=10, fireandforget=False, **kwargs):
         """Stops the packing computation thread thread started with StartPackFormationComputationThread
 
