@@ -4,6 +4,12 @@
 
 - Add master functions TerminateSlaves, CancelSlaves, Quit
 
+## 0.3.1 (2024-02-28)
+
+### Changes
+
+- Moved GetPackItemPoseInWorld from BinpickingPlanningClient to RealtimeRobotPlanningClient.
+
 ## 0.3.0 (2024-02-24)
 
 ### Changes
