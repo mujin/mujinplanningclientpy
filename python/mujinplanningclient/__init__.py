@@ -47,3 +47,6 @@ class TimeoutError(ClientExceptionBase):
 
 class UserInterrupt(ClientExceptionBase):
     pass
+
+class PlanningClientError(ClientExceptionBase):
+    pass
