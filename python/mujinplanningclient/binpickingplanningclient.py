@@ -628,7 +628,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, fireandforget=fireandforget)
 
-    def ManuallyPlacePackItem(self, packFormationComputationResult=None, inputPartIndex=None, placeLocationNames=None, placedTargetPrefix=None, dynamicGoalsGeneratorParameters=None, orderNumber=None, numLeftToPick=None, timeout=10, fireandforget=False):
+    def ManuallyPlacePackItem(self, packFormationComputationResult=None, inputPartIndex=None, placeLocationNames=None, placedTargetPrefix=None, packFormationParameters=None, orderNumber=None, numLeftToPick=None, timeout=10, fireandforget=False):
         """Places an item according to the pack formation assuming the item is placed manually and updates robotbridge state
 
         Args:
@@ -656,6 +656,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['numLeftToPick'] = numLeftToPick
         if placedTargetPrefix:
             taskparameters['placedTargetPrefix'] = placedTargetPrefix
-        if dynamicGoalsGeneratorParameters is not None:
-            taskparameters['dynamicGoalsGeneratorParameters'] = dynamicGoalsGeneratorParameters
+        if packFormationParameters is not None:
+            taskparameters['packFormationParameters'] = packFormationParameters
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
