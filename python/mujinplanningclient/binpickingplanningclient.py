@@ -652,8 +652,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['orderNumber'] = orderNumber
         if numLeftToPick is not None:
             taskparameters['numLeftToPick'] = numLeftToPick
-        if numLeftToPick is not None:
-            taskparameters['numLeftToPick'] = numLeftToPick
         if placedTargetPrefix:
             taskparameters['placedTargetPrefix'] = placedTargetPrefix
         if packFormationParameters is not None:
