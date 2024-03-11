@@ -637,8 +637,8 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             placeLocationNames (list(str)): Place location names of the order request.
             placedTargetPrefix (str): Name prefix of items placed to the desired place location.
             packFormationParameters (json): Placement parameters that should be used to generate final placement position of the item.
-            orderNumber (int, null): Number of items that should be placed as a part of the order.
-            numLeftToPick (int, null): Number of items remaining to be picked as a part of the order.
+            orderNumber (int, optional): Number of items that should be placed as a part of the order.
+            numLeftToPick (int, optional): Number of items remaining to be picked as a part of the order.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
