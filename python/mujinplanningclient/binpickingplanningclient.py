@@ -632,13 +632,13 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         """Places an item according to the pack formation assuming the item is placed manually and updates robotbridge state
 
         Args:
-            packFormationComputationResult:
-            inputPartIndex:
-            placeLocationNames:
-            placedTargetPrefix:
-            dynamicGoalsGeneratorParameters:
-            orderNumber:
-            numLeftToPick:
+            packFormationComputationResult (json): Pack formation that we try to follow.
+            inputPartIndex (int): Index of the item from packFormationComputationResult (1-based)
+            placeLocationNames (list(str)): Place location names of the order request.
+            placedTargetPrefix (str): Name prefix of items placed to the desired place location.
+            packFormationParameters (json): Placement parameters that should be used to generate final placement position of the item.
+            orderNumber (int, null): Number of items that should be placed as a part of the order.
+            numLeftToPick (int, null): Number of items remaining to be picked as a part of the order.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
