@@ -659,3 +659,26 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         if dynamicGoalsGeneratorParameters is not None:
             taskparameters['dynamicGoalsGeneratorParameters'] = dynamicGoalsGeneratorParameters
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
+    def ValidatePackFormation(
+        self,
+        packFormationComputationResult=None,
+        sourceContainerName=None,
+        destContainerName=None,
+        **kwargs
+    ):
+        """Validate the pack formation for its physical viability and reachability.
+
+        Args:
+            packFormationComputationResult (packFormationComputationResultType): A result of a pack formation computation.
+            sourceContainerName (str): The name of the source container.
+            destContainerName (str): The name of the destination container.
+        """
+        taskparameters = {
+            'command': 'VerifyPackFormation',
+            'packFormationComputationResult': packFormationComputationResult,
+            'sourcecontainername': sourceContainerName,
+            'destContainerName': destContainerName,
+        }
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters)
