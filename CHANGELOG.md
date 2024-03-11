@@ -4,6 +4,12 @@
 
 - Add master functions TerminateSlaves, CancelSlaves, Quit
 
+## 0.3.2 (2024-03-11)
+
+### Changes
+
+- When doing manual picking, propagate packFormationParameters to planning (instead of dynamicGoalGeneratorParameters).
+
 ## 0.3.1 (2024-02-28)
 
 ### Changes
