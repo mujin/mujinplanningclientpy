@@ -327,7 +327,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             object_uri (str, optional): Same as objectname, but in a Mujin URI format, e.g.: mujin:/OBJECTNAME.mujin.dae
             detectionResultState (dict, optional): Information about the detected objects (received from detectors)
             targetUpdateNamePrefix (str, optional):
-            cameranames (list[str], optional):
+            sensorSelectionInfos (list[dict[str, str]], optional): The sensorSelectionInfo configs of the cameras to avoid occlusions with the robot.
             countOverlappingPoints (bool, optional):
             overlapUpAxis (list[float], optional): Values of ['x', 'y', 'z'] correspondingly.
             zthresholdmult (float, optional):
