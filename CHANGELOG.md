@@ -4,7 +4,7 @@
 
 - Add master functions TerminateSlaves, CancelSlaves, Quit
 
-## 0.3.2 (2024-03-11)
+## 0.4.0 (2024-03-12)
 
 ### Changes
 
