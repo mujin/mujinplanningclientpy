@@ -8,7 +8,7 @@
 
 ### Changes
 
-- When doing manual picking, propagate packFormationParameters to planning (instead of dynamicGoalGeneratorParameters).
+- [BREAKING] `ManuallyPlacePackItem` now takes the input argument `packFormationParameters` instead of `dynamicGoalGeneratorParameters`
 
 ## 0.3.1 (2024-02-28)
 
