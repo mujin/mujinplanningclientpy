@@ -665,6 +665,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         packFormationComputationResult=None,
         sourceContainerName=None,
         destContainerName=None,
+        packLocationName=None,
         **kwargs
     ):
         """Validate the pack formation for its physical viability and reachability.
@@ -679,6 +680,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             'packFormationComputationResult': packFormationComputationResult,
             'sourcecontainername': sourceContainerName,
             'destContainerName': destContainerName,
+            'packLocationName': packLocationName
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters)
