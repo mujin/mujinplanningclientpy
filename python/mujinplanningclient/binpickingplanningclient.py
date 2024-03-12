@@ -675,7 +675,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             destContainerName (str): The name of the destination container.
         """
         taskparameters = {
-            'command': 'VerifyPackFormation',
+            'command': 'ValidatePackFormation',
             'packFormationComputationResult': packFormationComputationResult,
             'sourcecontainername': sourceContainerName,
             'destContainerName': destContainerName,
