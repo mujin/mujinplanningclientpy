@@ -4,6 +4,12 @@
 
 - Add master functions TerminateSlaves, CancelSlaves, Quit
 
+## 0.4.0 (2024-03-12)
+
+### Changes
+
+- [BREAKING] `ManuallyPlacePackItem` now takes the input argument `packFormationParameters` instead of `dynamicGoalGeneratorParameters`
+
 ## 0.3.1 (2024-02-28)
 
 ### Changes
