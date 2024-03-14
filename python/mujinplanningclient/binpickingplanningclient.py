@@ -662,25 +662,20 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
     def ValidatePackFormation(
         self,
-        packFormationComputationResult=None,
-        sourceContainerName=None,
-        destContainerName=None,
-        packLocationName=None,
+        packFormation=None,
+        validationSettings=None,
         **kwargs
     ):
-        """Validate the pack formation for its physical viability and reachability.
+        """Validates the pack formation.
 
         Args:
-            packFormationComputationResult (packFormationComputationResultType): A result of a pack formation computation.
-            sourceContainerName (str): The name of the source container.
-            destContainerName (str): The name of the destination container.
+            packFormation (packFormationComputationResultType): A result of a pack formation computation.
+            validationSettings (dict): Parameters for the validation.
         """
         taskparameters = {
             'command': 'ValidatePackFormation',
-            'packFormationComputationResult': packFormationComputationResult,
-            'sourcecontainername': sourceContainerName,
-            'destContainerName': destContainerName,
-            'packLocationName': packLocationName
+            'packFormation': packFormation,
+            'validationSettings': validationSettings,
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters)
