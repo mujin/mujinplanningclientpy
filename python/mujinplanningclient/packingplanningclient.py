@@ -56,6 +56,20 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
 
+    def StartSingleSkuPackFormationComputationThread(self, packingParameters, timeout=10, **kwargs):
+        """Starts a background loop to copmute packing formation.
+
+        Args:
+            packingParameters (SingleSKUPackFormationParameters): The packing parameters. Includes the container (pallet/cage) type and over/underhang.
+            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+        """
+        taskparameters = {
+            'command': 'StartSingleSkuPackFormationComputationThread',
+            'packingParameters': packingParameters
+        }
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def StopPackFormationComputationThread(self, timeout=10, fireandforget=False, **kwargs):
         """Stops the packing computation thread thread started with StartPackFormationComputationThread
 
