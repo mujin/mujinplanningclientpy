@@ -56,7 +56,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
 
-    def StartSingleSkuPackFormationComputationThread(self, packingParameters, timeout=10, **kwargs):
+    def StartSingleSkuPackFormationComputationThread(self, packingParameters, packLocationName, toolname=None, timeout=10, **kwargs):
         """Starts a background loop to copmute packing formation.
 
         Args:
@@ -65,10 +65,11 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         """
         taskparameters = {
             'command': 'StartSingleSkuPackFormationComputationThread',
-            'packingParameters': packingParameters
+            'packingParameters': packingParameters,
+            'packLocationName': packLocationName
         }
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
 
     def StopPackFormationComputationThread(self, timeout=10, fireandforget=False, **kwargs):
         """Stops the packing computation thread thread started with StartPackFormationComputationThread
