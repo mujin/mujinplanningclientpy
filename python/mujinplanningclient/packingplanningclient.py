@@ -5,6 +5,10 @@
 # mujin imports
 from . import realtimerobotplanningclient
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from typing import Any, Optional
+
 # logging
 import logging
 log = logging.getLogger(__name__)
@@ -56,15 +60,18 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
 
-    def StartSingleSkuPackFormationComputationThread(self, packingParameters, packLocationName, toolname=None, timeout=10, **kwargs):
+    def GenerateSingleSKUPackFormation(self, packingParameters, packLocationName, toolname=None, timeout=None, **kwargs):
+        # type: (dict[str, Any], str, Optional[str], Optional[float], Any) -> dict[str, Any]
         """Starts a background loop to copmute packing formation.
 
         Args:
             packingParameters (SingleSKUPackFormationParameters): The packing parameters. Includes the container (pallet/cage) type and over/underhang.
+            packLocationName (str): The location to try to palletize.
+            toolname (str, optional): The tool to assume for reachability checking. Defaults to the active manipulator.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
         """
         taskparameters = {
-            'command': 'StartSingleSkuPackFormationComputationThread',
+            'command': 'GenerateSingleSKUPackFormation',
             'packingParameters': packingParameters,
             'packLocationName': packLocationName
         }
