@@ -60,20 +60,22 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
 
-    def GenerateSingleSKUPackFormation(self, packingParameters, packLocationName, toolname=None, timeout=None, **kwargs):
-        # type: (dict[str, Any], str, Optional[str], Optional[float], Any) -> dict[str, Any]
+    def StartSingleSKUPackFormation(
+        self, userPackFormationComputationParameters, systemState, toolname=None, timeout=None, **kwargs
+    ):
+        # type: (dict[str, Any], dict[str, Any], Optional[str], Optional[float], Any) -> None
         """Starts a background loop to copmute packing formation.
 
         Args:
-            packingParameters (SingleSKUPackFormationParameters): The packing parameters. Includes the container (pallet/cage) type and over/underhang.
-            packLocationName (str): The location to try to palletize.
+            userPackFormationComputationParameters (PackFormationComputationParameters): The packing parameters.
+            systemState (dict[str, str]): The system state; provides the location and part type.
             toolname (str, optional): The tool to assume for reachability checking. Defaults to the active manipulator.
-            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
+            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: unchecked.)
         """
         taskparameters = {
-            'command': 'GenerateSingleSKUPackFormation',
-            'packingParameters': packingParameters,
-            'packLocationName': packLocationName
+            "command": "StartSingleSKUPackFormation",
+            "userPackFormationComputationParameters": userPackFormationComputationParameters,
+            "systemState": systemState,
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
