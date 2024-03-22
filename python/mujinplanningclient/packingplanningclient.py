@@ -205,4 +205,23 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         taskparameters = {'command': 'GetPackingState'}
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-    
+
+    def ValidatePackFormation(
+        self,
+        packFormation=None,
+        validationSettings=None,
+        **kwargs
+    ):
+        """Validates the pack formation.
+
+        Args:
+            packFormation (packFormationComputationResultType): A result of a pack formation computation.
+            validationSettings (dict): Parameters for the validation.
+        """
+        taskparameters = {
+            'command': 'ValidatePackFormation',
+            'packFormation': packFormation,
+            'validationSettings': validationSettings,
+        }
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters)
