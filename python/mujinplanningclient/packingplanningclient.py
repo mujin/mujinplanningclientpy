@@ -64,7 +64,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         self,
         userPackFormationComputationParameters,
         systemState,
-        toolname=None,
+        toolName=None,
         patternName=None,
         timeout=None,
         **kwargs
@@ -75,7 +75,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         Args:
             userPackFormationComputationParameters (PackFormationComputationParameters): The packing parameters.
             systemState (dict[str, str]): The system state; provides the location and part type.
-            toolname (str, optional): The tool to assume for reachability checking. Defaults to the active manipulator.
+            toolName (str, optional): The tool to assume for reachability checking. Defaults to the active manipulator.
             patternName (str, optional): The pattern to override the parameters with. Defaults to no override.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: unchecked.)
         """
@@ -86,7 +86,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             "patternName": patternName,
         }
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, toolname=toolName, timeout=timeout)
 
     def StopPackFormationComputationThread(self, timeout=10, fireandforget=False, **kwargs):
         """Stops the packing computation thread thread started with StartPackFormationComputationThread
