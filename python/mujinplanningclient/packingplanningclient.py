@@ -61,21 +61,29 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
 
     def StartSingleSKUPackFormation(
-        self, userPackFormationComputationParameters, systemState, toolname=None, timeout=None, **kwargs
+        self,
+        userPackFormationComputationParameters,
+        systemState,
+        toolname=None,
+        patternName=None,
+        timeout=None,
+        **kwargs
     ):
-        # type: (dict[str, Any], dict[str, Any], Optional[str], Optional[float], Any) -> None
+        # type: (dict[str, Any], dict[str, Any], Optional[str], Optional[str], Optional[float], Any) -> None
         """Starts a background loop to copmute packing formation.
 
         Args:
             userPackFormationComputationParameters (PackFormationComputationParameters): The packing parameters.
             systemState (dict[str, str]): The system state; provides the location and part type.
             toolname (str, optional): The tool to assume for reachability checking. Defaults to the active manipulator.
+            patternName (str, optional): The pattern to override the parameters with. Defaults to no override.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: unchecked.)
         """
         taskparameters = {
             "command": "StartSingleSKUPackFormation",
             "userPackFormationComputationParameters": userPackFormationComputationParameters,
             "systemState": systemState,
+            "patternName": patternName,
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
