@@ -60,7 +60,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
 
-    def StartSingleSKUPackFormation(
+    def StartSingleSKUPackFormationComputation(
         self,
         userPackFormationComputationParameters,  # type: dict[str, Any]
         systemState,  # type: dict[str, Any]
