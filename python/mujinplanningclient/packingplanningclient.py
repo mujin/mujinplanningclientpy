@@ -62,14 +62,13 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
 
     def StartSingleSKUPackFormation(
         self,
-        userPackFormationComputationParameters,
-        systemState,
-        toolName=None,
-        patternName=None,
-        timeout=None,
-        **kwargs
-    ):
-        # type: (dict[str, Any], dict[str, Any], Optional[str], Optional[str], Optional[float], Any) -> None
+        userPackFormationComputationParameters,  # type: dict[str, Any]
+        systemState,  # type: dict[str, Any]
+        toolName=None,  # type: Optional[str]
+        patternName=None,  # type: Optional[str]
+        timeout=None,  # type: Optional[float]
+        **kwargs  # type: Any
+    ):  # type: (...) -> None
         """Starts a background loop to copmute packing formation.
 
         Args:
