@@ -135,7 +135,9 @@ class PlanningClient(object):
             self.controllerurl, self.controllerusername, self.controllerpassword, self.controllerIp = ParseControllerInfo(controllerurl, controllerusername, controllerpassword)
 
         self._userinfo = {
+            'url': self.controllerurl,
             'username': self.controllerusername,
+            'password': self.controllerpassword,
             'locale': os.environ.get('LANG', ''),
         }
 
