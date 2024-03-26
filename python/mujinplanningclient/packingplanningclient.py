@@ -79,7 +79,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: unchecked.)
         """
         taskparameters = {
-            "command": "StartSingleSKUPackFormation",
+            "command": "StartSingleSKUPackFormationComputation",
             "userPackFormationComputationParameters": userPackFormationComputationParameters,
             "systemState": systemState,
             "patternName": patternName,
