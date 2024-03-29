@@ -101,9 +101,9 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             toolname (str, optional): Name of the manipulator. Default: self.toolname
             timeout (float, optional):  (Default: 10)
             fireandforget (bool, optional):  (Default: False)
-            blockwait (bool, optional): (Default: True)
             robotspeed (float, optional):
             forcereload (bool): If True, then force re-load the scene before executing the task.
+            blockwait (bool, optional): (Default: True)
 
         Returns:
             dict: Contains:
