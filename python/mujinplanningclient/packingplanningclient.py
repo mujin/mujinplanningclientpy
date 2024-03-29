@@ -41,20 +41,21 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         """
         super(PackingPlanningClient, self).__init__(tasktype=self.tasktype, **kwargs)
 
-    def StartPackFormationComputationThread(self, timeout=10, debuglevel=4, toolname=None, **kwargs):
+    def StartPackFormationComputationThread(self, timeout=10, debuglevel=4, toolname=None, fireandforget=False, **kwargs):
         """Starts a background loop to copmute packing formation.
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             debuglevel (int, optional): Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE. (Default: 4)
             toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
         taskparameters = {
             'command': 'StartPackFormationComputationThread',
             'debuglevel': debuglevel,
         }
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout, fireandforget=fireandforget)
 
     def StopPackFormationComputationThread(self, timeout=10, fireandforget=False, blockwait=True, **kwargs):
         """Stops the packing computation thread thread started with StartPackFormationComputationThread
