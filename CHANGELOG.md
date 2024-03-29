@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Add master functions TerminateSlaves, CancelSlaves, Quit
+- Add support for async command call for specific functions in  `PackingPlanningClient`
 
 ## 0.3.1 (2024-02-28)
 
