@@ -9,7 +9,6 @@ from . import realtimerobotplanningclient
 import logging
 log = logging.getLogger(__name__)
 
-
 class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningClient):
     """Mujin planning client for the Packing task"""
     tasktype = 'packing'
