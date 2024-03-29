@@ -64,7 +64,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
-            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse(Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
         """
         taskparameters = {
             'command': 'StopPackFormationComputationThread',
@@ -78,7 +78,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
-            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse(Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
         """
         taskparameters = {
             'command': 'VisualizePackingState',
@@ -92,7 +92,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
-            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse(Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
         """
         taskparameters = {
             'command': 'GetPackFormationSolution',
@@ -106,7 +106,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
-            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse(Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
         """
         taskparameters = {
             'command': 'SendPackFormationComputationResult',
@@ -120,7 +120,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
-            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse(Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
         """
         taskparameters = {
             'command': 'GetLatestPackFormationResultList',
@@ -137,7 +137,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             packFormationResultList:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
-            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse(Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
 
         Returns:
             dict: A dictionary with the structure:
@@ -185,7 +185,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
-            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse(Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
         """
         taskparameters = {'command': 'GetPackingState'}
         taskparameters.update(kwargs)
