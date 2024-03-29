@@ -42,7 +42,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         """
         super(PackingPlanningClient, self).__init__(tasktype=self.tasktype, **kwargs)
 
-    def StartPackFormationComputationThread(self, timeout=10, debuglevel=4, toolname=None, fireandforget=False, **kwargs):
+    def StartPackFormationComputationThread(self, timeout=10, debuglevel=4, toolname=None, fireandforget=False, blockwait=True, **kwargs):
         """Starts a background loop to copmute packing formation.
 
         Args:
@@ -50,13 +50,14 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             debuglevel (int, optional): Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE. (Default: 4)
             toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
         """
         taskparameters = {
             'command': 'StartPackFormationComputationThread',
             'debuglevel': debuglevel,
         }
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout, fireandforget=fireandforget)
+        return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
 
     def StopPackFormationComputationThread(self, timeout=10, fireandforget=False, blockwait=True, **kwargs):
         """Stops the packing computation thread thread started with StartPackFormationComputationThread
