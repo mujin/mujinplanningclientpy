@@ -237,7 +237,7 @@ class PlanningClient(object):
     # Tasks related
     #
 
-    def ExecuteCommand(self, taskparameters, slaverequestid=None, timeout=None, fireandforget=None, respawnopts=None, checkpreempt=True, forcereload=False, blockwait=True):
+    def ExecuteCommand(self, taskparameters, slaverequestid=None, timeout=None, fireandforget=None, blockwait=True, respawnopts=None, checkpreempt=True, forcereload=False):
         """Executes command with taskparameters via ZMQ.
 
         Args:
@@ -274,7 +274,7 @@ class PlanningClient(object):
                 taskparameters['callerid'] = self._callerid
         if self.tasktype == 'binpicking':
             command['fnname'] = '%s.%s' % (self.tasktype, command['fnname'])
-        response = self._commandsocket.SendCommand(command, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt, blockwait=blockwait)
+        response = self._commandsocket.SendCommand(command, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait, checkpreempt=checkpreempt)
 
         if not blockwait or fireandforget:
             # For fire and forget commands, no response will be available
