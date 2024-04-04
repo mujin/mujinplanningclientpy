@@ -66,6 +66,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         systemState,  # type: dict[str, Any]
         toolName=None,  # type: Optional[str]
         patternName=None,  # type: Optional[str]
+        packContainerType=None,  # type: Optional[str]
         timeout=None,  # type: Optional[float]
         **kwargs  # type: Any
     ):  # type: (...) -> None
@@ -76,6 +77,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             systemState (dict[str, str]): The system state; provides the location and part type.
             toolName (str, optional): The tool to assume for reachability checking. Defaults to the active manipulator.
             patternName (str, optional): The pattern to override the parameters with. Defaults to no override.
+            packContainerType (str, optional): Container type to use for the pack formation computation.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: unchecked.)
         """
         taskparameters = {
@@ -83,6 +85,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             "userPackFormationComputationParameters": userPackFormationComputationParameters,
             "systemState": systemState,
             "patternName": patternName,
+            "packContainerType": packContainerType,
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolName, timeout=timeout)
