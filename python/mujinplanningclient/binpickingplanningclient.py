@@ -628,17 +628,17 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, fireandforget=fireandforget)
 
-    def ManuallyPlacePackItem(self, packFormationComputationResult=None, inputPartIndex=None, placeLocationNames=None, placedTargetPrefix=None, dynamicGoalsGeneratorParameters=None, orderNumber=None, numLeftToPick=None, timeout=10, fireandforget=False):
+    def ManuallyPlacePackItem(self, packFormationComputationResult=None, inputPartIndex=None, placeLocationNames=None, placedTargetPrefix=None, packFormationParameters=None, orderNumber=None, numLeftToPick=None, timeout=10, fireandforget=False):
         """Places an item according to the pack formation assuming the item is placed manually and updates robotbridge state
 
         Args:
-            packFormationComputationResult:
-            inputPartIndex:
-            placeLocationNames:
-            placedTargetPrefix:
-            dynamicGoalsGeneratorParameters:
-            orderNumber:
-            numLeftToPick:
+            packFormationComputationResult (json): Pack formation that we try to follow.
+            inputPartIndex (int): Index of the item from packFormationComputationResult (1-based)
+            placeLocationNames (list(str)): Place location names of the order request.
+            placedTargetPrefix (str): Name prefix of items placed to the desired place location.
+            packFormationParameters (json): Placement parameters that should be used to generate final placement position of the item.
+            orderNumber (int, optional): Number of items that should be placed as a part of the order.
+            numLeftToPick (int, optional): Number of items remaining to be picked as a part of the order.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
@@ -652,10 +652,8 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['orderNumber'] = orderNumber
         if numLeftToPick is not None:
             taskparameters['numLeftToPick'] = numLeftToPick
-        if numLeftToPick is not None:
-            taskparameters['numLeftToPick'] = numLeftToPick
         if placedTargetPrefix:
             taskparameters['placedTargetPrefix'] = placedTargetPrefix
-        if dynamicGoalsGeneratorParameters is not None:
-            taskparameters['dynamicGoalsGeneratorParameters'] = dynamicGoalsGeneratorParameters
+        if packFormationParameters is not None:
+            taskparameters['packFormationParameters'] = packFormationParameters
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
