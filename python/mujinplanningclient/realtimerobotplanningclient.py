@@ -87,7 +87,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         self._robotaccelmult = robotaccelmult
 
-    def ExecuteCommand(self, taskparameters, robotname=None, toolname=None, robotspeed=None, robotaccelmult=None, envclearance=None, timeout=10, fireandforget=False, respawnopts=None, forcereload=False):
+    def ExecuteCommand(self, taskparameters, robotname=None, toolname=None, robotspeed=None, robotaccelmult=None, envclearance=None, timeout=10, fireandforget=False, respawnopts=None, forcereload=False, blockwait=True):
         """Wrapper to ExecuteCommand with robot info specified in taskparameters.
 
         Executes a command in the task.
@@ -103,6 +103,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             fireandforget (bool, optional):  (Default: False)
             robotspeed (float, optional):
             forcereload (bool): If True, then force re-load the scene before executing the task.
+            blockwait (bool, optional): (Default: True)
 
         Returns:
             dict: Contains:
@@ -147,7 +148,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             if envclearance is not None:
                 taskparameters['envclearance'] = envclearance
 
-        return super(RealtimeRobotPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, respawnopts=respawnopts, forcereload=forcereload)
+        return super(RealtimeRobotPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, respawnopts=respawnopts, forcereload=forcereload, blockwait=blockwait)
 
     #
     # Commands

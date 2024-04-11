@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningClient):
     """Mujin planning client for the Packing task"""
     tasktype = 'packing'
-    
+
     def __init__(self, **kwargs):
         """Connects to the Mujin controller, initializes Packing task and sets up parameters
 
@@ -40,88 +40,95 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             ignoredArgs: Additional keyword args are not used, but allowed for easy initialization from a dictionary
         """
         super(PackingPlanningClient, self).__init__(tasktype=self.tasktype, **kwargs)
-    
-    def StartPackFormationComputationThread(self, timeout=10, debuglevel=4, toolname=None, **kwargs):
+
+    def StartPackFormationComputationThread(self, timeout=10, debuglevel=4, toolname=None, fireandforget=False, blockwait=True, **kwargs):
         """Starts a background loop to copmute packing formation.
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             debuglevel (int, optional): Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE. (Default: 4)
             toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
+            fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
         """
         taskparameters = {
             'command': 'StartPackFormationComputationThread',
             'debuglevel': debuglevel,
         }
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
 
-    def StopPackFormationComputationThread(self, timeout=10, fireandforget=False, **kwargs):
+    def StopPackFormationComputationThread(self, timeout=10, fireandforget=False, blockwait=True, **kwargs):
         """Stops the packing computation thread thread started with StartPackFormationComputationThread
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
         """
         taskparameters = {
             'command': 'StopPackFormationComputationThread',
         }
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
 
-    def VisualizePackingState(self, timeout=10, fireandforget=False, **kwargs):
+    def VisualizePackingState(self, timeout=10, fireandforget=False, blockwait=True, **kwargs):
         """Stops the packing computation thread thread started with StartPackFormationComputationThread
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
         """
         taskparameters = {
             'command': 'VisualizePackingState',
         }
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-    
-    def GetPackFormationSolution(self, timeout=10, fireandforget=False, **kwargs):
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
+
+    def GetPackFormationSolution(self, timeout=10, fireandforget=False, blockwait=True, **kwargs):
         """Stops the packing computation thread thread started with StartPackFormationComputationThread
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
         """
         taskparameters = {
             'command': 'GetPackFormationSolution',
         }
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-    
-    def SendPackFormationComputationResult(self, timeout=10, fireandforget=False, **kwargs):
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
+
+    def SendPackFormationComputationResult(self, timeout=10, fireandforget=False, blockwait=True, **kwargs):
         """Stops the packing computation thread thread started with StartPackFormationComputationThread
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
         """
         taskparameters = {
             'command': 'SendPackFormationComputationResult',
         }
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
 
-    def GetLatestPackFormationResultList(self, timeout=10, fireandforget=False, **kwargs):
+    def GetLatestPackFormationResultList(self, timeout=10, fireandforget=False, blockwait=True, **kwargs):
         """Gets latest pack formation computation result
 
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
         """
         taskparameters = {
             'command': 'GetLatestPackFormationResultList',
         }
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-    
-    def ValidatePackFormationResultList(self, packFormationResultList, timeout=10, fireandforget=False, **kwargs):
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
+
+    def ValidatePackFormationResultList(self, packFormationResultList, timeout=10, fireandforget=False, blockwait=True, **kwargs):
         """Validates pack formation result list and compute info (fillRatio, packageDimensions, packedItemsInfo, etc) about it.
 
         kwargs are expected to be packing parameters.
@@ -130,6 +137,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             packFormationResultList:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
 
         Returns:
             dict: A dictionary with the structure:
@@ -146,7 +154,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             'packFormationResultList': packFormationResultList,
         }
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
 
     def ComputeSamePartPackResultBySimulation(self, timeout=100, **kwargs):
         """Computes pack formation for single part type.
@@ -159,7 +167,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-    
+
     def HasDetectionObstacles(self, timeout=100, **kwargs):
         """Checks to see if the detection obstacles have all arrived.
 
@@ -171,14 +179,14 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-    
-    def GetPackingState(self, timeout=10, fireandforget=False, **kwargs):
+
+    def GetPackingState(self, timeout=10, fireandforget=False, blockwait=True, **kwargs):
         """
         Args:
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
+            blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
         """
         taskparameters = {'command': 'GetPackingState'}
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
-    
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
