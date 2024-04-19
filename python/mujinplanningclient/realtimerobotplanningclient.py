@@ -148,6 +148,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             if envclearance is not None:
                 taskparameters['envclearance'] = envclearance
 
+        log.error("Ready to go!")
+        log.error("Doing this: %s"%str(taskparameters))
         return super(RealtimeRobotPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, respawnopts=respawnopts, forcereload=forcereload, blockwait=blockwait)
 
     #
@@ -1151,7 +1153,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if startvalues is not None:
             taskparameters['startvalues'] = list(startvalues)
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
+        log.error('Robot name is %s', robotname)
+        return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout, robotname=robotname)
 
     def MoveJointsToPositionConfiguration(
         self,
