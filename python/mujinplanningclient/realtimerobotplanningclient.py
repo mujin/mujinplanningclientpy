@@ -150,6 +150,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
         log.error("Ready to go!")
         log.error("Doing this: %s"%str(taskparameters))
+        # robotaccelmult=robotaccelmult, timeout=20.0/min(robotaccelmult, robotspeedmult),
+        log.error('robotaccelmult is %s, robotspeed is %s', str(robotaccelmult), str(robotspeed))
+        #timeout = 20.0/min(robotaccelmult, robotspeed)
+        timeout = 2000.0
+        log.error('That made the timeout be %s', str(timeout))
         return super(RealtimeRobotPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, respawnopts=respawnopts, forcereload=forcereload, blockwait=blockwait)
 
     #
