@@ -29,7 +29,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             robotspeed (float, optional): Speed of the robot, e.g. 0.4
             robotaccelmult (float, optional): Optional multiplier for the robot acceleration.
             envclearance (float, optional): Environment clearance in millimeter, e.g. 20
-            robotBridgeConnectionInfo (str, optional): dict holding the connection info for the robot bridge.
+            robotBridgeConnectionIfnfo (str, optional): dict holding the connection info for the robot bridge.
             taskzmqport (int, optional): Port of the task's ZMQ server, e.g. 7110. (Default: 11000)
             taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher, e.g. 7111. (Default: 11001)
             taskheartbeattimeout (float, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
@@ -150,12 +150,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
         log.error("Ready to go!")
         log.error("Doing this: %s"%str(taskparameters))
-        # robotaccelmult=robotaccelmult, timeout=20.0/min(robotaccelmult, robotspeedmult),
         log.error('robotaccelmult is %s, robotspeed is %s', str(robotaccelmult), str(robotspeed))
-        #timeout = 20.0/min(robotaccelmult, robotspeed)
-        timeout = 2000.0
-        log.error('That made the timeout be %s', str(timeout))
-        return super(RealtimeRobotPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, respawnopts=respawnopts, forcereload=forcereload, blockwait=blockwait)
+        if robotaccelmult is None or robotspeed is None:
+            singleCalibrationTimeout = timeout
+        else:
+            singleCalibrationTimeout = 20.0 / min(robotaccelmult, robotspeed)
+        log.error('That made the timeout be %s seconds.', str(singleCalibrationTimeout))
+        return super(RealtimeRobotPlanningClient, self).ExecuteCommand(taskparameters, timeout=singleCalibrationTimeout, fireandforget=fireandforget, respawnopts=respawnopts, forcereload=forcereload, blockwait=blockwait)
 
     #
     # Commands
