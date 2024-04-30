@@ -64,9 +64,10 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
 
     def StartSingleSKUPackFormationComputation(
         self,
-        userPackFormationComputationParameters,  # type: dict[str, Any]
-        systemState,  # type: dict[str, Any]
-        toolName=None,  # type: Optional[str]
+        userPackFormationParameters,  # type: dict[str, Any]
+        locationName,  # type: str
+        partType,  # type: str
+        toolname=None,  # type: Optional[str]
         patternName=None,  # type: Optional[str]
         packContainerType=None,  # type: Optional[str]
         timeout=None,  # type: Optional[float]
@@ -75,22 +76,24 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         """Starts a background loop to copmute packing formation.
 
         Args:
-            userPackFormationComputationParameters (PackFormationComputationParameters): The packing parameters.
-            systemState (dict[str, str]): The system state; provides the location and part type.
-            toolName (str, optional): The tool to assume for reachability checking. Defaults to the active manipulator.
+            userPackFormationParameters (PackFormationComputationParameters): The packing parameters.
+            locationName (str): Which location to pack into
+            partType (str): Which partType from the database to use
+            toolname (str, optional): The tool to assume for reachability checking. Defaults to the active manipulator.
             patternName (str, optional): The pattern to override the parameters with. Defaults to no override.
             packContainerType (str, optional): Container type to use for the pack formation computation.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: unchecked.)
         """
         taskparameters = {
             "command": "StartSingleSKUPackFormationComputation",
-            "userPackFormationComputationParameters": userPackFormationComputationParameters,
-            "systemState": systemState,
+            "userPackFormationParameters": userPackFormationParameters,
+            'locationName': locationName,
+            'partType': partType,
             "patternName": patternName,
             "packContainerType": packContainerType,
         }
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, toolname=toolName, timeout=timeout)
+        return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
 
     def StopPackFormationComputationThread(self, timeout=10, fireandforget=False, blockwait=True, **kwargs):
         """Stops the packing computation thread thread started with StartPackFormationComputationThread
