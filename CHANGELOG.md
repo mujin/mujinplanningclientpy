@@ -1,6 +1,20 @@
 # Changelog
 
-## Unreleased
+## 0.3.4 (2024-04-01)
+
+### Changes
+
+- Pass controller url, username, and password in userinfo.
+
+## 0.3.3 (2024-03-29)
+
+### Changes
+
+- Add support for async command call for specific functions in `PackingPlanningClient`
+
+## 0.3.2 (2024-02-28)
+
+### Changes
 
 - Add master functions TerminateSlaves, CancelSlaves, Quit
 
