@@ -5,6 +5,10 @@
 # mujin imports
 from . import realtimerobotplanningclient
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from typing import Any, Optional
+
 # logging
 import logging
 log = logging.getLogger(__name__)
@@ -57,6 +61,39 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
+
+    def StartSingleSKUPackFormationComputation(
+        self,
+        userPackFormationParameters,  # type: dict[str, Any]
+        locationName,  # type: str
+        partType,  # type: str
+        toolname=None,  # type: Optional[str]
+        patternName=None,  # type: Optional[str]
+        packContainerType=None,  # type: Optional[str]
+        timeout=None,  # type: Optional[float]
+        **kwargs  # type: Any
+    ):  # type: (...) -> None
+        """Starts a background loop to copmute packing formation.
+
+        Args:
+            userPackFormationParameters (PackFormationComputationParameters): The packing parameters.
+            locationName (str): Which location to pack into
+            partType (str): Which partType from the database to use
+            toolname (str, optional): The tool to assume for reachability checking. Defaults to the active manipulator.
+            patternName (str, optional): The pattern to override the parameters with. Defaults to no override.
+            packContainerType (str, optional): Container type to use for the pack formation computation.
+            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: unchecked.)
+        """
+        taskparameters = {
+            "command": "StartSingleSKUPackFormationComputation",
+            "userPackFormationParameters": userPackFormationParameters,
+            'locationName': locationName,
+            'partType': partType,
+            "patternName": patternName,
+            "packContainerType": packContainerType,
+        }
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
 
     def StopPackFormationComputationThread(self, timeout=10, fireandforget=False, blockwait=True, **kwargs):
         """Stops the packing computation thread thread started with StartPackFormationComputationThread
@@ -190,3 +227,24 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         taskparameters = {'command': 'GetPackingState'}
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
+    
+    def ValidatePackFormation(
+        self,
+        packFormation=None,
+        validationSettings=None,
+        **kwargs
+    ):
+        """Validates the pack formation.
+
+        Args:
+            packFormation (packFormationComputationResultType): A result of a pack formation computation.
+            validationSettings (dict): Parameters for the validation.
+        """
+        taskparameters = {
+            'command': 'ValidatePackFormation',
+            'packFormation': packFormation,
+            'validationSettings': validationSettings,
+        }
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters)
+    
