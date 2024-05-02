@@ -659,3 +659,12 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         if dynamicGoalsGeneratorParameters is not None:
             taskparameters['dynamicGoalsGeneratorParameters'] = dynamicGoalsGeneratorParameters
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
+    def ToggleSourceContainerObservationMatrixVisualization(self, timeout=10, fireandforget=False):
+        """Toggles visualization of source container observation matrix in the viewer.
+        
+        """
+        taskparameters = {
+            'command': 'ToggleSourceContainerObservationMatrixVisualization'
+        }
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
