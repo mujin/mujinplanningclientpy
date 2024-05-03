@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.6 (2024-04-30)
+
+- rename to "StartValidatePackFormation" to be more consistent with the threading model.
+
+## 0.3.5 (2024-04-30)
+
+- remove systemState from StartSingleSKUPackFormationComputation
+
 ## 0.3.4 (2024-04-01)
 
 ### Changes
@@ -17,6 +25,12 @@
 ### Changes
 
 - Add master functions TerminateSlaves, CancelSlaves, Quit
+
+## 0.3.2 (2024-03-11)
+
+### Changes
+
+- Add `ValidatePackFormation` function.
 
 ## 0.3.1 (2024-02-28)
 
