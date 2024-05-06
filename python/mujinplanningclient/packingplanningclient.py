@@ -164,10 +164,10 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
-
-    def ValidatePackFormationResultList(self, packFormationResultList, timeout=10, fireandforget=False, blockwait=True, **kwargs):
+    
+    def StartValidatePackFormation(self, packFormationResultList, timeout=10, fireandforget=False, blockwait=True, **kwargs):
         """Validates pack formation result list and compute info (fillRatio, packageDimensions, packedItemsInfo, etc) about it.
-
+        
         kwargs are expected to be packing parameters.
 
         Args:
@@ -187,12 +187,12 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
                     - packFormationResult: Optional.
         """
         taskparameters = {
-            'command': 'ValidatePackFormationResultList',
+            'command': 'StartValidatePackFormation',
             'packFormationResultList': packFormationResultList,
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
-
+    
     def ComputeSamePartPackResultBySimulation(self, timeout=100, **kwargs):
         """Computes pack formation for single part type.
 
@@ -230,20 +230,18 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
     
     def ValidatePackFormation(
         self,
-        packFormation=None,
-        validationSettings=None,
+        packFormationResultList=None,
         **kwargs
     ):
         """Validates the pack formation.
 
         Args:
-            packFormation (packFormationComputationResultType): A result of a pack formation computation.
+            packFormationResultList (packFormationComputationResultType): A result of a pack formation computation.
             validationSettings (dict): Parameters for the validation.
         """
         taskparameters = {
             'command': 'ValidatePackFormation',
-            'packFormation': packFormation,
-            'validationSettings': validationSettings,
+            'packFormationResultList': packFormationResultList,
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters)

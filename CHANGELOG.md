@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.6 (2024-04-30)
+
+- rename to "StartValidatePackFormation" to be more consistent with the threading model.
+
 ## 0.3.5 (2024-04-30)
 
 - remove systemState from StartSingleSKUPackFormationComputation
