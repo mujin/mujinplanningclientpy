@@ -366,7 +366,7 @@ class PlanningClient(object):
         """
         return self.SendConfig({'command':'TerminateSlaves', 'slaverequestids':slaverequestids}, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
 
-    def CancelSlaves(self, slaverequestids, timeout=None, fireandforget=None, checkpreempt=True):
+    def CancelSlaves(self, slaverequestids, timeout=10, fireandforget=None, checkpreempt=True):
         """cancel the current commands on the slaves with specific slaverequestids
         """
         return self.SendConfig({'command':'cancel', 'slaverequestids':slaverequestids}, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
