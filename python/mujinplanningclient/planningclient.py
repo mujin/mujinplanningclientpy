@@ -362,12 +362,24 @@ class PlanningClient(object):
         return response['output']
     
     def TerminateSlaves(self, slaverequestids, timeout=None, fireandforget=None, checkpreempt=True):
-        """terminate slaves with specific slaverequestids
+        """ Terminate slaves with specific slaverequestids
+
+        Args:
+            slaverequestids (list[str]): list of slaverequestid corresponding to slaves to be terminated
+            timeout (float, optional): Time in seconds after which the command is assumed to have failed.
+            fireandforget (bool, optional): Whether we should return immediately after sending the command. If True, return value is None.
+            checkpreempt (bool, optional): If a preempt function should be checked during execution.
         """
         return self.SendConfig({'command':'TerminateSlaves', 'slaverequestids':slaverequestids}, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
 
     def CancelSlaves(self, slaverequestids, timeout=10, fireandforget=None, checkpreempt=True):
-        """cancel the current commands on the slaves with specific slaverequestids
+        """ Cancel the current commands on the slaves with specific slaverequestids
+
+        Args:
+            slaverequestids (list[str]): list of slaverequestid corresponding to slaves to be cancelled
+            timeout (float, optional): Time in seconds after which the command is assumed to have failed.
+            fireandforget (bool, optional): Whether we should return immediately after sending the command. If True, return value is None.
+            checkpreempt (bool, optional): If a preempt function should be checked during execution.
         """
         return self.SendConfig({'command':'cancel', 'slaverequestids':slaverequestids}, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
 
