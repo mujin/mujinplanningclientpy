@@ -17,6 +17,8 @@ from . import zmqclient
 from . import zmqsubscriber
 from . import zmq
 from . import json
+from . import PlanningClientError
+from . import _
 
 # Logging
 import logging
@@ -135,7 +137,9 @@ class PlanningClient(object):
             self.controllerurl, self.controllerusername, self.controllerpassword, self.controllerIp = ParseControllerInfo(controllerurl, controllerusername, controllerpassword)
 
         self._userinfo = {
+            'url': self.controllerurl,
             'username': self.controllerusername,
+            'password': self.controllerpassword,
             'locale': os.environ.get('LANG', ''),
         }
 
@@ -245,7 +249,7 @@ class PlanningClient(object):
 
         self._validationQueue.Add(commandPayload['taskparams']['taskparameters']['command'], commandPayload, returnValue)
 
-    def ExecuteCommand(self, taskparameters, slaverequestid=None, timeout=None, fireandforget=None, respawnopts=None, checkpreempt=True, forcereload=False):
+    def ExecuteCommand(self, taskparameters, slaverequestid=None, timeout=None, fireandforget=None, respawnopts=None, checkpreempt=True, forcereload=False, blockwait=True):
         """Executes command with taskparameters via ZMQ.
 
         Args:
@@ -283,25 +287,43 @@ class PlanningClient(object):
                 taskparameters['callerid'] = self._callerid
         if self.tasktype == 'binpicking':
             command['fnname'] = '%s.%s' % (self.tasktype, command['fnname'])
-        response = self._commandsocket.SendCommand(command, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
+        response = self._commandsocket.SendCommand(command, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt, blockwait=blockwait)
 
-        if fireandforget:
-            self._Validate(command, None)
+        if not blockwait or fireandforget:
             # For fire and forget commands, no response will be available
+            self._Validate(command, None)
             return None
+        return self._ProcessCommandResponse(response, command=command)
 
+    def WaitForCommandResponse(self, timeout=None, command=None):
+        """Waits for a response for a command sent on the RPC socket.
+
+        Args:
+            timeout: (Default: None)
+            command (dict, optional): Command sent to robotbridge (Default: None)
+
+        Raises:
+            PlanningClientError
+        """
+        assert self._commandsocket is not None
+        if not self._commandsocket.IsWaitingReply():
+            raise PlanningClientError(_('Waiting on command %s when wait signal is not on.') % command)
+        response = self._commandsocket.ReceiveCommand(timeout=timeout)
+        return self._ProcessCommandResponse(response, command=command)
+
+    def _ProcessCommandResponse(self, response, command=None):
         error = GetAPIServerErrorFromZMQ(response)
         if error is not None:
             log.warn('GetAPIServerErrorFromZMQ returned error for %r', response)
             raise error
         if response is None:
             self._Validate(command, None)
-            log.warn(u'got no response from task %r', taskparameters)
+            log.warn(u'got no response from command %r', command)
             return None
 
         self._Validate(command, response['output'])
         return response['output']
-        
+
     #
     # Config
     #

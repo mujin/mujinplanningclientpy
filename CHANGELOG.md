@@ -1,8 +1,48 @@
 # Changelog
 
-## Unreleased
+## 0.3.6 (2024-04-30)
+
+- rename to "StartValidatePackFormation" to be more consistent with the threading model.
+
+## 0.3.5 (2024-04-30)
+
+- remove systemState from StartSingleSKUPackFormationComputation
+
+## 0.3.4 (2024-04-01)
+
+### Changes
+
+- Pass controller url, username, and password in userinfo.
+
+## 0.3.3 (2024-03-29)
+
+### Changes
+
+- Add support for async command call for specific functions in `PackingPlanningClient`
+
+## 0.3.2 (2024-02-28)
+
+### Changes
 
 - Add master functions TerminateSlaves, CancelSlaves, Quit
+
+## 0.3.2 (2024-03-11)
+
+### Changes
+
+- Add `ValidatePackFormation` function.
+
+## 0.3.1 (2024-02-28)
+
+### Changes
+
+- Moved GetPackItemPoseInWorld from BinpickingPlanningClient to RealtimeRobotPlanningClient.
+
+## 0.3.0 (2024-02-24)
+
+### Changes
+
+- Add support for async command call.
 
 ## 0.1.6 (2023-06-09)
 

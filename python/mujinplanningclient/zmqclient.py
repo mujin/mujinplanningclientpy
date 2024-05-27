@@ -368,7 +368,11 @@ class ZmqClient(object):
                 if sendmultipart:
                     self._socket.send_multipart(command, zmq.NOBLOCK)
                 elif sendjson:
-                    self._socket.send_json(command, zmq.NOBLOCK)
+                    try:
+                        self._socket.send_json(command, zmq.NOBLOCK)
+                    except OverflowError as e:
+                        log.error('Failed sending command=%r: %s', command, e)
+                        raise
                 else:
                     self._socket.send(command, zmq.NOBLOCK)
 
