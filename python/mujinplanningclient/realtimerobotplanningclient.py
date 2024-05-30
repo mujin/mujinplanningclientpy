@@ -1239,6 +1239,37 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
 
+    def GetRobotConfigurationFromPositionName(
+        self,
+        positionConfigurationName,
+        robotname=None,
+        timeout=10,
+        **kwargs
+    ):
+        """
+        Returns DoF values for a position config stored in a robot model as a body parameter.
+        Assumes the environment to which the robot belongs is locked.
+
+        :param robot: Robot for which a position configuration is read
+        :param positionConfigurationName: str
+        :param checkArmJointValuesIncluded: bool, if one or more joint values for arm are missing from the config, an exception is thrown.
+        :param checkAllJointValuesIncluded: bool, if one or more joint values are missing from the config, an exception is thrown. When true, it is guaranteed that jointIndices will be identical to range(len(robot.GetJoints())).
+        :param checkCollision: bool, whether to perform check collision. If the position configuration is in collision, throw an exception.
+        :param checkCollisionWithGrabbedBodies: bool, if False, then ignores collision with the grabbed bodies. Only valid when checkCollision is True.
+        :return: dict of dofValues, dofIndices, and connectedBodyActiveStates to allow a robot state to be restored
+        """
+        taskparameters = {
+            'command': 'GetRobotConfigurationFromPositionName',
+            'positionConfigurationName': positionConfigurationName
+        }
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        if timeout:
+            taskparameters['timeout'] = timeout
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
+
+
     def GetRobotBridgeIOVariables(self, ioname=None, ionames=None, robotname=None, timeout=10, **kwargs):
         """Returns the data of the IO in ASCII hex as a string
 
