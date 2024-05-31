@@ -85,7 +85,7 @@ class ForceTorqueSensorCalibrationPlanningClient(RealtimeRobotPlanningClient):
     #
 
 
-    def ComputeCalibrationPoses(self, timeout=3000, **kwargs):
+    def StartCalibrationTrajectoriesComputation(self, timeout=3000, **kwargs):
         # type: (Optional[float], Any) -> Any
         """Compute a set of calibration poses
 
@@ -93,14 +93,14 @@ class ForceTorqueSensorCalibrationPlanningClient(RealtimeRobotPlanningClient):
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 3000)
         """
         taskparameters = {
-            'command': 'ComputeCalibrationPoses',
+            'command': 'StartCalibrationTrajectoriesComputation',
         }  # type: Dict[str, Any]
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetCalibrationPoseCalculationCompletionPercentage(self, timeout=3000, **kwargs):
+    def GetCalibrationTrajectoriesComputationProgress(self, timeout=3000, **kwargs):
         taskparameters = {
-            'command': 'GetCalibrationPoseCalculationCompletionPercentage',
+            'command': 'GetCalibrationTrajectoriesComputationProgress',
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
