@@ -97,3 +97,10 @@ class ForceTorqueSensorCalibrationPlanningClient(RealtimeRobotPlanningClient):
         }  # type: Dict[str, Any]
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
+    def GetCalibrationPoseCalculationCompletionPercentage(self, timeout=3000, **kwargs):
+        taskparameters = {
+            'command': 'GetCalibrationPoseCalculationCompletionPercentage',
+        }
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters, timeout=timeout)
