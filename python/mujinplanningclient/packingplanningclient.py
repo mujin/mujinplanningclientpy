@@ -61,37 +61,36 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
-
+    
     def StartSingleSKUPackFormationComputation(
         self,
-        userPackFormationParameters,  # type: dict[str, Any]
-        locationName,  # type: str
         partType,  # type: str
+        userPackFormationParameters=None,  # type: dict[str, Any]
         toolname=None,  # type: Optional[str]
         patternName=None,  # type: Optional[str]
-        packContainerType=None,  # type: Optional[str]
+        packLocationInfo=None,  # type: Optional[str]
         timeout=None,  # type: Optional[float]
         **kwargs  # type: Any
     ):  # type: (...) -> None
         """Starts a background loop to copmute packing formation.
-
+        
         Args:
             userPackFormationParameters (PackFormationComputationParameters): The packing parameters.
             locationName (str): Which location to pack into
             partType (str): Which partType from the database to use
             toolname (str, optional): The tool to assume for reachability checking. Defaults to the active manipulator.
             patternName (str, optional): The pattern to override the parameters with. Defaults to no override.
-            packContainerType (str, optional): Container type to use for the pack formation computation.
+            packLocationInfo (dict, optional): Information about the location/container packing to
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: unchecked.)
         """
         taskparameters = {
             "command": "StartSingleSKUPackFormationComputation",
             "userPackFormationParameters": userPackFormationParameters,
-            'locationName': locationName,
             'partType': partType,
             "patternName": patternName,
-            "packContainerType": packContainerType,
         }
+        if packLocationInfo:
+            taskparameters["packLocationInfo"] = packLocationInfo
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
     
