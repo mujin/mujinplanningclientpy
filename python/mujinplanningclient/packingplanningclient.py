@@ -94,11 +94,13 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         }
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
-
-    def StopPackFormationComputationThread(self, timeout=10, fireandforget=False, blockwait=True, **kwargs):
+    
+    def StopPackFormationComputationThread(self, finishStatus=None, finishMessage=None, timeout=10, fireandforget=False, blockwait=True, **kwargs):
         """Stops the packing computation thread thread started with StartPackFormationComputationThread
 
         Args:
+            finishStatus (str, optional): one of FinishX official statues to end the cycle with.
+            finishMessage (str, optional): finish message to end the cycle with.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
             blockwait (bool, optional): Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
@@ -106,6 +108,10 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         taskparameters = {
             'command': 'StopPackFormationComputationThread',
         }
+        if finishStatus:
+            taskparameters['finishStatus'] = finishStatus
+        if finishMessage:
+            taskparameters['finishMessage'] = finishMessage
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
 
