@@ -276,12 +276,7 @@ class PlanningClient(object):
                 taskparameters['callerid'] = self._callerid
         if self.tasktype == 'binpicking':
             command['fnname'] = '%s.%s' % (self.tasktype, command['fnname'])
-        log.error("Now in here and doing this: %s with timeout %s"%(str(command), str(timeout)))
-        import traceback
-        traceback.print_stack()
         response = self._commandsocket.SendCommand(command, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt, blockwait=blockwait)
-
-        log.error("Response: %s", str(response))
 
         if not blockwait or fireandforget:
             # For fire and forget commands, no response will be available
