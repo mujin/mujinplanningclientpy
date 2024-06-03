@@ -98,8 +98,14 @@ class ForceTorqueSensorCalibrationPlanningClient(RealtimeRobotPlanningClient):
         }  # type: Dict[str, Any]
         return super(ForceTorqueSensorCalibrationPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, **kwargs)
 
-    def GetCalibrationTrajectoriesComputationProgress(self, **kwargs):
+    def GetCalibrationTrajectoryInfos(self, **kwargs):
         taskparameters = {
-            'command': 'GetCalibrationTrajectoriesComputationProgress',
+            'command': 'GetCalibrationTrajectoryInfos',
+        }
+        return super(ForceTorqueSensorCalibrationPlanningClient, self).ExecuteCommand(taskparameters, **kwargs)
+
+    def GetCurrentStageInfo(self, **kwargs):
+        taskparameters = {
+            'command': 'GetCurrentStageInfo',
         }
         return super(ForceTorqueSensorCalibrationPlanningClient, self).ExecuteCommand(taskparameters, **kwargs)
