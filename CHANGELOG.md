@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.7 (2024-06-02)
+
+- Allow finishStatus/finishMessage to be specified for task StopX commands.
+
 ## 0.3.6 (2024-04-30)
 
 - rename to "StartValidatePackFormation" to be more consistent with the threading model.
