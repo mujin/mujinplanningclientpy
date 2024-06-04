@@ -98,6 +98,18 @@ class ForceTorqueSensorCalibrationPlanningClient(RealtimeRobotPlanningClient):
         }  # type: Dict[str, Any]
         return super(ForceTorqueSensorCalibrationPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, **kwargs)
 
+    def StartCalibrationTrajectoryExecution(self, ftSensorLinkName, timeout=3000, **kwargs):
+        # type: (Optional[float], Any) -> Any
+        """Compute a set of calibration poses
+
+        Args:
+            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 3000)
+        """
+        taskparameters = {
+            'command': 'StartCalibrationTrajectoryExecution',
+        }  # type: Dict[str, Any]
+        return super(ForceTorqueSensorCalibrationPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, **kwargs)
+
     def GetCalibrationTrajectoryInfos(self, **kwargs):
         taskparameters = {
             'command': 'GetCalibrationTrajectoryInfos',
