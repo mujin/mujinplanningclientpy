@@ -118,6 +118,12 @@ class ForceTorqueSensorCalibrationPlanningClient(RealtimeRobotPlanningClient):
         }
         return super(ForceTorqueSensorCalibrationPlanningClient, self).ExecuteCommand(taskparameters, **kwargs)
 
+    def StartCalibrationTrajectoryExecution(self, **kwargs):
+        taskparameters = {
+            'command': 'StartCalibrationTrajectoryExecution'
+        }
+        return super(ForceTorqueSensorCalibrationPlanningClient, self).ExecuteCommand(taskparameters, **kwargs)
+
     def GetObservationInfos(self, **kwargs):
         taskparameters = {
             'command': 'GetObservationInfos',
