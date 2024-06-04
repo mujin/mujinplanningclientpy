@@ -98,7 +98,7 @@ class ForceTorqueSensorCalibrationPlanningClient(RealtimeRobotPlanningClient):
         }  # type: Dict[str, Any]
         return super(ForceTorqueSensorCalibrationPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, **kwargs)
 
-    def StartCalibrationTrajectoryExecution(self, ftSensorLinkName, timeout=3000, **kwargs):
+    def StartCalibrationTrajectoryExecution(self, robotspeedmult, robotaccelmult, timeout=3000, **kwargs):
         # type: (Optional[float], Any) -> Any
         """Compute a set of calibration poses
 
@@ -107,6 +107,8 @@ class ForceTorqueSensorCalibrationPlanningClient(RealtimeRobotPlanningClient):
         """
         taskparameters = {
             'command': 'StartCalibrationTrajectoryExecution',
+            'robotspeedmult': robotspeedmult,
+            'robotaccelmult': robotaccelmult,
         }  # type: Dict[str, Any]
         return super(ForceTorqueSensorCalibrationPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, **kwargs)
 
