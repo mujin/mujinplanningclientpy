@@ -7,6 +7,8 @@ Client to connect to Mujin Controller's planning server.
 # System imports
 import os
 import time
+import msgpack
+import six
 
 import zmq
 
@@ -25,25 +27,13 @@ from . import _
 import logging
 log = logging.getLogger(__name__)
 
-def GetAPIServerErrorFromZMQ(response):
+def _ParseAPIServerResponse(response):
     """If response is an error, return the APIServerError instantiated from the response's error field. Otherwise return None
     """
-    if response is None:
-        return None
-    
-    if 'error' in response:
-        if isinstance(response['error'], dict):
-            return APIServerError(response['error']['description'], response['error']['errorcode'], response['error'].get('inputcommand',None), response['error'].get('detailInfoType',None), response['error'].get('detailInfo',None))
-        
-        else:
-            return APIServerError(response['error'])
-    
-    elif 'exception' in response:
-        return APIServerError(response['exception'])
-    
-    elif 'status' in response and response['status'] != 'succeeded':
-        # something happened so raise exception
-        return APIServerError(u'Resulting status is %s' % response['status'])
+    assert len(response) == 2
+    if response[0] == b't':
+        return msgpack.unpackb(response[1], raw=False)
+    raise APIServerError(response[1])
 
 def ParseControllerInfo(controllerUrl, username, password):
     """Return controller URL, username, password, port and IP/hostname. This is done because the URL can contain the username and password information.
@@ -208,25 +198,31 @@ class PlanningClient(object):
     def DeleteJobs(self, timeout=5):
         """Cancels all jobs"""
         if self._configsocket is not None:
-            self.SendConfig({'command': 'cancel'}, timeout=timeout, fireandforget=False)
+            self.SendConfig({}, slaveRequest={'command': 'cancel'}, timeout=timeout, fireandforget=False)
 
     def GetPublishedServerState(self, timeout=2.0):
         """Return most recent published state. If publishing is disabled, then will return None
         """
-        if self._subscriber is None:
-            self._subscriber = zmqsubscriber.ZmqSubscriber('tcp://%s:%d' % (self.controllerIp, self.taskheartbeatport or (self.taskzmqport + 1)), ctx=self._ctx)
-        rawServerState = self._subscriber.SpinOnce(timeout=timeout)
-        if rawServerState is not None:
-            return json.loads(rawServerState)
-        return None
+        subscriber = zmqsubscriber.ZmqSubscriber('tcp://%s:%d' % (self.controllerIp, self.taskheartbeatport or (self.taskzmqport + 1)), ctx=self._ctx, conflate=False, topics={b'm'})
+        try:
+            rawMasterState = subscriber.SpinOnce(timeout=timeout)
+            if rawMasterState is not None:
+                return msgpack.unpackb(rawMasterState[1], raw=False)
+            return None
+        finally:
+            subscriber.Destroy()
 
     def GetPublishedTaskState(self, timeout=2.0):
         """Return most recent published state. If publishing is disabled, then will return None
         """
-        serverState = self.GetPublishedServerState(timeout=timeout)
-        if serverState is not None and 'slavestates' in serverState:
-            return serverState['slavestates'].get('slaverequestid-%s' % self._slaverequestid)
-        return None
+        subscriber = zmqsubscriber.ZmqSubscriber('tcp://%s:%d' % (self.controllerIp, self.taskheartbeatport or (self.taskzmqport + 1)), ctx=self._ctx, conflate=False, topics={b's' + six.ensure_binary(self._slaverequestid)})
+        try:
+            rawSlaveState = subscriber.SpinOnce(timeout=timeout)
+            if rawSlaveState is not None:
+                return msgpack.unpackb(rawSlaveState[1], raw=False)
+            return None
+        finally:
+            subscriber.Destroy()
     
     def SetScenePrimaryKey(self, scenepk):
         self.scenepk = scenepk
@@ -267,7 +263,6 @@ class PlanningClient(object):
                 'forcereload':forcereload,
             },
             'userinfo': self._userinfo,
-            'slaverequestid': slaverequestid,
             'stamp': time.time(),
             'respawnopts': respawnopts,
         }
@@ -277,12 +272,18 @@ class PlanningClient(object):
                 taskparameters['callerid'] = self._callerid
         if self.tasktype == 'binpicking':
             command['fnname'] = '%s.%s' % (self.tasktype, command['fnname'])
-        response = self._commandsocket.SendCommand(command, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt, blockwait=blockwait)
+
+        frames = (
+            msgpack.packb({'slaverequestid': slaverequestid}),
+            msgpack.packb(command),
+        )
+
+        response = self._commandsocket.SendCommand(frames, sendmultipart=True, recvmultipart=True, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt, blockwait=blockwait)
 
         if not blockwait or fireandforget:
             # For fire and forget commands, no response will be available
             return None
-        return self._ProcessCommandResponse(response, command=command)
+        return _ParseAPIServerResponse(response)
 
     def WaitForCommandResponse(self, timeout=None, command=None):
         """Waits for a response for a command sent on the RPC socket.
@@ -298,18 +299,7 @@ class PlanningClient(object):
         if not self._commandsocket.IsWaitingReply():
             raise PlanningClientError(_('Waiting on command %s when wait signal is not on.') % command)
         response = self._commandsocket.ReceiveCommand(timeout=timeout)
-        return self._ProcessCommandResponse(response, command=command)
-
-    def _ProcessCommandResponse(self, response, command=None):
-        error = GetAPIServerErrorFromZMQ(response)
-        if error is not None:
-            log.warn('GetAPIServerErrorFromZMQ returned error for %r', response)
-            raise error
-        if response is None:
-            log.warn(u'got no response from command %r', command)
-            return None
-
-        return response['output']
+        return _ParseAPIServerResponse(response)
 
     #
     # Config
@@ -327,7 +317,7 @@ class PlanningClient(object):
             dict: The 'output' field of the server response.
         """
         configuration['command'] = 'configure'
-        return self.SendConfig(configuration, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
+        return self.SendConfig({}, slaveRequest=configuration, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
     def SetLogLevel(self, componentLevels, fireandforget=None, slaverequestid=None, timeout=5):
         """Set planning log level.
@@ -343,7 +333,7 @@ class PlanningClient(object):
         }
         return self.SendConfig(configuration, timeout=timeout, fireandforget=fireandforget, slaverequestid=slaverequestid)
 
-    def SendConfig(self, command, slaverequestid=None, timeout=None, fireandforget=None, checkpreempt=True):
+    def SendConfig(self, command, slaveRequest=None, slaverequestid=None, timeout=None, fireandforget=None, checkpreempt=True):
         """Sends a config command via ZMQ to the planning server.
         """
         if slaverequestid is None:
@@ -351,26 +341,28 @@ class PlanningClient(object):
             
         command['slaverequestid'] = slaverequestid
         if self._callerid is not None:
-            command['callerid'] = self._callerid
-        response = self._configsocket.SendCommand(command, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
+            slaveRequest['callerid'] = self._callerid
+
+        frames = [msgpack.packb(command)]
+        if slaveRequest is not None:
+            frames.append(msgpack.packb(slaveRequest))
+
+        response = self._configsocket.SendCommand(frames, sendmultipart=True, recvmultipart=True, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
         if fireandforget:
             # For fire and forget commands, no response will be available
             return None
 
-        error = GetAPIServerErrorFromZMQ(response)
-        if error is not None:
-            raise error
-        return response['output']
+        return _ParseAPIServerResponse(response)
     
     def TerminateSlaves(self, slaverequestids, timeout=None, fireandforget=None, checkpreempt=True):
         """terminate slaves with specific slaverequestids
         """
-        return self.SendConfig({'command':'TerminateSlaves', 'slaverequestids':slaverequestids}, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
+        return self.SendConfig({'slaverequestids':slaverequestids}, slaveRequest={'command':'quit'}, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
 
     def CancelSlaves(self, slaverequestids, timeout=None, fireandforget=None, checkpreempt=True):
         """cancel the current commands on the slaves with specific slaverequestids
         """
-        return self.SendConfig({'command':'cancel', 'slaverequestids':slaverequestids}, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
+        return self.SendConfig({'slaverequestids':slaverequestids}, slaveRequest={'command':'cancel'}, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
 
     def Quit(self,timeout=None, fireandforget=None, checkpreempt=True):
         return self.SendConfig({'command':'quit'}, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt)
