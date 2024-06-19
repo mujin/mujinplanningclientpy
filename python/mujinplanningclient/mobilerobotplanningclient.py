@@ -15,29 +15,16 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
         kwargs['tasktype'] = self.tasktype # override task type
         super(MobileRobotPlanningClient, self).__init__(**kwargs)
 
-    # TODO: Adding optional parameters only for dev purpose, should be spreaded out to arg list.
-    def ManageMobileRobotTasks(self, tasks, slaverequestid=None, timeout=None, fireandforget=None, respawnopts=None, checkpreempt=True, forcereload=False, blockwait=True, **kwargs):
+    def ManageMobileRobotTasks(self, tasks, timeout=None, fireandforget=None, checkpreempt=True, blockwait=True, **kwargs):
         """
         This function will initialize the planning thread if it's not started.
-        If the robotBridgeConnectionInfo is not set to use=True, no robot movement will occur as
-        there will be no way to fetch updated information from the robot bridge server.
+
         Arguments:
-            tasks (list[dict]): list of MobileRobotTask.
-            robotBridgeConnectionInfo: specified as a dictionary with the following fields:
-                use: bool: Whether the planning task should connect to robot bridges. Defaults to false.
-                host: string: Hostname of the robot bridge server to communicate with
-                port: string: Port of the robot bridge server to communicate with
-                queueid: string: Name of the queue ID to use. Defaults to the slave request id.
-            chargingParameters: specified as a dictionary with the following fields:
-                minimumChargeTimeS: int: A robot that begins charging will always charge for at least this duration
-                lowPowerThresholdPercent: Battery percentage [0, 100) below which a robot will be considered for charging
-                sufficientPowerThresholdPercent: Battery percentage [0, 100) above which a robot will yield a charger to another robot
-                highPowerThresholdPercent: Battery percentage [0, 100) above which a robot will disengage from the charger
-            saveDebugResourcesEveryPlanningLoop: bool, true to save debug resources every re-planning loop.
+            tasks (list[dict]): list of MobileRobotTask changes.
         """
         taskparameters = {
             'command': 'ManageMobileRobotTasks',
             'tasks': tasks,
         }
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, slaverequestid=slaverequestid, timeout=timeout, fireandforget=fireandforget, respawnopts=respawnopts, checkpreempt=checkpreempt, forcereload=forcereload, blockwait=blockwait)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt, blockwait=blockwait)
