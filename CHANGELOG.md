@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0 (2024-06-19)
+
+- Add `mobilerobotplanningclient`.
+
 ## 0.4.0 (2024-06-19)
 
 - Divide the planning client and ZMQ client into separate repositories.
