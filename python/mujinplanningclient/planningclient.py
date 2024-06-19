@@ -8,14 +8,15 @@ Client to connect to Mujin Controller's planning server.
 import os
 import time
 
+import zmq
+
 # Mujin imports
 from mujinwebstackclient import APIServerError
 from mujinwebstackclient import urlparse
 from mujinwebstackclient.webstackclient import GetURIFromPrimaryKey, GetFilenameFromURI
 
-from . import zmqclient
-from . import zmqsubscriber
-from . import zmq
+from mujinzmqclient import zmqclient, zmqsubscriber
+
 from . import json
 from . import PlanningClientError
 from . import _
