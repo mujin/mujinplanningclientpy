@@ -652,7 +652,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             'command': 'ManuallyPlacePackItem',
             'packFormationComputationResult': packFormationComputationResult,
             'inputPartIndex': inputPartIndex,
-            'placeLocationNames': placeLocationNames
+            'placeLocationNames': placeLocationNames,
         }
         if orderNumber is not None:
             taskparameters['orderNumber'] = orderNumber
