@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0 (2024-06-19)
+
+- Divide the planning client and ZMQ client into separate repositories.
+
 ## 0.3.7 (2024-06-02)
 
 - Allow finishStatus/finishMessage to be specified for task StopX commands.
