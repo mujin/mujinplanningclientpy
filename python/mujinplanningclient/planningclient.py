@@ -283,6 +283,12 @@ class PlanningClient(object):
             return None
         return self._ProcessCommandResponse(response, command=command)
 
+    def IsWaitingResponse(self):
+        # type: () -> bool
+        """Returns whether the client is waiting for response on the command socket, and caller should call WaitForCommandResponse().
+        """
+        return self._commandsocket.IsWaitingReply()
+
     def WaitForCommandResponse(self, timeout=None, command=None):
         """Waits for a response for a command sent on the RPC socket.
 
