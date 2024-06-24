@@ -1,24 +1,26 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2012-2023 Mujin, Inc.
+# AUTO GENERATED FILE! DO NOT EDIT!
 
 # system imports
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Tuple, Union # noqa: F401 # used in type check
-    from . import zmq
+    import handeyecalibrationplanningclient_types as types
 
 # mujin imports
-from .realtimerobotplanningclient import RealtimeRobotPlanningClient
+from . import zmq
+from . import realtimerobotplanningclient
 
 # logging
 import logging
 log = logging.getLogger(__name__)
 
 
-class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
+class HandEyeCalibrationPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningClient):
     """Mujin planning client for the HandEyeCalibration task"""
 
-    tasktype = 'handeyecalibration'
+    robot = None  # type: str # type: ignore
 
     _deprecated = None # used to mark arguments as deprecated (set argument default value to this)
 
@@ -28,10 +30,11 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
         robotspeed=None,
         robotaccelmult=None,
         envclearance=10.0,
-        robotBridgeConnectionInfo=None, 
+        robotBridgeConnectionInfo=None,
         taskzmqport=11000,
         taskheartbeatport=11001,
         taskheartbeattimeout=7.0,
+        tasktype='handeyecalibration',
         ctx=None,
         slaverequestid=None,
         controllerip='',
@@ -42,7 +45,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
         callerid='',
         **ignoredArgs
     ):
-        # type: (Optional[str], Optional[float], Optional[float], float, Optional[str], int, int, float, Optional[zmq.Context], Optional[str], str, str, str, str, str, str, Any) -> None
+        # type: (str, int, int, float, str, Optional[zmq.Context], Optional[str], str, str, str, str, str, str, Any) -> None
         """Connects to the Mujin controller, initializes HandEyeCalibration task and sets up parameters
 
         Args:
@@ -54,6 +57,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             taskzmqport (int, optional): Port of the task's ZMQ server, e.g. 7110. (Default: 11000)
             taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher, e.g. 7111. (Default: 11001)
             taskheartbeattimeout (float, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
+            tasktype (str, optional): Type of the task, e.g. 'binpicking', 'handeyecalibration', 'itlrealtimeplanning3'. Default: handeyecalibration
             ctx (zmq.Context, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
             slaverequestid:
             controllerip (str): IP or hostname of the mujin controller, e.g. 172.17.0.2 or controller123
@@ -64,6 +68,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             callerid (str, optional): Caller identifier to send to server on every command
             ignoredArgs: Additional keyword args are not used, but allowed for easy initialization from a dictionary
         """
+        self.robot = robotname
         super(HandEyeCalibrationPlanningClient, self).__init__(
             robotname=robotname,
             robotspeed=robotspeed,
@@ -73,7 +78,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             taskzmqport=taskzmqport,
             taskheartbeatport=taskheartbeatport,
             taskheartbeattimeout=taskheartbeattimeout,
-            tasktype=self.tasktype,
+            tasktype=tasktype,
             ctx=ctx,
             slaverequestid=slaverequestid,
             controllerip=controllerip,
@@ -84,31 +89,33 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             callerid=callerid
         )
 
+    
 
     #
-    # Commands
+    # Commands (generated from the spec)
     #
 
-
-    def ComputeCalibrationPoses(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, numsamples, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, gridindex=None, toolname=None, calibboardObjectName=None, minPatternTiltAngle=None, maxPatternTiltAngle=None, dynamicEnvironmentState=None, robot=None, **kwargs):
-        # type: (Dict, List[Dict], int, Dict, Optional[str], Optional[str], float, Optional[int], Optional[str], Optional[str], Optional[float], Optional[float], Optional[List[Dict]], Optional[str], Any) -> Any
-        """Compute a set of calibration poses that satisfy the angle constraints using latin hypercube sampling (or stratified sampling upon failure)
+    def ComputeCalibrationPoses(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, numsamples, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, gridindex=None, toolname=None, calibboardObjectName=None, minPatternTiltAngle=None, maxPatternTiltAngle=None, dynamicEnvironmentState=None, robot=None, debuglevel=None, **kwargs):
+        # type: (types.SensorSelectionInfo, list[types.SensorSelectionInfo], int, types.ComputeCalibrationPosesParametersCalibboardvisibility, Optional[str], Optional[str], float, Optional[int], Optional[str], Optional[str], Optional[float], Optional[float], Optional[types.ComputeCalibrationPosesParametersDynamicEnvironmentState], Optional[str], Optional[int], Optional[Any]) -> Optional[Any]
+        """
+        Compute a set of calibration poses that satisfy the angle constraints using latin hypercube sampling (or stratified sampling upon failure)
 
         Args:
-            primarySensorSelectionInfo (dict): Selects the primary camera that everything will be calibrated against.
-            secondarySensorSelectionInfos (list[dict]): Selects the secondary camera(s) (assumed to be nearby the primary sensor).
-            numsamples (int): Number of samples to take. A reasonable number is often between 5 and 25.
-            calibboardvisibility (dict):
-            calibboardLinkName (str, optional):
-            calibboardGeomName (str, optional):
-            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 3000)
-            gridindex (int, optional): The index of the voxel
-            toolname (str, optional):
-            calibboardObjectName (str, optional):
-            minPatternTiltAngle (float, optional): The minimum tilt of the pattern in degrees. Default: 10 degrees
-            maxPatternTiltAngle (float, optional): The maximum tilt of the pattern in degrees. Default: 30 degrees
-            dynamicEnvironmentState (list[dict], optional): The dynamic objects in the environment that is to be used for planning/executing the task. A list of bodies.
-            robot (str, optional): The name of the robot (modelName). If not specified - the value used for client initialization will be applied.
+            primarySensorSelectionInfo: Selects the primary camera that everything will be calibrated against.
+            secondarySensorSelectionInfos: Selects the secondary camera(s) (assumed to be near the primary sensor).
+            numsamples: Number of samples to take. A reasonable number is often between 5 and 25.
+            calibboardvisibility:
+            calibboardLinkName: (Default: None)
+            calibboardGeomName: (Default: None)
+            timeout: Time in seconds after which the command is assumed to have failed. (Default: 3000)
+            gridindex: The index of the voxel (Default: None)
+            toolname: Name of the manipulator. Defaults to currently selected tool (Default: None)
+            calibboardObjectName: (Default: None)
+            minPatternTiltAngle: The minimum tilt of the pattern in degrees. Default: 10 degrees (Default: None)
+            maxPatternTiltAngle: The maximum tilt of the pattern in degrees. Default: 30 degrees (Default: None)
+            dynamicEnvironmentState: Dynamic environment state that allows the user to set/create objects in a particular state dynamically. (Default: None)
+            robot: The name of the robot (modelName). If not specified - the value used for client initialization will be applied. (Default: None)
+            debuglevel: Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE. (Default: None)
         """
         taskparameters = {
             'command': 'ComputeCalibrationPoses',
@@ -116,7 +123,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             'secondarySensorSelectionInfos': secondarySensorSelectionInfos,
             'numsamples': numsamples,
             'calibboardvisibility': calibboardvisibility,
-        }  # type: Dict[str, Any]
+        }  # type: dict[str, Any]
         if calibboardLinkName is not None:
             taskparameters['calibboardLinkName'] = calibboardLinkName
         if calibboardGeomName is not None:
@@ -133,36 +140,34 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             taskparameters['maxPatternTiltAngle'] = maxPatternTiltAngle
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
-        if self._robotname is not None:
-            taskparameters['robot'] = self._robotname
         if robot is not None:
             taskparameters['robot'] = robot
+        elif self.robot is not None:
+            taskparameters['robot'] = self.robot
+        if debuglevel is not None:
+            taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-
-    def SampleCalibrationConfiguration(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, gridindex, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, minPatternTiltAngle=None, maxPatternTiltAngle=None, toolname=None, calibboardObjectName=None, dynamicEnvironmentState=None, robot=None, **kwargs):
-        # type: (Dict, List[Dict], int, Dict, Optional[str], Optional[str], float, Optional[float], Optional[float], Optional[str], Optional[str], Optional[List[Dict]], Optional[str], Any) -> Optional[Dict[str, List[float]]]
-        """Sample a valid calibration pose inside the given voxel and find a corresponding IK solution.
+    def SampleCalibrationConfiguration(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, gridindex, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, minPatternTiltAngle=None, maxPatternTiltAngle=None, toolname=None, calibboardObjectName=None, dynamicEnvironmentState=None, robot=None, debuglevel=None, **kwargs):
+        # type: (types.SensorSelectionInfo, list[types.SensorSelectionInfo], int, types.SampleCalibrationConfigurationParametersCalibboardvisibility, Optional[str], Optional[str], float, Optional[float], Optional[float], Optional[str], Optional[str], Optional[types.SampleCalibrationConfigurationParametersDynamicEnvironmentState], Optional[str], Optional[int], Optional[Any]) -> Optional[types.SampleCalibrationConfigurationReturns]
+        """
+        Sample a valid calibration pose inside the given voxel and find a corresponding IK solution.
 
         Args:
-            primarySensorSelectionInfo (dict): Selects the primary camera that everything will be calibrated against.
-            secondarySensorSelectionInfos (list[dict]): Selects the secondary camera(s) (assumed to be nearby the primary sensor).
-            gridindex (int): The index of the voxel
-            calibboardvisibility (dict):
-            calibboardLinkName (str, optional):
-            calibboardGeomName (str, optional):
-            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 3000)
-            minPatternTiltAngle (float, optional): The minimum tilt of the pattern in degrees. Default: 10 degrees
-            maxPatternTiltAngle (float, optional): The maximum tilt of the pattern in degrees. Default: 30 degrees
-            toolname (str, optional):
-            calibboardObjectName (str, optional):
-            dynamicEnvironmentState (list[dict], optional): The dynamic objects in the environment that is to be used for planning/executing the task. A list of bodies.
-            robot (str, optional): The name of the robot (modelName). If not specified - the value used for client initialization will be applied.
-
-        Returns:
-            dict: A dictionary with the structure:
-
-                - vConfig (list[float]): The IK solution (joint angles) for the sample.
+            primarySensorSelectionInfo: Selects the primary camera that everything will be calibrated against.
+            secondarySensorSelectionInfos: Selects the secondary camera(s) (assumed to be near the primary sensor).
+            gridindex: The index of the voxel
+            calibboardvisibility:
+            calibboardLinkName: (Default: None)
+            calibboardGeomName: (Default: None)
+            timeout: Time in seconds after which the command is assumed to have failed. (Default: 3000)
+            minPatternTiltAngle: The minimum tilt of the pattern in degrees. Default: 10 degrees (Default: None)
+            maxPatternTiltAngle: The maximum tilt of the pattern in degrees. Default: 30 degrees (Default: None)
+            toolname: Name of the manipulator. Defaults to currently selected tool (Default: None)
+            calibboardObjectName: (Default: None)
+            dynamicEnvironmentState: Dynamic environment state that allows the user to set/create objects in a particular state dynamically. (Default: None)
+            robot: The name of the robot (modelName). If not specified - the value used for client initialization will be applied. (Default: None)
+            debuglevel: Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE. (Default: None)
         """
         taskparameters = {
             'command': 'SampleCalibrationConfiguration',
@@ -170,7 +175,7 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             'secondarySensorSelectionInfos': secondarySensorSelectionInfos,
             'gridindex': gridindex,
             'calibboardvisibility': calibboardvisibility,
-        }  # type: Dict[str, Any]
+        }  # type: dict[str, Any]
         if calibboardLinkName is not None:
             taskparameters['calibboardLinkName'] = calibboardLinkName
         if calibboardGeomName is not None:
@@ -185,10 +190,12 @@ class HandEyeCalibrationPlanningClient(RealtimeRobotPlanningClient):
             taskparameters['calibboardObjectName'] = calibboardObjectName
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
-        if self._robotname is not None:
-            taskparameters['robot'] = self._robotname
         if robot is not None:
             taskparameters['robot'] = robot
+        elif self.robot is not None:
+            taskparameters['robot'] = self.robot
+        if debuglevel is not None:
+            taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
