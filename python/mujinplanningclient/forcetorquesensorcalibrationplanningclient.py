@@ -131,3 +131,9 @@ class ForceTorqueSensorCalibrationPlanningClient(RealtimeRobotPlanningClient):
             'command': 'GetCurrentStageInfo',
         }
         return super(ForceTorqueSensorCalibrationPlanningClient, self).ExecuteCommand(taskparameters, **kwargs)
+
+    def ApplyCalibrationResultsToRobotModel(self, **kwargs):
+        taskparameters = {
+            'command': 'ApplyCalibrationResultsToRobotModel',
+        }
+        return super(ForceTorqueSensorCalibrationPlanningClient, self).ExecuteCommand(taskparameters, **kwargs)
