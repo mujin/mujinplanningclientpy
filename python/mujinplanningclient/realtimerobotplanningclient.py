@@ -5,7 +5,7 @@
 # system imports
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional, Tuple, Union # noqa: F401 # used in type check
+    from typing import Any, Dict, List, Optional, Tuple, Union, Literal # noqa: F401 # used in type check
     import realtimerobotplanningclient_types as types
 
 # mujin imports
@@ -221,6 +221,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetJointValues(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, executetimeout=10, **kwargs):
         # type: (float, Optional[types.GetJointValuesParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.GetJointValuesParametersRobotBridgeConnectionInfo], Optional[list[types.GetJointValuesParametersLocationCollisionInfosArrayElement]], float, Optional[Any]) -> Optional[types.GetJointValuesReturns]
         """
@@ -258,6 +259,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['executetimeout'] = executetimeout
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def MoveToolLinear(
         self,
         goaltype,  # type: Optional[str]
@@ -383,6 +385,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['moveStraightParams'] = moveStraightParams
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout, robotspeed=robotspeed)
+
     def MoveToHandPosition(
         self,
         goaltype,  # type: Optional[str]
@@ -637,6 +640,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['smootherParameters'] = smootherParameters
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, envclearance=envclearance, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
+
     def Grab(self, targetname, toolname=None, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, Optional[str], float, Optional[types.GrabParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -661,6 +665,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def Release(self, targetname, timeout=10, dynamicEnvironmentState=None, debuglevel=None, toolname=None, **kwargs):
         # type: (str, float, Optional[types.ReleaseParametersDynamicEnvironmentState], Optional[int], Optional[str], Optional[Any]) -> Optional[Any]
         """
@@ -685,6 +690,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['toolname'] = toolname
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetGrabbed(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, Optional[types.GetGrabbedParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.GetGrabbedReturns]
         """
@@ -704,6 +710,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetTransform(self, targetname, connectedBodyName='', linkName='', geometryName='', geometryPk='', unit='mm', timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, str, str, str, str, str, float, Optional[types.GetTransformParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.GetTransformReturns]
         """
@@ -743,6 +750,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetLinkParentInfo(self, objectName, linkName, unit='mm', timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, str, str, float, Optional[types.GetLinkParentInfoParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.GetLinkParentInfoReturns]
         """
@@ -769,6 +777,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def SetTransform(self, targetname, translation, unit='mm', rotationmat=None, quaternion=None, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, list[float], str, Optional[list[float]], Optional[list[float]], float, Optional[types.SetTransformParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -804,6 +813,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['quaternion'] = [1, 0, 0, 0]
             log.warn('No rotation is specified. Using identity quaternion.')
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetOBB(self, targetname, unit='mm', timeout=10, linkname=None, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, str, float, Optional[str], Optional[types.GetOBBParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.GetOBBReturns]
         """
@@ -834,6 +844,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetInnerEmptyRegionOBB(self, targetname, linkname=None, unit='mm', timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, Optional[str], str, float, Optional[types.GetInnerEmptyRegionOBBParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.GetInnerEmptyRegionOBBReturns]
         """
@@ -864,6 +875,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetInstObjectAndSensorInfo(self, instobjectnames=None, sensornames=None, unit='mm', timeout=10, ignoreMissingObjects=None, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (Optional[list[str]], Optional[list[str]], str, float, Optional[bool], Optional[types.GetInstObjectAndSensorInfoParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -895,6 +907,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetInstObjectInfoFromURI(self, objecturi=None, unit='mm', timeout=10, instobjectpose=None, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (Optional[str], str, float, Optional[tuple[float, float, float, float, float, float, float]], Optional[types.GetInstObjectInfoFromURIParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.GetInstObjectInfoFromURIReturns]
         """
@@ -923,6 +936,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetAABB(self, targetname, unit='mm', timeout=10, linkname=None, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, str, float, Optional[str], Optional[types.GetAABBParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.GetAABBReturns]
         """
@@ -953,6 +967,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def SetLocationTracking(self, timeout=10, fireandforget=False, cycleIndex=None, locationReplaceInfos=None, removeLocationNames=None, minRobotBridgeTimeStampUS=None, dynamicObstacleBaseName=None, targetUpdateBaseName=None, ioSignalsInfo=None, unit='mm', dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, Optional[Any], Optional[Any], Optional[list[str]], Optional[int], Optional[str], Optional[str], Optional[types.SetLocationTrackingParametersIoSignalsInfoVariantItemPrefix0], str, Optional[types.SetLocationTrackingParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -997,6 +1012,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def ResetLocationTracking(self, timeout=10, fireandforget=False, resetAllLocations=None, resetLocationName=None, resetLocationNames=None, checkIdAndResetLocationName=None, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, Optional[bool], Optional[str], Optional[list[str]], Optional[Any], Optional[types.ResetLocationTrackingParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[list[str]]
         """
@@ -1032,6 +1048,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)['clearedLocationNames']
+
     def GetLocationTrackingInfos(self, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, Optional[types.GetLocationTrackingInfosParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.GetLocationTrackingInfosReturns]
         """
@@ -1055,6 +1072,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)['activeLocationTrackingInfos']
+
     def UpdateLocationContainerIdType(self, locationName, containerName, containerId, containerType, trackingCycleIndex=None, timeout=10, fireandforget=False, unit='mm', dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, str, Optional[str], str, Optional[str], float, bool, str, Optional[types.UpdateLocationContainerIdTypeParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -1089,6 +1107,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def ResetLocationTrackingContainerId(self, locationName, checkContainerId, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, str, float, bool, Optional[types.ResetLocationTrackingContainerIdParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -1113,6 +1132,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def RemoveObjectsWithPrefix(self, prefix=_deprecated, removeNamePrefixes=None, timeout=10, fireandforget=False, removeLocationNames=None, doRemoveOnlyDynamic=None, dynamicEnvironmentState=None, debuglevel=None, locationName=None, locationContainerId=None, imageStartTimeStampMS=None, callerid=None, robotname=None, envclearance=None, robotBridgeConnectionInfo=None, robotaccelmult=None, robotspeed=None, stamp=None, command=None, **kwargs):
         # type: (Optional[str], Optional[list[str]], float, bool, Optional[list[str]], Optional[bool], Optional[types.RemoveObjectsWithPrefixParametersDynamicEnvironmentState], Optional[int], Optional[str], Optional[Any], Optional[int], Optional[str], Optional[str], Optional[float], Optional[types.RemoveObjectsWithPrefixParametersRobotBridgeConnectionInfo], Optional[float], Optional[float], Optional[float], Optional[str], Optional[Any]) -> Optional[types.RemoveObjectsWithPrefixReturns]
         """
@@ -1176,6 +1196,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['command'] = command
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def GetTrajectoryLog(self, timeout=10, startindex=None, num=None, includejointvalues=False, dynamicEnvironmentState=None, debuglevel=None, saverawtrajectories=None, **kwargs):
         # type: (float, Optional[int], Optional[int], bool, Optional[types.GetTrajectoryLogParametersDynamicEnvironmentState], Optional[int], Optional[bool], Optional[Any]) -> Optional[types.GetTrajectoryLogReturns]
         """
@@ -1207,6 +1228,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['saverawtrajectories'] = saverawtrajectories
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def ChuckGripper(self, robotname=None, grippername=None, timeout=10, toolname=None, dynamicEnvironmentState=None, debuglevel=None, robotspeed=None, speed=_deprecated, robotaccelmult=None, ionames=None, **kwargs):
         # type: (Optional[str], str, float, Optional[str], Optional[types.ChuckGripperParametersDynamicEnvironmentState], Optional[int], Optional[float], Optional[Any], Optional[float], Optional[list[Any]], Optional[Any]) -> Optional[Any]
         """
@@ -1244,6 +1266,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def UnchuckGripper(self, robotname=None, grippername=None, timeout=10, targetname=None, toolname=None, pulloutdist=None, deletetarget=None, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, speed=_deprecated, robotaccelmult=None, ionames=None, releaseTargetData=None, useReleaseTargetData=None, **kwargs):
         # type: (Optional[str], str, float, Optional[str], Optional[str], Optional[float], Optional[int], Optional[types.UnchuckGripperParametersDynamicEnvironmentState], Optional[int], str, Optional[types.UnchuckGripperParametersRobotBridgeConnectionInfo], Optional[list[types.UnchuckGripperParametersLocationCollisionInfosArrayElement]], Optional[float], Optional[Any], Optional[float], Optional[list[Any]], Optional[Any], Optional[bool], Optional[Any]) -> Optional[Any]
         """
@@ -1305,6 +1328,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['useReleaseTargetData'] = useReleaseTargetData
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def CalibrateGripper(self, robotname=None, grippername=None, timeout=10, fireandforget=False, toolname=None, dynamicEnvironmentState=None, debuglevel=None, robotspeed=None, speed=_deprecated, robotaccelmult=None, ionames=None, **kwargs):
         # type: (Optional[str], str, float, bool, Optional[str], Optional[types.CalibrateGripperParametersDynamicEnvironmentState], Optional[int], Optional[float], Optional[Any], Optional[float], Optional[list[Any]], Optional[Any]) -> Optional[Any]
         """
@@ -1343,6 +1367,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def StopGripper(self, robotname=None, grippername=None, timeout=10, fireandforget=False, toolname=None, dynamicEnvironmentState=None, debuglevel=None, robotspeed=None, speed=_deprecated, robotaccelmult=None, ionames=None, **kwargs):
         # type: (Optional[str], str, float, bool, Optional[str], Optional[types.StopGripperParametersDynamicEnvironmentState], Optional[int], Optional[float], Optional[Any], Optional[float], Optional[list[Any]], Optional[Any]) -> Optional[Any]
         """
@@ -1379,6 +1404,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def MoveGripper(self, grippervalues, robotname=None, grippername=None, timeout=10, fireandforget=False, toolname=None, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, speed=_deprecated, robotaccelmult=None, ionames=None, **kwargs):
         # type: (list[float], Optional[str], str, float, bool, Optional[str], Optional[types.MoveGripperParametersDynamicEnvironmentState], Optional[int], str, Optional[types.MoveGripperParametersRobotBridgeConnectionInfo], Optional[list[types.MoveGripperParametersLocationCollisionInfosArrayElement]], Optional[float], Optional[Any], Optional[float], Optional[list[Any]], Optional[Any]) -> Optional[Any]
         """
@@ -1428,6 +1454,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def ExecuteRobotProgram(self, robotProgramName, robotname=None, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, unit='mm', toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, speed=_deprecated, robotaccelmult=None, ionames=None, **kwargs):
         # type: (str, Optional[str], float, bool, Optional[types.ExecuteRobotProgramParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[types.ExecuteRobotProgramParametersRobotBridgeConnectionInfo], Optional[list[types.ExecuteRobotProgramParametersLocationCollisionInfosArrayElement]], Optional[float], Optional[Any], Optional[float], Optional[list[Any]], Optional[Any]) -> Optional[Any]
         """
@@ -1475,6 +1502,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def SaveScene(self, timeout=10, filename=None, preserveexternalrefs=None, externalref=None, saveclone=_deprecated, saveReferenceUriAsHint=None, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, Optional[str], Optional[bool], Optional[str], Optional[Any], Optional[bool], Optional[types.SaveSceneParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.SaveSceneReturns]
         """
@@ -1510,6 +1538,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def SaveGripper(self, timeout=10, robotname=None, filename=None, manipname=None, dynamicEnvironmentState=None, debuglevel=None, unit='mm', toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, **kwargs):
         # type: (float, Optional[str], Optional[str], Optional[str], Optional[types.SaveGripperParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[types.SaveGripperParametersRobotBridgeConnectionInfo], Optional[list[types.SaveGripperParametersLocationCollisionInfosArrayElement]], Optional[Any]) -> Optional[Any]
         """
@@ -1550,6 +1579,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def MoveJointsToJointConfigurationStates(
         self,
         goalJointConfigurationStates,  # type: list[types.MoveJointsToJointConfigurationStatesParametersGoalJointConfigurationStatesArrayElement]
@@ -1778,6 +1808,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['goaljoints'] = goaljoints
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
+
     def MoveJoints(
         self,
         jointvalues,  # type: list[float]
@@ -2010,6 +2041,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['goalJointConfigurationStates'] = goalJointConfigurationStates
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
+
     def MoveJointsToPositionConfiguration(
         self,
         positionConfigurationName=None,  # type: Optional[str]
@@ -2242,6 +2274,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotProgramName'] = robotProgramName
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
+
     def StartMoveThread(
         self,
         timeout=10,  # type: float
@@ -2469,6 +2502,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if robotBridgeConnectionInfo is not None:
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetRobotBridgeIOVariables(self, ioname=None, ionames=None, robotname=None, timeout=10, dynamicEnvironmentState=None, debuglevel=None, unit='mm', toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, **kwargs):
         # type: (Optional[str], Optional[list[Any]], Optional[str], float, Optional[types.GetRobotBridgeIOVariablesParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[types.GetRobotBridgeIOVariablesParametersRobotBridgeConnectionInfo], Optional[list[types.GetRobotBridgeIOVariablesParametersLocationCollisionInfosArrayElement]], Optional[Any]) -> Optional[Any]
         """
@@ -2509,6 +2543,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def SetRobotBridgeIOVariables(self, iovalues, robotname=None, timeout=10, dynamicEnvironmentState=None, debuglevel=None, unit='mm', toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, forceasync=None, **kwargs):
         # type: (Any, Optional[str], float, Optional[types.SetRobotBridgeIOVariablesParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[types.SetRobotBridgeIOVariablesParametersRobotBridgeConnectionInfo], Optional[list[types.SetRobotBridgeIOVariablesParametersLocationCollisionInfosArrayElement]], Optional[bool], Optional[Any]) -> Optional[Any]
         """
@@ -2549,6 +2584,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['forceasync'] = forceasync
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def ComputeIkParamPosition(self, name, robotname=None, timeout=10, dynamicEnvironmentState=None, debuglevel=None, toolname=None, unit='mm', jointvalues=None, **kwargs):
         # type: (str, Optional[str], float, Optional[types.ComputeIkParamPositionParametersDynamicEnvironmentState], Optional[int], Optional[str], str, Optional[list[float]], Optional[Any]) -> Optional[types.ComputeIkParamPositionReturns]
         """
@@ -2582,6 +2618,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['jointvalues'] = jointvalues
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def ComputeIKFromParameters(
         self,
         toolname=None,  # type: Optional[str]
@@ -2677,6 +2714,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotname'] = robotname
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
+
     def ReloadModule(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, **kwargs):
         # type: (float, Optional[types.ReloadModuleParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.ReloadModuleParametersRobotBridgeConnectionInfo], Optional[list[types.ReloadModuleParametersLocationCollisionInfosArrayElement]], Optional[Any]) -> Optional[Any]
         """
@@ -2709,6 +2747,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def ShutdownRobotBridge(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, **kwargs):
         # type: (float, Optional[types.ShutdownRobotBridgeParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.ShutdownRobotBridgeParametersRobotBridgeConnectionInfo], Optional[list[types.ShutdownRobotBridgeParametersLocationCollisionInfosArrayElement]], Optional[Any]) -> Optional[Any]
         """
@@ -2741,6 +2780,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetRobotBridgeState(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, ionames=None, **kwargs):
         # type: (float, Optional[types.GetRobotBridgeStateParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.GetRobotBridgeStateParametersRobotBridgeConnectionInfo], Optional[list[types.GetRobotBridgeStateParametersLocationCollisionInfosArrayElement]], Optional[list[Any]], Optional[Any]) -> Optional[Any]
         """
@@ -2776,6 +2816,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def ClearRobotBridgeError(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, **kwargs):
         # type: (float, Optional[types.ClearRobotBridgeErrorParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.ClearRobotBridgeErrorParametersRobotBridgeConnectionInfo], Optional[list[types.ClearRobotBridgeErrorParametersLocationCollisionInfosArrayElement]], Optional[Any]) -> Optional[Any]
         """
@@ -2808,6 +2849,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def SetRobotBridgePause(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, **kwargs):
         # type: (float, Optional[types.SetRobotBridgePauseParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.SetRobotBridgePauseParametersRobotBridgeConnectionInfo], Optional[list[types.SetRobotBridgePauseParametersLocationCollisionInfosArrayElement]], Optional[Any]) -> Optional[Any]
         """
@@ -2840,6 +2882,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def SetRobotBridgeResume(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, **kwargs):
         # type: (float, Optional[types.SetRobotBridgeResumeParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.SetRobotBridgeResumeParametersRobotBridgeConnectionInfo], Optional[list[types.SetRobotBridgeResumeParametersLocationCollisionInfosArrayElement]], Optional[Any]) -> Optional[Any]
         """
@@ -2872,6 +2915,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def SetRobotBridgeServoOn(self, isservoon, robotname=None, timeout=3, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None):
         # type: (bool, Optional[str], float, bool, Optional[types.SetRobotBridgeServoOnParametersDynamicEnvironmentState], Optional[int]) -> Optional[Any]
         """
@@ -2894,6 +2938,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def SetRobotBridgeLockMode(self, islockmode, robotname=None, timeout=3, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None):
         # type: (bool, Optional[str], float, bool, Optional[types.SetRobotBridgeLockModeParametersDynamicEnvironmentState], Optional[int]) -> Optional[Any]
         """
@@ -2916,6 +2961,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def ResetSafetyFault(self, timeout=3, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None):
         # type: (float, bool, Optional[types.ResetSafetyFaultParametersDynamicEnvironmentState], Optional[int]) -> Optional[Any]
         """
@@ -2933,6 +2979,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def SetRobotBridgeControlMode(self, controlMode, timeout=3, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None):
         # type: (str, float, bool, Optional[types.SetRobotBridgeControlModeParametersDynamicEnvironmentState], Optional[int]) -> Optional[Any]
         """
@@ -2952,6 +2999,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def GetDynamicObjects(self, timeout=1, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, Optional[types.GetDynamicObjectsParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2971,6 +3019,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def ComputeRobotConfigsForGraspVisualization(self, targetname, graspname, robotname=None, toolname=None, unit='mm', timeout=10, dynamicEnvironmentState=None, debuglevel=None, approachoffset=None, departoffsetdir=None, departoffsetintool=None, shadowrobotname=None, shadowrobottoolname=None, **kwargs):
         # type: (str, str, Optional[str], Optional[str], str, float, Optional[types.ComputeRobotConfigsForGraspVisualizationParametersDynamicEnvironmentState], Optional[int], Optional[float], Optional[tuple[float, float, float]], Optional[list[float]], Optional[str], Optional[str], Optional[Any]) -> Optional[Any]
         """
@@ -3016,6 +3065,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['shadowrobottoolname'] = shadowrobottoolname
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
+
     def ResetCacheTemplates(self, timeout=1, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, Optional[types.ResetCacheTemplatesParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -3036,6 +3086,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def SetRobotBridgeExternalIOPublishing(self, enable, timeout=2, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (bool, float, bool, Optional[types.SetRobotBridgeExternalIOPublishingParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -3058,6 +3109,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def RestoreSceneInitialState(self, timeout=1, preserverobotdofvalues=1, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, int, Optional[types.RestoreSceneInitialStateParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -3080,6 +3132,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def RunMotorControlTuningStepTest(self, jointName, amplitude, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, float, float, Optional[types.RunMotorControlTuningStepTestParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -3104,6 +3157,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters.update(kwargs)
         log.warn('sending taskparameters=%r', taskparameters)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def RunMotorControlTuningMaximulLengthSequence(self, jointName, amplitude, timeout=10, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, speed=_deprecated, robotaccelmult=None, ionames=None, **kwargs):
         # type: (str, float, float, Optional[types.RunMotorControlTuningMaximulLengthSequenceParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.RunMotorControlTuningMaximulLengthSequenceParametersRobotBridgeConnectionInfo], Optional[list[types.RunMotorControlTuningMaximulLengthSequenceParametersLocationCollisionInfosArrayElement]], Optional[float], Optional[Any], Optional[float], Optional[list[Any]], Optional[Any]) -> Optional[Any]
         """
@@ -3152,6 +3206,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def RunMotorControlTuningDecayingChirp(self, jointName, amplitude, freqMax, timeout=120, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, speed=_deprecated, robotaccelmult=None, ionames=None, **kwargs):
         # type: (str, float, float, float, Optional[types.RunMotorControlTuningDecayingChirpParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.RunMotorControlTuningDecayingChirpParametersRobotBridgeConnectionInfo], Optional[list[types.RunMotorControlTuningDecayingChirpParametersLocationCollisionInfosArrayElement]], Optional[float], Optional[Any], Optional[float], Optional[list[Any]], Optional[Any]) -> Optional[Any]
         """
@@ -3202,6 +3257,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def RunMotorControlTuningGaussianImpulse(self, jointName, amplitude, timeout=20, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, speed=_deprecated, robotaccelmult=None, ionames=None, **kwargs):
         # type: (str, float, float, Optional[types.RunMotorControlTuningGaussianImpulseParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.RunMotorControlTuningGaussianImpulseParametersRobotBridgeConnectionInfo], Optional[list[types.RunMotorControlTuningGaussianImpulseParametersLocationCollisionInfosArrayElement]], Optional[float], Optional[Any], Optional[float], Optional[list[Any]], Optional[Any]) -> Optional[Any]
         """
@@ -3250,6 +3306,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def RunMotorControlTuningBangBangResponse(self, jointName, amplitude, timeout=60, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, speed=_deprecated, robotaccelmult=None, ionames=None, **kwargs):
         # type: (str, float, float, Optional[types.RunMotorControlTuningBangBangResponseParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.RunMotorControlTuningBangBangResponseParametersRobotBridgeConnectionInfo], Optional[list[types.RunMotorControlTuningBangBangResponseParametersLocationCollisionInfosArrayElement]], Optional[float], Optional[Any], Optional[float], Optional[list[Any]], Optional[Any]) -> Optional[Any]
         """
@@ -3298,6 +3355,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def RunDynamicsIdentificationTest(self, timeout=4, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, speed=_deprecated, robotaccelmult=None, ionames=None, **kwargs):
         # type: (float, Optional[types.RunDynamicsIdentificationTestParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.RunDynamicsIdentificationTestParametersRobotBridgeConnectionInfo], Optional[list[types.RunDynamicsIdentificationTestParametersLocationCollisionInfosArrayElement]], Optional[float], Optional[Any], Optional[float], Optional[list[Any]], Optional[Any]) -> Optional[Any]
         """
@@ -3340,6 +3398,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetTimeToRunDynamicsIdentificationTest(self, timeout=10, jointName=None, minJointAngle=None, maxJointAngle=None, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, speed=_deprecated, robotaccelmult=None, ionames=None, **kwargs):
         # type: (float, Optional[str], Optional[float], Optional[float], Optional[types.GetTimeToRunDynamicsIdentificationTestParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.GetTimeToRunDynamicsIdentificationTestParametersRobotBridgeConnectionInfo], Optional[list[types.GetTimeToRunDynamicsIdentificationTestParametersLocationCollisionInfosArrayElement]], Optional[float], Optional[Any], Optional[float], Optional[list[Any]], Optional[Any]) -> Optional[Any]
         """
@@ -3391,6 +3450,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def CalculateTestRangeFromCollision(self, timeout=10, jointName=None, unit='mm', envclearance=None, dynamicEnvironmentState=None, debuglevel=None, robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, speed=_deprecated, robotaccelmult=None, ionames=None, **kwargs):
         # type: (float, Optional[str], str, Optional[float], Optional[types.CalculateTestRangeFromCollisionParametersDynamicEnvironmentState], Optional[int], Optional[str], Optional[str], Optional[types.CalculateTestRangeFromCollisionParametersRobotBridgeConnectionInfo], Optional[list[types.CalculateTestRangeFromCollisionParametersLocationCollisionInfosArrayElement]], Optional[float], Optional[Any], Optional[float], Optional[list[Any]], Optional[Any]) -> Optional[Any]
         """
@@ -3439,6 +3499,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetMotorControlParameterSchema(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, Optional[types.GetMotorControlParameterSchemaParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -3458,6 +3519,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetMotorControlParameter(self, jointName, parameterName, timeout=10, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, speed=_deprecated, robotaccelmult=None, ionames=None, **kwargs):
         # type: (str, str, float, Optional[types.GetMotorControlParameterParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.GetMotorControlParameterParametersRobotBridgeConnectionInfo], Optional[list[types.GetMotorControlParameterParametersLocationCollisionInfosArrayElement]], Optional[float], Optional[Any], Optional[float], Optional[list[Any]], Optional[Any]) -> Optional[Any]
         """
@@ -3506,6 +3568,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetMotorControlParameters(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, Optional[types.GetMotorControlParametersParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -3525,6 +3588,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def SetMotorControlParameter(self, jointName, parameterName, parameterValue, timeout=10, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotspeed=None, speed=_deprecated, robotaccelmult=None, ionames=None, **kwargs):
         # type: (str, str, Any, float, Optional[types.SetMotorControlParameterParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.SetMotorControlParameterParametersRobotBridgeConnectionInfo], Optional[list[types.SetMotorControlParameterParametersLocationCollisionInfosArrayElement]], Optional[float], Optional[Any], Optional[float], Optional[list[Any]], Optional[Any]) -> Optional[Any]
         """
@@ -3575,6 +3639,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ionames'] = ionames
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def IsProfilingRunning(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None):
         # type: (float, Optional[types.IsProfilingRunningParametersDynamicEnvironmentState], Optional[int]) -> Optional[Any]
         """
@@ -3593,6 +3658,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def StartProfiling(self, clocktype='cpu', timeout=10, dynamicEnvironmentState=None, debuglevel=None):
         # type: (str, float, Optional[types.StartProfilingParametersDynamicEnvironmentState], Optional[int]) -> Optional[Any]
         """
@@ -3614,6 +3680,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def StopProfiling(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None):
         # type: (float, Optional[types.StopProfilingParametersDynamicEnvironmentState], Optional[int]) -> Optional[Any]
         """
@@ -3632,6 +3699,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def ReplaceBodies(self, bodieslist, timeout=10, replaceInfos=None, testLocationName=None, testLocationContainerId=None, removeNamePrefixes=None, removeLocationNames=None, doRemoveOnlyDynamic=None, unit='mm', dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (Any, float, Optional[list[types.ReplaceBodiesParametersReplaceInfosArrayElement]], Optional[str], Optional[str], Optional[list[str]], Optional[list[str]], Optional[bool], str, Optional[types.ReplaceBodiesParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -3675,6 +3743,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetState(self, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, robotaccelmult=None, callerid=None, stamp=None, command=None, robotspeed=None, **kwargs):
         # type: (float, bool, Optional[types.GetStateParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.GetStateParametersRobotBridgeConnectionInfo], Optional[list[types.GetStateParametersLocationCollisionInfosArrayElement]], Optional[float], Optional[str], Optional[float], Optional[str], Optional[float], Optional[Any]) -> Optional[Any]
         """
@@ -3723,6 +3792,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotspeed'] = robotspeed
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def EnsureSyncWithRobotBridge(self, syncTimeStampUS, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (int, float, bool, Optional[types.EnsureSyncWithRobotBridgeParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -3745,6 +3815,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def ResetCachedRobotConfigurationState(self, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, Optional[types.ResetCachedRobotConfigurationStateParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -3765,6 +3836,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def StopMoveThread(self, timeout=10, fireandforget=False, initializeCameraPosition=None, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, Optional[Any], Optional[types.StopMoveThreadParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -3788,6 +3860,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def SetInstantaneousJointValues(self, objectName, jointvalues, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, unit='mm', **kwargs):
         # type: (str, list[float], float, bool, Optional[types.SetInstantaneousJointValuesParametersDynamicEnvironmentState], Optional[int], str, Optional[Any]) -> Optional[Any]
         """
@@ -3813,6 +3886,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['unit'] = unit
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def GetPackItemPoseInWorld(self, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, packFormationComputationResult=None, inputPartIndex=None, placeLocationNames=None, unit='mm', **kwargs):
         # type: (float, bool, Optional[types.GetPackItemPoseInWorldParametersDynamicEnvironmentState], Optional[int], Optional[types.PackFormation], Optional[int], Optional[list[str]], str, Optional[Any]) -> Optional[Any]
         """
@@ -3843,6 +3917,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['unit'] = unit
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def VisualizePackFormationResult(
         self,
         dynamicEnvironmentState=None,  # type: Optional[types.VisualizePackFormationResultParametersDynamicEnvironmentState]
@@ -4003,6 +4078,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if normalizePackToEmptyRegion is not None:
             taskparameters['normalizePackToEmptyRegion'] = normalizePackToEmptyRegion
         return self.ExecuteCommand(taskparameters, )
+
     def ClearPackingStateVisualization(self, dynamicEnvironmentState=None, debuglevel=None, containername=None):
         # type: (Optional[types.ClearPackingStateVisualizationParametersDynamicEnvironmentState], Optional[int], Optional[str]) -> Optional[Any]
         """
@@ -4023,3 +4099,4 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         if containername is not None:
             taskparameters['containername'] = containername
         return self.ExecuteCommand(taskparameters, )
+

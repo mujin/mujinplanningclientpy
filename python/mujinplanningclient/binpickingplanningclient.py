@@ -5,7 +5,7 @@
 # system imports
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional, Tuple, Union # noqa: F401 # used in type check
+    from typing import Any, Dict, List, Optional, Tuple, Union, Literal # noqa: F401 # used in type check
     import binpickingplanningclient_types as types
 
 # mujin imports
@@ -191,6 +191,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, robotspeed=robotspeed, timeout=timeout)
+
     def StartPickAndPlaceThread(
         self,
         goaltype=None,  # type: Optional[Any]
@@ -2097,6 +2098,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['targetname'] = targetname
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, robotspeed=robotspeed, timeout=timeout)
+
     def StopPickPlaceThread(self, resetExecutionState=_deprecated, resetStatusPickPlace=False, finishStatus=None, finishMessage=None, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, resetCachedRobotConfigurationState=None, useRobotBridge=None, **kwargs):
         # type: (bool, bool, str, Optional[str], float, bool, Optional[types.StopPickPlaceThreadParametersDynamicEnvironmentState], Optional[int], Optional[bool], Optional[bool], Optional[Any]) -> Optional[Any]
         """
@@ -2131,6 +2133,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['useRobotBridge'] = useRobotBridge
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def GetPickPlaceStatus(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, Optional[types.GetPickPlaceStatusParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.GetPickPlaceStatusReturns]
         """
@@ -2153,6 +2156,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def ComputeIK(self, toolname=None, timeout=10, iktype=None, quaternion=None, translation=None, direction=None, angle=None, freeincvalue=None, filteroptions=None, limit=None, preshape=None, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (Optional[str], float, Optional[str], Optional[list[float]], Optional[list[float]], Optional[list[Any]], Optional[float], Optional[float], Optional[int], Optional[int], Optional[list[float]], Optional[types.ComputeIKParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.ComputeIKReturns]
         """
@@ -2198,6 +2202,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
+
     def InitializePartsWithPhysics(self, timeout=10, targeturi=None, numtargets=None, regionname=None, duration=None, basename=None, deleteprevious=None, forcegravity=None, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, Optional[Any], Optional[Any], Optional[str], Optional[Any], Optional[Any], Optional[Any], Optional[Any], Optional[types.InitializePartsWithPhysicsParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2240,6 +2245,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         if 'containername' not in taskparameters:
             taskparameters['containername'] = self.regionname
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def StopPhysicsThread(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, Optional[types.StopPhysicsThreadParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2259,6 +2265,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def JitterPartUntilValidGrasp(self, toolname=None, timeout=10, targetname=None, graspsetname=None, approachoffset=None, departoffsetdir=None, destdepartoffsetdir=None, leaveoffsetintool=None, desttargetname=None, destikparamnames=None, jitterangle=None, jitteriters=None, dynamicEnvironmentState=None, debuglevel=None, jitterdist=None, **kwargs):
         # type: (Optional[str], float, Optional[str], Optional[str], Optional[Any], Optional[tuple[float, float, float]], Optional[tuple[float, float, float]], Optional[Any], Optional[Any], Optional[list[list[str]]], Optional[Any], Optional[Any], Optional[types.JitterPartUntilValidGraspParametersDynamicEnvironmentState], Optional[int], Optional[Any], Optional[Any]) -> Optional[Any]
         """
@@ -2323,6 +2330,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['jitterdist'] = jitterdist
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
+
     def MoveToDropOff(
         self,
         dropOffInfo,  # type: types.MoveToDropOffParametersDropOffInfo
@@ -2557,6 +2565,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['clearOrderCache'] = clearOrderCache
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, robotname=robotname, robotspeed=robotspeed, robotaccelmult=robotaccelmult, timeout=timeout)
+
     def IsRobotOccludingBody(self, bodyname, cameraname, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (Any, Any, float, Optional[types.IsRobotOccludingBodyParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.IsRobotOccludingBodyReturns]
         """
@@ -2583,6 +2592,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetPickedPositions(self, unit='m', timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, float, Optional[types.GetPickedPositionsParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2608,6 +2618,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetPickAndPlaceLog(self, timeout=10, startindex=None, num=None, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, Optional[int], Optional[int], Optional[types.GetPickAndPlaceLogParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2649,6 +2660,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def MoveRobotOutOfCameraOcclusion(self, regionname=None, robotspeed=None, toolname=None, timeout=10, cameranames=None, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, Optional[float], Optional[str], float, Optional[list[str]], Optional[types.MoveRobotOutOfCameraOcclusionParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2677,6 +2689,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, toolname=toolname, timeout=timeout)
+
     def PausePickPlace(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, Optional[types.PausePickPlaceParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2694,6 +2707,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def ResumePickPlace(self, timeout=10, dynamicEnvironmentState=None, debuglevel=None, numTargetsToPlace=None, enablerobotbridge=None, **kwargs):
         # type: (float, Optional[types.ResumePickPlaceParametersDynamicEnvironmentState], Optional[int], Optional[int], Optional[bool], Optional[Any]) -> Optional[Any]
         """
@@ -2717,6 +2731,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['enablerobotbridge'] = enablerobotbridge
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def SendStateTrigger(self, stateTrigger, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, float, bool, Optional[types.SendStateTriggerParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2737,6 +2752,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def GetBinpickingState(self, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, Optional[types.GetBinpickingStateParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2755,6 +2771,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def SetStopPickPlaceAfterExecutionCycle(self, finishStatus=None, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (Optional[str], float, Optional[types.SetStopPickPlaceAfterExecutionCycleParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2780,6 +2797,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def PutPartsBack(self, trajectory, numparts, toolname=None, grippervalues=None, timeout=100, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, int, str, Optional[list[Any]], float, Optional[types.PutPartsBackParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2808,6 +2826,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GenerateGraspModelFromIkParams(self, graspsetname, targeturi, toolname, robotname=None, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, str, Optional[str], Optional[str], float, Optional[types.GenerateGraspModelFromIkParamsParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2834,6 +2853,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, robotname=robotname, toolname=toolname, timeout=timeout)
+
     def CheckGraspModelIk(self, graspsetname, targeturi, toolname, ikparamnames=None, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, Any, Optional[str], list[str], float, Optional[types.CheckGraspModelIkParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2861,6 +2881,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def SetCurrentLayoutDataFromPLC(self, containername, containerLayoutSize, destObstacleName, ioVariableName, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, Any, str, str, float, Optional[types.SetCurrentLayoutDataFromPLCParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2888,6 +2909,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def ClearVisualization(self, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, Optional[types.ClearVisualizationParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2908,6 +2930,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def GetPlanStatistics(self, timeout=1, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, Optional[types.GetPlanStatisticsParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2928,6 +2951,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def SetCurrentLayoutDataSendOnObjectUpdateData(self, doUpdate, containername=None, containerLayoutSize=None, ioVariableName=None, fireandforget=True, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (bool, Optional[str], Optional[Any], Optional[str], bool, Optional[types.SetCurrentLayoutDataSendOnObjectUpdateDataParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -2958,6 +2982,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, fireandforget=fireandforget)
+
     def ManuallyPlacePackItem(self, packFormationComputationResult=None, inputPartIndex=None, placeLocationNames=None, placedTargetPrefix=None, dynamicGoalsGeneratorParameters=None, orderNumber=None, numLeftToPick=None, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, unit='mm', sizeRoundUp=None, sizePrecisionXYZ=None, randomBoxOrigin=None):
         # type: (types.PackFormation, int, list[str], Optional[str], Optional[types.ManuallyPlacePackItemParametersDynamicGoalsGeneratorParameters], Optional[int], Optional[int], float, bool, Optional[types.ManuallyPlacePackItemParametersDynamicEnvironmentState], Optional[int], str, Optional[bool], Optional[tuple[float, float, float]], Optional[tuple[float, float, float]]) -> Optional[Any]
         """
@@ -3008,3 +3033,4 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         if randomBoxOrigin is not None:
             taskparameters['randomBoxOrigin'] = randomBoxOrigin
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+

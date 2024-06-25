@@ -5,7 +5,7 @@
 # system imports
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional, Tuple, Union # noqa: F401 # used in type check
+    from typing import Any, Dict, List, Optional, Tuple, Union, Literal # noqa: F401 # used in type check
 
 # mujin imports
 from . import zmq
@@ -375,6 +375,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['executionmode'] = executionmode
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, toolname=toolname)
+
     def StartSingleSKUPackFormationComputation(self, partType=None, userPackFormationParameters=None, toolname=None, patternName=None, packLocationInfo=None, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (Optional[Any], Optional[Any], Optional[Any], Optional[Any], Optional[Any], float, Optional[types.StartSingleSKUPackFormationComputationParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -407,6 +408,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, timeout=timeout)
+
     def StopPackFormationComputationThread(self, finishStatus=None, finishMessage=None, timeout=10, fireandforget=False, blockwait=False, dynamicEnvironmentState=None, debuglevel=None, robotname=None, toolname=None, callerid=None, stamp=None, command=None, robotBridgeConnectionInfo=None, robotspeed=None, robotaccelmult=None, **kwargs):
         # type: (Optional[str], Optional[str], float, bool, bool, Optional[types.StopPackFormationComputationThreadParametersDynamicEnvironmentState], Optional[int], Optional[str], Optional[str], Optional[str], Optional[float], Optional[str], Optional[types.StopPackFormationComputationThreadParametersRobotBridgeConnectionInfo], Optional[float], Optional[float], Optional[Any]) -> Optional[Any]
         """
@@ -458,6 +460,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['robotaccelmult'] = robotaccelmult
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
+
     def VisualizePackingState(self, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, Optional[types.VisualizePackingStateParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -478,6 +481,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def GetPackFormationSolution(self, timeout=10, fireandforget=False, blockwait=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, bool, Optional[types.GetPackFormationSolutionParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -499,6 +503,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
+
     def SendPackFormationComputationResult(self, timeout=10, fireandforget=False, blockwait=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, bool, Optional[types.SendPackFormationComputationResultParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -520,6 +525,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
+
     def GetLatestPackFormationResultList(self, timeout=10, fireandforget=False, blockwait=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, bool, Optional[types.GetLatestPackFormationResultListParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[list[types.PackFormation]]
         """
@@ -541,6 +547,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
+
     def StartValidatePackFormation(self, packFormationResultList, timeout=10, fireandforget=False, blockwait=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (Any, float, bool, bool, Optional[types.StartValidatePackFormationParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> None
         """
@@ -564,6 +571,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
+
     def ValidatePackFormationResultList(
         self,
         packFormationResultList,  # type: list[types.PackFormation]
@@ -699,6 +707,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['forceValidatePackContainerType'] = forceValidatePackContainerType
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def ComputeSamePartPackResultBySimulation(self, timeout=100, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, Optional[types.ComputeSamePartPackResultBySimulationParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -718,6 +727,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def HasDetectionObstacles(
         self,
         timeout=100,  # type: float
@@ -919,6 +929,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['constraintToolInfo'] = constraintToolInfo
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetPackingState(self, timeout=10, fireandforget=False, blockwait=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, bool, Optional[types.GetPackingStateParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.GetPackingStateReturns]
         """
@@ -940,3 +951,4 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
+

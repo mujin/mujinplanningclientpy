@@ -5,7 +5,7 @@
 # system imports
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional, Tuple, Union # noqa: F401 # used in type check
+    from typing import Any, Dict, List, Optional, Tuple, Union, Literal # noqa: F401 # used in type check
     import realtimeitl3planningclient_types as types
 
 # mujin imports
@@ -114,6 +114,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def GetITLState(self, robotname=None, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, **kwargs):
         # type: (Optional[str], float, bool, Optional[types.GetITLStateParametersDynamicEnvironmentState], Optional[int], Optional[types.GetITLStateParametersRobotBridgeConnectionInfo], Optional[list[types.GetITLStateParametersLocationCollisionInfosArrayElement]], Optional[Any]) -> Optional[Any]
         """
@@ -141,6 +142,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def ExecuteTrajectory(self, identifier, trajectories, statevalues=None, stepping=False, istep=None, cycles=1, restorevalues=None, envclearance=15, robotspeed=None, robotaccelmult=None, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None):
         # type: (Any, Any, Optional[list[Any]], Any, Optional[bool], Any, Optional[list[Any]], float, Optional[float], Optional[float], float, bool, Optional[types.ExecuteTrajectoryParametersDynamicEnvironmentState], Optional[int]) -> Optional[Any]
         """
@@ -185,6 +187,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def ExecuteTrajectoryStep(self, reverse=False, envclearance=15, robotspeed=None, robotaccelmult=None, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None):
         # type: (bool, Optional[float], Optional[float], Optional[float], float, bool, Optional[types.ExecuteTrajectoryStepParametersDynamicEnvironmentState], Optional[int]) -> Optional[Any]
         """
@@ -213,6 +216,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def PauseExecuteTrajectory(self, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None):
         # type: (float, bool, Optional[types.PauseExecuteTrajectoryParametersDynamicEnvironmentState], Optional[int]) -> Optional[Any]
         """
@@ -230,6 +234,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def ResumeExecuteTrajectory(self, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None):
         # type: (float, bool, Optional[types.ResumeExecuteTrajectoryParametersDynamicEnvironmentState], Optional[int]) -> Optional[Any]
         """
@@ -247,6 +252,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def ComputeRobotConfigsForCommandVisualization(self, executiongraph, commandindex=0, timeout=2, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (types.ComputeRobotConfigsForCommandVisualizationParametersExecutiongraph, int, float, bool, Optional[types.ComputeRobotConfigsForCommandVisualizationParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -270,6 +276,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def ComputeRobotJointValuesForCommandVisualization(self, program, commandindex=0, timeout=2, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, int, float, bool, Optional[types.ComputeRobotJointValuesForCommandVisualizationParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -293,6 +300,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def PlotProgramWaypoints(self, timeout=1, fireandforget=True, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, Optional[types.PlotProgramWaypointsParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -311,6 +319,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def StartITLProgram(
         self,
         programName,  # type: str
@@ -499,6 +508,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             taskparameters['stamp'] = stamp
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def StopITLProgram(self, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, finishCode=None, finishMessage=None, **kwargs):
         # type: (float, bool, Optional[types.StopITLProgramParametersDynamicEnvironmentState], Optional[int], Optional[str], Optional[str], Optional[Any]) -> Optional[Any]
         """
@@ -525,6 +535,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             taskparameters['finishMessage'] = finishMessage
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def GenerateExecutionGraph(self, programName, commandTimeout=_deprecated, totalTimeout=_deprecated, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, unit='mm', robotname=None, toolname=None, robotBridgeConnectionInfo=None, locationCollisionInfos=None, executionid=None, parameters=None, programCommit=None, **kwargs):
         # type: (str, float, float, float, bool, Optional[types.GenerateExecutionGraphParametersDynamicEnvironmentState], Optional[int], str, Optional[str], Optional[str], Optional[types.GenerateExecutionGraphParametersRobotBridgeConnectionInfo], Optional[list[types.GenerateExecutionGraphParametersLocationCollisionInfosArrayElement]], Optional[str], Optional[types.GenerateExecutionGraphParametersParameters], Optional[str], Optional[Any]) -> Optional[types.GenerateExecutionGraphReturns]
         """
@@ -573,6 +584,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             taskparameters['programCommit'] = programCommit
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+
     def PopulateTargetInContainer(self, locationName, populateTargetUri, populateFnName, containerMetaData=None, timeout=20, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, str, Literal['mujinplanningcommon.planningutil.populateutil.container_filling_util.PopulatePensInBulkTray'], Optional[types.PopulateTargetInContainerParametersContainerMetaData], float, Optional[types.PopulateTargetInContainerParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
@@ -601,3 +613,4 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+

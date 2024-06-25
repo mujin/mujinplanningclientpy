@@ -5,7 +5,7 @@
 # system imports
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional, Tuple, Union # noqa: F401 # used in type check
+    from typing import Any, Dict, List, Optional, Tuple, Union, Literal # noqa: F401 # used in type check
     import handeyecalibrationplanningclient_types as types
 
 # mujin imports
@@ -148,6 +148,7 @@ class HandEyeCalibrationPlanningClient(realtimerobotplanningclient.RealtimeRobot
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
     def SampleCalibrationConfiguration(self, primarySensorSelectionInfo, secondarySensorSelectionInfos, gridindex, calibboardvisibility, calibboardLinkName=None, calibboardGeomName=None, timeout=3000, minPatternTiltAngle=None, maxPatternTiltAngle=None, toolname=None, calibboardObjectName=None, dynamicEnvironmentState=None, robot=None, debuglevel=None, **kwargs):
         # type: (types.SensorSelectionInfo, list[types.SensorSelectionInfo], int, types.SampleCalibrationConfigurationParametersCalibboardvisibility, Optional[str], Optional[str], float, Optional[float], Optional[float], Optional[str], Optional[str], Optional[types.SampleCalibrationConfigurationParametersDynamicEnvironmentState], Optional[str], Optional[int], Optional[Any]) -> Optional[types.SampleCalibrationConfigurationReturns]
         """
@@ -198,6 +199,7 @@ class HandEyeCalibrationPlanningClient(realtimerobotplanningclient.RealtimeRobot
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
+
 
     def ReloadModule(self, **kwargs):
         return self.ExecuteCommand({
