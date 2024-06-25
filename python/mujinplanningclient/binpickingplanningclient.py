@@ -208,7 +208,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         toolname=None,  # type: Optional[str]
         robotspeed=None,  # type: Optional[Any]
         timeout=10,  # type: float
-        densowavearmgroup=5,  # type: Any
         dynamicEnvironmentState=None,  # type: Optional[types.StartPickAndPlaceThreadParametersDynamicEnvironmentState]
         allTargetsDifferentUri=None,  # type: Optional[bool]
         absMaxPlanningTimeToWait=0.0,  # type: float
@@ -584,6 +583,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         waitForLocationUnprohibited=False,  # type: bool
         waitUpdateStampTimeout=30.0,  # type: float
         ykkControlInfo=None,  # type: Optional[types.YKKControlInfo]
+        destoffsetdir,  # type: Any
         containername=None,  # type: Optional[str]
         controllerclientparameters=None,  # type: Optional[types.StartPickAndPlaceThreadParametersControllerclientparameters]
         cycleIndex=None,  # type: Optional[str]
@@ -644,7 +644,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             toolname: (Default: None)
             robotspeed: (Default: None)
             timeout: Time in seconds after which the command is assumed to have failed. (Default: 10)
-            densowavearmgroup: (Default: 5)
             dynamicEnvironmentState: Dynamic environment state that allows the user to set/create objects in a particular state dynamically. (Default: None)
             allTargetsDifferentUri: Whether the binpickingmodule should treat all targets as different. (Default: None)
             absMaxPlanningTimeToWait: seconds. Valid if > 0. If a valid pick-place plan result has been computed and the system has been waiting for more than the specified time, then the best plan result is returned. If no valid plan result is available yet, the system will continue planning until all the candidate grasp ikparams, dest ikparams, and their combinations have been checked. If no valid plan result is computed and all the candidate IKParams are exhausted, then the system will return error codes such as `novaliddgrasp`, `novaliddest`, or `novalidgraspgoalpair`.
@@ -1266,6 +1265,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             waitForLocationUnprohibited: Wait for all location to become unprohibited. (Default: False)
             waitUpdateStampTimeout: sec, how long to wait for the initial vision results to come before starting pick and place (Default: 30.0)
             ykkControlInfo: Information on controlling ykk external devices (Default: None)
+            destoffsetdir:
             containername: (Default: None)
             controllerclientparameters: (Default: None)
             cycleIndex: (Default: None)
@@ -1294,25 +1294,21 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         taskparameters = {
             'command': 'StartPickAndPlaceThread',
             'targetnamepattern': targetnamepattern,
+            'approachoffset': approachoffset,
+            'destdepartoffsetdir': destdepartoffsetdir,
+            'debuglevel': debuglevel,
+            'movetodestination': movetodestination,
             'regionname': regionname,
             'envclearance': envclearance,
+            'destoffsetdir': destoffsetdir,
+            'containername': containername,
         }  # type: dict[str, Any]
         if goals is not None:
             taskparameters['goaltype'] = goaltype
         if goals is not None:
             taskparameters['orderedgoals'] = goals
-        if approachoffset != 30:
-            taskparameters['approachoffset'] = approachoffset
         if departoffsetdir != [0, 0, 50]:
             taskparameters['departoffsetdir'] = departoffsetdir
-        if destdepartoffsetdir != [0, 0, 30]:
-            taskparameters['destdepartoffsetdir'] = destdepartoffsetdir
-        if debuglevel != 4:
-            taskparameters['debuglevel'] = debuglevel
-        if movetodestination != 1:
-            taskparameters['movetodestination'] = movetodestination
-        if densowavearmgroup != 5:
-            taskparameters['densowavearmgroup'] = densowavearmgroup
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if allTargetsDifferentUri is not None:
@@ -2063,8 +2059,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['waitUpdateStampTimeout'] = waitUpdateStampTimeout
         if ykkControlInfo is not None:
             taskparameters['ykkControlInfo'] = ykkControlInfo
-        if containername is not None:
-            taskparameters['containername'] = containername
         if controllerclientparameters is not None:
             taskparameters['controllerclientparameters'] = controllerclientparameters
         if cycleIndex is not None:
