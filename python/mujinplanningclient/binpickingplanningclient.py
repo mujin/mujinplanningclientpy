@@ -2460,6 +2460,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         taskparameters = {
             'command': 'MoveToDropOff',
             'dropOffInfo': dropOffInfo,
+            'unit': unit,
         }  # type: dict[str, Any]
         if execute != 1:
             taskparameters['execute'] = execute
@@ -2471,8 +2472,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
-        if unit != 'mm':
-            taskparameters['unit'] = unit
         if constraintToolDirection is not None:
             taskparameters['constraintToolDirection'] = constraintToolDirection
         if departOffsetDir is not None:
@@ -2609,9 +2608,8 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         """
         taskparameters = {
             'command': 'GetPickedPositions',
+            'unit': unit,
         }  # type: dict[str, Any]
-        if unit != 'm':
-            taskparameters['unit'] = unit
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
@@ -3011,6 +3009,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             'packFormationComputationResult': packFormationComputationResult,
             'inputPartIndex': inputPartIndex,
             'placeLocationNames': placeLocationNames,
+            'unit': unit,
         }  # type: dict[str, Any]
         if placedTargetPrefix:
             taskparameters['placedTargetPrefix'] = placedTargetPrefix
@@ -3024,8 +3023,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
-        if unit != 'mm':
-            taskparameters['unit'] = unit
         if sizeRoundUp is not None:
             taskparameters['sizeRoundUp'] = sizeRoundUp
         if sizePrecisionXYZ is not None:
