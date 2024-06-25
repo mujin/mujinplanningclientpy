@@ -200,7 +200,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         approachoffset=30,  # type: types.ApproachGraspOffset
         departoffsetdir=[0, 0, 50],  # type: tuple[float, float, float]
         destdepartoffsetdir=[0, 0, 30],  # type: tuple[float, float, float]
-        deletetarget=_deprecated,  # type: bool
+        deletetarget=0,  # type: bool
         debuglevel=4,  # type: Literal[0, 1, 2, 3, 4, 5]
         movetodestination=1,  # type: Literal[0, 1]
         worksteplength=_deprecated,  # type: Optional[float]
@@ -624,7 +624,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             Common values are 30-100 mm. Setting a value that is too high can cause pick candidates to be discarded, as the approach motion may collide with e.g. container walls or be out of the robot's reach. (Default: 30)
             departoffsetdir: Departure offset direction. mm (x,y,z) (Default: [0, 0, 50])
             destdepartoffsetdir: Departure offset direction. mm (x,y,z) (Default: [0, 0, 30])
-            deletetarget: **deprecated** Whether to delete target after pick and place is done. (Default: 0)
+            deletetarget: Whether to delete target after pick and place is done. (Default: 0)
             debuglevel: Limits the amount of logs that are written. High log levels should only be active when a problem is being investigated, as excessive logging can decrease performance. Log levels lower than 3 are not recommended.
 
             - Level 0: Only FATAL logs
@@ -1296,6 +1296,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             'approachoffset': approachoffset,
             'departoffsetdir': departoffsetdir,
             'destdepartoffsetdir': destdepartoffsetdir,
+            'deletetarget': deletetarget,
             'debuglevel': debuglevel,
             'movetodestination': movetodestination,
             'regionname': regionname,

@@ -334,9 +334,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
         toolname=None,  # type: Optional[str]
         robotBridgeConnectionInfo=None,  # type: Optional[types.StartITLProgramParametersRobotBridgeConnectionInfo]
         locationCollisionInfos=None,  # type: Optional[list[types.StartITLProgramParametersLocationCollisionInfosArrayElement]]
-        allowGrabWithoutTemplateTarget=False,  # type: bool
         departOffsetDir=None,  # type: Optional[tuple[float, float, float]]
-        disallowSteppingBackwardAfterGrabRelease=True,  # type: bool
         encoderConvergenceSpeedThresh=None,  # type: Optional[float]
         envclearance=None,  # type: Optional[float]
         envClearanceMultiplierForJittering=None,  # type: Optional[float]
@@ -384,9 +382,7 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             toolname: Name of the manipulator. Defaults to currently selected tool (Default: None)
             robotBridgeConnectionInfo: Information to set up a client to the robot bridge. (Default: None)
             locationCollisionInfos: List of external collision IOs to be computed and sent in realtime. (Default: None)
-            allowGrabWithoutTemplateTarget: Deprecated. Only for backwards compatibility. (Default: False)
             departOffsetDir: Departure offset direction. mm (x,y,z) (Default: None)
-            disallowSteppingBackwardAfterGrabRelease: Deprecated. Only for backwards compatibility. (Default: True)
             encoderConvergenceSpeedThresh: (Default: None)
             envclearance: Environment clearance in millimeters. (Default: None)
             envClearanceMultiplierForJittering: (Default: None)
@@ -439,12 +435,8 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
         if locationCollisionInfos is not None:
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
-        if allowGrabWithoutTemplateTarget != False:
-            taskparameters['allowGrabWithoutTemplateTarget'] = allowGrabWithoutTemplateTarget
         if departOffsetDir is not None:
             taskparameters['departOffsetDir'] = departOffsetDir
-        if disallowSteppingBackwardAfterGrabRelease != True:
-            taskparameters['disallowSteppingBackwardAfterGrabRelease'] = disallowSteppingBackwardAfterGrabRelease
         if encoderConvergenceSpeedThresh is not None:
             taskparameters['encoderConvergenceSpeedThresh'] = encoderConvergenceSpeedThresh
         if envclearance is not None:

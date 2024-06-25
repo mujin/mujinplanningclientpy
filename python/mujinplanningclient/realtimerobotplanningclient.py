@@ -390,7 +390,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         goals,  # type: Optional[list[float]]
         toolname=None,  # type: Optional[str]
         envclearance=None,  # type: Optional[float]
-        closegripper=0,  # type: int
+        closegripper=1,  # type: int
         robotspeed=None,  # type: Optional[float]
         robotaccelmult=None,  # type: Optional[float]
         timeout=10,  # type: float
@@ -461,7 +461,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             goals: Flat list of goals, e.g. two 5D ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]
             toolname: Name of the manipulator. Defaults to currently selected tool (Default: None)
             envclearance: Environment clearance in millimeters. (Default: None)
-            closegripper: Whether to close gripper once the goal is reached. Boolean value represented by 0 or 1. (Default: 0)
+            closegripper: Whether to close gripper once the goal is reached. Boolean value represented by 0 or 1. (Default: 1)
             robotspeed: Value in (0,1] defining the percentage of speed the robot should move at. (Default: None)
             robotaccelmult: Value in (0,1] defining the percentage of acceleration the robot should move at. (Default: None)
             timeout: Time in seconds after which the command is assumed to have failed. (Default: 10)
@@ -1266,7 +1266,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             targetname: Name of the target object. (Default: None)
             toolname: Name of the manipulator. Defaults to currently selected tool (Default: None)
             pulloutdist: Distance to move away along the tool direction after releasing. (Default: None)
-            deletetarget: If 1, removes the target object from the environment after releasing. (Default: 1) (Default: None)
+            deletetarget: If 1, removes the target object from the environment after releasing. (Default: None)
             dynamicEnvironmentState: Dynamic environment state that allows the user to set/create objects in a particular state dynamically. (Default: None)
             debuglevel: Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE. (Default: None)
             unit: The unit of the given values. (Default: 'mm')
