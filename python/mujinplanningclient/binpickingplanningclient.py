@@ -240,7 +240,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         checkCollisionAtDestNames=None,  # type: Optional[list[str]]
         checkDestContainerEmptyOnArrivalNames=None,  # type: Optional[list[str]]
         checkExpectedDetectedHeightThreshold=None,  # type: Optional[float]
-        checkForEndEffectorLowerThanGraspDist=0.0,  # type: float
+        checkForEndEffectorLowerThanGraspDist=None,  # type: Optional[float]
         checkObstacleNames=None,  # type: Optional[list[str]]
         checkPickContainerEmptyOnFinish=False,  # type: bool
         checkPlaceContainerEmptyOnArrival=False,  # type: bool
@@ -685,7 +685,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             checkCollisionAtDestNames: Enables specified bodies for collision detection at the destination placement. The body names can be e.g. an external IO region at the destination. (Default: None)
             checkDestContainerEmptyOnArrivalNames: If the `checkPlaceContainerEmptyOnArrival` flag is True, then the destination container names in this list will be checked to make sure the place container is empty upon arrival. A non-empty place container will trigger the error code `FinishedPlaceContainerNotEmpty`. (Default: None)
             checkExpectedDetectedHeightThreshold: The threshold for the expected detected height of the top surface of the target workpiece to determine height check failures. If `checkExpectedDetectedHeight` is set, the threshold is compared against it. If not, the threshold is compared against N*`part_height` where N is the number of layers. (Default: None)
-            checkForEndEffectorLowerThanGraspDist: mm. Distance threshold for the max distance of "end effector translation"-"tool translation" along the vector oriented toward the container opening (usually +z). (Default: 0.0)
+            checkForEndEffectorLowerThanGraspDist: mm. Distance threshold for the max distance of "end effector translation"-"tool translation" along the vector oriented toward the container opening (usually +z). (Default: None)
             checkObstacleNames: (Default: None)
             checkPickContainerEmptyOnFinish: If True, then check to make sure the pick container is empty when the order cycle finishes. If it is not empty, the cycle will finish with error code 'FinishedPickContainerNotEmpty'.
 
@@ -1368,7 +1368,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['checkDestContainerEmptyOnArrivalNames'] = checkDestContainerEmptyOnArrivalNames
         if checkExpectedDetectedHeightThreshold is not None:
             taskparameters['checkExpectedDetectedHeightThreshold'] = checkExpectedDetectedHeightThreshold
-        if checkForEndEffectorLowerThanGraspDist != 0.0:
+        if checkForEndEffectorLowerThanGraspDist is not None:
             taskparameters['checkForEndEffectorLowerThanGraspDist'] = checkForEndEffectorLowerThanGraspDist
         if checkObstacleNames is not None:
             taskparameters['checkObstacleNames'] = checkObstacleNames
