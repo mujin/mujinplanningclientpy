@@ -5,7 +5,7 @@
 # system imports
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional, Tuple, Union, Literal # noqa: F401 # used in type check
+    from typing import Any, Optional, Union, Literal # noqa: F401 # used in type check
 
 # mujin imports
 from . import zmq

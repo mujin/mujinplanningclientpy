@@ -5,7 +5,7 @@
 # system imports
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional, Tuple, Union, Literal # noqa: F401 # used in type check
+    from typing import Any, Optional, Union, Literal # noqa: F401 # used in type check
     import realtimerobotplanningclient_types as types
 
 # mujin imports
@@ -137,7 +137,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         self._robotaccelmult = robotaccelmult
 
     def ExecuteCommand(self, taskparameters, robotname=None, toolname=None, robotspeed=None, robotaccelmult=None, envclearance=None, timeout=10, fireandforget=False, respawnopts=None, forcereload=False, blockwait=True):
-        # type: (Dict, Optional[str], Optional[str], Optional[float], Optional[float], Optional[float], float, bool, Any, bool) -> Any
+        # type: (dict, Optional[str], Optional[str], Optional[float], Optional[float], Optional[float], float, bool, Any, bool) -> Any
         """Wrapper to ExecuteCommand with robot info specified in taskparameters.
 
         Executes a command in the task.
