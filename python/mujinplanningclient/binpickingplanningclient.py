@@ -104,8 +104,8 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
 
     def PickAndPlace(
         self,
-        goaltype=_deprecated,  # type: Optional[str]
-        goals=_deprecated,  # type: Optional[str]
+        goaltype=_deprecated,  # type: str
+        goals=_deprecated,  # type: str
         targetnamepattern=None,  # type: str
         approachoffset=30,  # type: float
         departoffsetdir=[0, 0, 50],  # type: tuple[float, float, float]
@@ -134,8 +134,8 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         Picks up an object with the targetnamepattern and places it down at one of the goals. First computes the entire plan from robot moving to a grasp and then moving to its destination, then runs it on the real robot. Task finishes once the real robot is at the destination.
 
         Args:
-            goaltype: **deprecated** Type of the goal, e.g. translationdirection5d or transform6d (Default: None)
-            goals: **deprecated** Flat list of goals, e.g. two 5d ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1] (Default: None)
+            goaltype: **deprecated** Type of the goal, e.g. translationdirection5d or transform6d
+            goals: **deprecated** Flat list of goals, e.g. two 5d ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]
             targetnamepattern: regular expression describing the name of the object. No default will be provided, caller must set this. See https://docs.python.org/2/library/re.html (Default: None)
             approachoffset: Distance in millimeters to move straight to the grasp point, e.g. 30 mm (Default: 30)
             departoffsetdir: The direction and distance in mm to move the part in global frame (usually along negative gravity) after it is grasped, e.g. [0,0,50] (Default: [0, 0, 50])
@@ -164,22 +164,15 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         taskparameters = {
             'command': 'PickAndPlace',
             'targetnamepattern': targetnamepattern,
+            'approachoffset': approachoffset,
+            'departoffsetdir': departoffsetdir,
+            'destdepartoffsetdir': destdepartoffsetdir,
+            'deletetarget': deletetarget,
+            'debuglevel': debuglevel,
+            'movetodestination': movetodestination,
+            'freeinc': freeinc,
             'envclearance': envclearance,
         }  # type: dict[str, Any]
-        if approachoffset != 30:
-            taskparameters['approachoffset'] = approachoffset
-        if departoffsetdir != [0, 0, 50]:
-            taskparameters['departoffsetdir'] = departoffsetdir
-        if destdepartoffsetdir != [0, 0, 30]:
-            taskparameters['destdepartoffsetdir'] = destdepartoffsetdir
-        if deletetarget != 0:
-            taskparameters['deletetarget'] = deletetarget
-        if debuglevel != 4:
-            taskparameters['debuglevel'] = debuglevel
-        if movetodestination != 1:
-            taskparameters['movetodestination'] = movetodestination
-        if freeinc != [0.08]:
-            taskparameters['freeinc'] = freeinc
         if densowavearmgroup != 5:
             taskparameters['densowavearmgroup'] = densowavearmgroup
         if regionname is not None:
