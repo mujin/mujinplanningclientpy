@@ -583,7 +583,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         waitForLocationUnprohibited=False,  # type: bool
         waitUpdateStampTimeout=30.0,  # type: float
         ykkControlInfo=None,  # type: Optional[types.YKKControlInfo]
-        destoffsetdir,  # type: Any
         containername=None,  # type: Optional[str]
         controllerclientparameters=None,  # type: Optional[types.StartPickAndPlaceThreadParametersControllerclientparameters]
         cycleIndex=None,  # type: Optional[str]
@@ -1265,7 +1264,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             waitForLocationUnprohibited: Wait for all location to become unprohibited. (Default: False)
             waitUpdateStampTimeout: sec, how long to wait for the initial vision results to come before starting pick and place (Default: 30.0)
             ykkControlInfo: Information on controlling ykk external devices (Default: None)
-            destoffsetdir:
             containername: (Default: None)
             controllerclientparameters: (Default: None)
             cycleIndex: (Default: None)
@@ -1295,20 +1293,18 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             'command': 'StartPickAndPlaceThread',
             'targetnamepattern': targetnamepattern,
             'approachoffset': approachoffset,
+            'departoffsetdir': departoffsetdir,
             'destdepartoffsetdir': destdepartoffsetdir,
             'debuglevel': debuglevel,
             'movetodestination': movetodestination,
             'regionname': regionname,
             'envclearance': envclearance,
-            'destoffsetdir': destoffsetdir,
             'containername': containername,
         }  # type: dict[str, Any]
         if goals is not None:
             taskparameters['goaltype'] = goaltype
         if goals is not None:
             taskparameters['orderedgoals'] = goals
-        if departoffsetdir != [0, 0, 50]:
-            taskparameters['departoffsetdir'] = departoffsetdir
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if allTargetsDifferentUri is not None:
