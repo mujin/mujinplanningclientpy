@@ -324,7 +324,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         executionConnectingTrajDecelMult=None,  # type: Optional[float]
         executionConnectingTrajReverseMult=1.0,  # type: float
         executionReverseRecoveryDistance=50,  # type: float
-        executionEnvClearanceApproachConcatenate=0.0,  # type: float
+        executionEnvClearanceApproachConcatenate=None,  # type: Optional[float]
         executionMaxConcatenateSearchTime=None,  # type: Optional[float]
         executionConcatenateSearchDeltaTime=None,  # type: Optional[float]
         executionFilterFactor=0.4,  # type: float
@@ -349,7 +349,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         forceTargetUriCheck=None,  # type: Optional[bool]
         forceSecondPreshapeAfterFirstApproach=None,  # type: Optional[bool]
         forceSecondReleaseAfterFirstDestDepart=None,  # type: Optional[bool]
-        forceWaitDestContainer=False,  # type: bool
+        forceWaitDestContainer=None,  # type: Optional[bool]
         getCorrectPlanningReport=True,  # type: bool
         doSecondPreshapeAfterFirstApproach=None,  # type: Optional[bool]
         doSecondReleaseAfterFirstDestDepart=None,  # type: Optional[bool]
@@ -857,7 +857,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             executionConnectingTrajDecelMult: The parameter is used to control how fast the robot decelerates when pausing due to an interlock or PieceLost problem. (Default: None)
             executionConnectingTrajReverseMult: The parameter is used to control how fast the robot moves backward and then stops when reversing due to torque limit error or position tracking error. (Default: 1.0)
             executionReverseRecoveryDistance: Recovery distance the robot tool should move in reverse of the trajectory from the detected collision/error position. (Default: 50)
-            executionEnvClearanceApproachConcatenate: The environment clearance used for approach trajectory concatenation with merging. Set to 0.0 to speed up concatenation, but can be more dangerous. (Default: 0.0)
+            executionEnvClearanceApproachConcatenate: The environment clearance used for approach trajectory concatenation with merging. Set to 0.0 to speed up concatenation, but can be more dangerous. (Default: None)
             executionMaxConcatenateSearchTime: The maximum search time in common.ConcatenateTrajectoriesWithMerging. (Default: None)
             executionConcatenateSearchDeltaTime: The deltatime in common.ConcatenateTrajectoriesWithMerging. If 0 - the concatenation is disabled. (Default: None)
             executionFilterFactor: the parameter is used to make robot trajectory while grabbing not grabbing  a target smooth. Default is 1.0, a smaller value makes the trajectory smoother, but the trajectory is rejected more often and can possibly collide with obstacles. (Default: 0.4)
@@ -909,7 +909,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             forceWaitDestContainer: If True, then wait for correct locationInfo from incoming destination containers, as it could have information about the partType, when no detection has started. This parameter will be applicable only when `useLocationState` is enabled.
 
             Example: If an AGV is managing the destination pallet in a palletizing application, the system needs to wait for the pallet to be placed in the correct location before starting the picking cycle. 
-             (Default: False)
+             (Default: None)
             getCorrectPlanningReport: If True, computes a test pick and place command to give better error reporting to the user.
 
             The Binpicking planning loop may return `NoValidDest` during GrapGoalPair generation, even when there is no valid grasp. If this flag is enabled, `PlanToDestMode` is disabled, i.e. valid destinations are disabled, to confirm that a valid grasp can be generated. (Default: True)
@@ -1537,7 +1537,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['executionConnectingTrajReverseMult'] = executionConnectingTrajReverseMult
         if executionReverseRecoveryDistance != 50:
             taskparameters['executionReverseRecoveryDistance'] = executionReverseRecoveryDistance
-        if executionEnvClearanceApproachConcatenate != 0.0:
+        if executionEnvClearanceApproachConcatenate is not None:
             taskparameters['executionEnvClearanceApproachConcatenate'] = executionEnvClearanceApproachConcatenate
         if executionMaxConcatenateSearchTime is not None:
             taskparameters['executionMaxConcatenateSearchTime'] = executionMaxConcatenateSearchTime
@@ -1587,7 +1587,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['forceSecondPreshapeAfterFirstApproach'] = forceSecondPreshapeAfterFirstApproach
         if forceSecondReleaseAfterFirstDestDepart is not None:
             taskparameters['forceSecondReleaseAfterFirstDestDepart'] = forceSecondReleaseAfterFirstDestDepart
-        if forceWaitDestContainer != False:
+        if forceWaitDestContainer is not None:
             taskparameters['forceWaitDestContainer'] = forceWaitDestContainer
         if getCorrectPlanningReport != True:
             taskparameters['getCorrectPlanningReport'] = getCorrectPlanningReport

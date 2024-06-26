@@ -290,7 +290,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         currentlimitratios=None,  # type: Optional[list[float]]
         instobjectname=None,  # type: Optional[str]
         ikparamname=None,  # type: Optional[str]
-        execute=None,  # type: Optional[int]
+        execute=1,  # type: int
         moveStraightParams=None,  # type: Optional[types.MoveStraightParameters]
         **kwargs  # type: Optional[Any]
     ):
@@ -328,7 +328,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             currentlimitratios: The joints' current limit ratios. (Default: None)
             instobjectname: If goaltype is not set and both instobjectname and ikparamname are set, use ikparamname of instobjectname as target position. (Default: None)
             ikparamname: If goaltype is not set and both instobjectname and ikparamname are set, use ikparamname of instobjectname as target position. (Default: None)
-            execute: If 1, execute the motion. (Default: None)
+            execute: If 1, execute the motion. (Default: 1)
             moveStraightParams: A set of parameters defining how the robot behaves during linear motions. (Default: None)
         """
         taskparameters = {
@@ -377,7 +377,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['instobjectname'] = instobjectname
         if ikparamname is not None:
             taskparameters['ikparamname'] = ikparamname
-        if execute is not None:
+        if execute != 1:
             taskparameters['execute'] = execute
         if moveStraightParams is not None:
             taskparameters['moveStraightParams'] = moveStraightParams
@@ -411,7 +411,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         ignoreGrabbingTarget=None,  # type: Optional[bool]
         jointthresh=None,  # type: Optional[float]
         jitter=None,  # type: Optional[float]
-        execute=None,  # type: Optional[int]
+        execute=1,  # type: int
         executionFilterFactor=None,  # type: Optional[float]
         filtertraj=None,  # type: Optional[bool]
         currentlimitratios=None,  # type: Optional[list[float]]
@@ -482,7 +482,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             ignoreGrabbingTarget: (Default: None)
             jointthresh: (Default: None)
             jitter: (Default: None)
-            execute: If 1, execute the motion. (Default: None)
+            execute: If 1, execute the motion. (Default: 1)
             executionFilterFactor: (Default: None)
             filtertraj: (Default: None)
             currentlimitratios: The joints' current limit ratios. (Default: None)
@@ -559,7 +559,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['jointthresh'] = jointthresh
         if jitter is not None:
             taskparameters['jitter'] = jitter
-        if execute is not None:
+        if execute != 1:
             taskparameters['execute'] = execute
         if executionFilterFactor is not None:
             taskparameters['executionFilterFactor'] = executionFilterFactor
@@ -2271,7 +2271,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         jointthresh=None,  # type: Optional[float]
         envclearance=None,  # type: Optional[float]
         jitter=None,  # type: Optional[float]
-        execute=None,  # type: Optional[int]
+        execute=1,  # type: int
         executionFilterFactor=None,  # type: Optional[float]
         filtertraj=None,  # type: Optional[bool]
         locationCollisionInfos=None,  # type: Optional[list[types.StartMoveThreadParametersLocationCollisionInfosArrayElement]]
@@ -2332,7 +2332,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             jointthresh: (Default: None)
             envclearance: Environment clearance in millimeters. (Default: None)
             jitter: (Default: None)
-            execute: If 1, execute the motion. (Default: None)
+            execute: If 1, execute the motion. (Default: 1)
             executionFilterFactor: (Default: None)
             filtertraj: (Default: None)
             locationCollisionInfos: List of external collision IOs to be computed and sent in realtime. (Default: None)
@@ -2402,7 +2402,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['envclearance'] = envclearance
         if jitter is not None:
             taskparameters['jitter'] = jitter
-        if execute is not None:
+        if execute != 1:
             taskparameters['execute'] = execute
         if executionFilterFactor is not None:
             taskparameters['executionFilterFactor'] = executionFilterFactor
