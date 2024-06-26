@@ -212,7 +212,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         dynamicEnvironmentState=None,  # type: Optional[types.StartPickAndPlaceThreadParametersDynamicEnvironmentState]
         allTargetsDifferentUri=None,  # type: Optional[bool]
         absMaxPlanningTimeToWait=0.0,  # type: float
-        addGraspGoalPairWorker=False,  # type: bool
+        addGraspGoalPairWorker=True,  # type: bool
         alwaysPlanOutOfOcclusion=None,  # type: Optional[Literal[0, 1]]
         approachCurrentExceedThresholds=None,  # type: Optional[list[float]]
         approachCurrentExceedThresholdsDelta=None,  # type: Optional[list[float]]
@@ -255,7 +255,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         deleteDynamicObjectsAfterFinish=False,  # type: bool
         deleteTargetWhenPlacedInDest='KeepInAll',  # type: Literal['DeleteInAll', 'KeepInAll']
         deleteTargetFromSourceContainer=0,  # type: Literal[0, 1]
-        deletetargetonocclusion=True,  # type: bool
         destikparamnames=None,  # type: Optional[list[str]]
         intermediateCycles=None,  # type: Optional[list[types.IntermediateCycleInfo]]
         deleteTargetsOnPieceLost=None,  # type: Optional[bool]
@@ -312,8 +311,8 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         dropOffDestCoordType=None,  # type: Optional[types.AllDestCoordType]
         dropOffSpeedMult=0.5,  # type: float
         dropOffsetFromCollision=0.05,  # type: float
-        dropTargetInSourceContainerBoxMult=0.7,  # type: float
-        dropTargetInDestContainerBoxMult=0.7,  # type: float
+        dropTargetInSourceContainerBoxMult=0.98,  # type: float
+        dropTargetInDestContainerBoxMult=1.0,  # type: float
         dropTargetInDestContainerZSafetyMult=0.5,  # type: float
         dropTargetMaxDistanceThresold=0.0,  # type: float
         dropTargetMaxDistanceXYThreshold=0.0,  # type: float
@@ -327,9 +326,9 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         executionEnvClearanceApproachConcatenate=None,  # type: Optional[float]
         executionMaxConcatenateSearchTime=None,  # type: Optional[float]
         executionConcatenateSearchDeltaTime=None,  # type: Optional[float]
-        executionFilterFactor=0.4,  # type: float
-        executionFilterFactorWhenGrabbing=0.4,  # type: float
-        executethread=True,  # type: bool
+        executionFilterFactor=1.0,  # type: float
+        executionFilterFactorWhenGrabbing=1.0,  # type: float
+        executethread=False,  # type: bool
         executeITLOnCompleteLayerInfo=None,  # type: Optional[types.StartPickAndPlaceThreadParametersExecuteITLOnCompleteLayerInfo]
         executionVerificationInfo=None,  # type: Optional[types.ExecutionVerificationInfo]
         needContainerResetMode='WaitForPickCompletion',  # type: Literal['ResetOnLastTargetInOrder', 'ResetOnNoMoreTargets', 'WaitForPickCompletion']
@@ -361,13 +360,13 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         graspDepartCurrentExceedThresholdsDelta=None,  # type: Optional[list[float]]
         graspApproachCollisionWallOffsetParameters=None,  # type: Optional[types.CollisionWallOffsetParameters]
         graspDepartAccelDecelScaleMultOnTargetMass=None,  # type: Optional[types.GraspDepartAccelDecelScaleMultOnTargetMass]
-        graspDepartReverseRecoveryDistance=50.0,  # type: float
+        graspDepartReverseRecoveryDistance=-1,  # type: float
         graspDepartForceTorqueExceedThresholds=None,  # type: Optional[list[float]]
         graspDepartForceTorqueExceedThresholdsDelta=None,  # type: Optional[list[float]]
         graspDepartCollisionWallOffsetParameters=None,  # type: Optional[types.CollisionWallOffsetParameters]
         graspPenetrationOnTiltDist=0,  # type: float
         graspsetname=None,  # type: Optional[str]
-        graspFilterByApproachOrientationThresh=-1,  # type: float
+        graspFilterByApproachOrientationThresh=None,  # type: Optional[float]
         graspTimeLimit=0.0,  # type: float
         graspGoalPairCostMultipliers=None,  # type: Optional[types.GraspGoalPairCostMultipliers]
         graspPriorityMultipliers=None,  # type: Optional[types.GraspPriorityMultipliers]
@@ -415,13 +414,13 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         logFailedTargetPriorityTimeout=10,  # type: float
         maxAllowedTargetSize=None,  # type: Optional[tuple[float, float, float]]
         maxAllowedTargetSizeObjectName=None,  # type: Optional[str]
-        maxConsideredCameraIkSolutions=200,  # type: int
+        maxConsideredCameraIkSolutions=20,  # type: int
         maxDestIkSolutions=20,  # type: int
-        maxGraspIkSolutions=20,  # type: int
+        maxGraspIkSolutions=5,  # type: int
         maxGraspsToConsider=0,  # type: int
-        maxFinalPlanIgnoreCount=0,  # type: int
-        maxFinalPlanIgnoreMinTargets=6,  # type: int
-        maxGraspIkSolutionsPerGrasp=10,  # type: int
+        maxFinalPlanIgnoreCount=1,  # type: int
+        maxFinalPlanIgnoreMinTargets=0,  # type: int
+        maxGraspIkSolutionsPerGrasp=5,  # type: int
         maxIncidenceAngleOfIgnoreDestLinksForDestApproach=-1.0,  # type: float
         maxIncidenceAngleOfIgnoreDestLinksForDestApproachIgnoreDistance=20.0,  # type: float
         maxStartFailuresForTargetGrasp=None,  # type: Optional[int]
@@ -439,12 +438,12 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         maxNumPlanningFailedIterations=5,  # type: int
         maxPlanningCyclesToQueue=2,  # type: int
         maxTimeForDecrease=0,  # type: float
-        maxTorqueMultForApproach=0.4,  # type: float
+        maxTorqueMultForApproach=1.0,  # type: float
         maxTorqueMultForDestApproach=1.0,  # type: float
         mergeTrajectoryParametersForRecovery=None,  # type: Optional[types.MergeTrajectoryParameters]
         midDestCoordType=None,  # type: Optional[Literal['tool', 'target']]
         midDestIkparamNames=None,  # type: Optional[list[str]]
-        midDestPassthroughVelocity=0,  # type: float
+        midDestPassthroughVelocity=None,  # type: Optional[tuple[float, float, float]]
         midDestWaitTime=0,  # type: float
         maxManipAccel=None,  # type: Optional[float]
         maxManipSpeed=None,  # type: Optional[float]
@@ -458,16 +457,16 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         moveStraightParamsOnReplan=None,  # type: Optional[types.MoveStraightParameters]
         moveToMidDest=False,  # type: bool
         multiPickInfo=None,  # type: Optional[types.MultiPickInfo]
-        neighTargetThresh=30,  # type: float
-        neighTargetThreshForTorqueError=100,  # type: float
-        neighTargetThreshY=30,  # type: float
+        neighTargetThresh=5,  # type: float
+        neighTargetThreshForTorqueError=5,  # type: float
+        neighTargetThreshY=None,  # type: Optional[float]
         notifyStateSlaveZMQUri=None,  # type: Optional[str]
         numInitialDestinationResultsWorkers=0,  # type: int
         numInitialGraspWorkers=0,  # type: int
         numInputPlacedPartInfoOnArrival=0,  # type: int
         numLogGraspPriorities=0,  # type: int
         numTargetsToPlace=0,  # type: int
-        numThreads=4,  # type: int
+        numThreads=None,  # type: Optional[int]
         numValidBodiesToTriggerWaitForCapturingBeforeGraspApproach=None,  # type: Optional[int]
         forceTorqueBasedEstimatorParameters=None,  # type: Optional[types.ForceTorqueBasedEstimatorParameters]
         objectMassPropertiesCheckingInfo=None,  # type: Optional[types.ObjectMassPropertiesCheckingInfo]
@@ -514,11 +513,11 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         saveOnPlanFailure=False,  # type: bool
         savetrajectorylog=False,  # type: bool
         saveRobotFeedbackLog=False,  # type: bool
-        saveVerificationScene=False,  # type: bool
+        saveVerificationScene=True,  # type: bool
         saveWhenSlowPlanningDuration=5.0,  # type: float
-        timeOutForFailedParts=10000,  # type: float
+        timeOutForFailedParts=0,  # type: float
         useKZFilter=True,  # type: bool
-        singularityEpsilon=0.05,  # type: float
+        singularityEpsilon=0.05235987755982988,  # type: float
         skipCollidingDestsInfo=None,  # type: Optional[types.SkipCollidingDestsInfo]
         skipLastImageCheckWhenNoMoreDestForDynamicGoals=False,  # type: bool
         skipTrajectoryPlanning=False,  # type: bool
@@ -530,7 +529,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         sourceDestTargetOrientationPenalty=0,  # type: float
         strictPickOrdering=None,  # type: Optional[types.StrictPickOrdering]
         targetdestikthresh=0.01,  # type: float
-        targetenvclearance=20,  # type: float
+        targetenvclearance=None,  # type: Optional[float]
         targetGraspTimeLimit=0,  # type: float
         targetIsRandomBox=None,  # type: Optional[bool]
         targetMinBottomPaddingForInitialTransfer=40,  # type: float
@@ -542,11 +541,11 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         targetPostActionAfterPick=None,  # type: Optional[Literal['setUnpickable', 'moveDownSetUnpickable', 'delete', 'deleteButConsiderForApproachMove', 'deleteNotifyBridge']]
         targetPriorityMultipliers=None,  # type: Optional[types.TargetPriorityMultipliers]
         targetStackDestHeightPenaltyMult=None,  # type: Optional[float]
-        targetPrioritySuctionForceMult=0,  # type: float
+        targetPrioritySuctionForceMult=0.01,  # type: float
         targetPriorityTransferSpeedMult=0,  # type: float
-        targeturi='',  # type: str
+        targeturi=None,  # type: Optional[str]
         targetThicknessThreshForTrapping=20.0,  # type: float
-        toolMaxRotationBetweenPickAndPlace=-1.0,  # type: float
+        toolMaxRotationBetweenPickAndPlace=4.71238898038469,  # type: float
         targetRotationConstraintParameters=None,  # type: Optional[types.TargetRotationConstraintParameters]
         targetLabelAlignmentParameters=None,  # type: Optional[types.TargetLabelAlignmentParameters]
         treatAsSquareTargetExtentsThreshold=-1.0,  # type: float
@@ -554,7 +553,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         toolposes=None,  # type: Optional[types.StartPickAndPlaceThreadParametersToolposes]
         toolSpeedAccelInfo=None,  # type: Optional[types.ToolSpeedAccelInfo]
         toolSpeedAccelOptions=0,  # type: int
-        torqueDistThresh=15,  # type: float
+        torqueDistThresh=20,  # type: float
         transferSpeedPostMult=None,  # type: Optional[float]
         minAcceptedTransferSpeedMult=None,  # type: Optional[float]
         minTransferSpeedMult=None,  # type: Optional[float]
@@ -649,7 +648,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             absMaxPlanningTimeToWait: seconds. Valid if > 0. If a valid pick-place plan result has been computed and the system has been waiting for more than the specified time, then the best plan result is returned. If no valid plan result is available yet, the system will continue planning until all the candidate grasp ikparams, dest ikparams, and their combinations have been checked. If no valid plan result is computed and all the candidate IKParams are exhausted, then the system will return error codes such as `novaliddgrasp`, `novaliddest`, or `novalidgraspgoalpair`.
 
             There are other planning time limits like `smoothingTimeLimit` in SmootherParameters, `maxPlanningTime` in PathPlannerParameters, `iktimelimit` for finding IKSolutions, etc. that affect the time spent on parts of the pick-place planning process. (Default: 0.0)
-            addGraspGoalPairWorker: If True, adds a planning worker thread that works only on grasp-goal pair generation. (Default: False)
+            addGraspGoalPairWorker: If True, adds a planning worker thread that works only on grasp-goal pair generation. (Default: True)
             alwaysPlanOutOfOcclusion: If true, plans a motion out of camera occlusion when a pick failed or robot had to stop and retry a pick (i.e. piece lost). (Default: None)
             approachCurrentExceedThresholds: Absolute current thresholds that should not exceed by joints (Default: None)
             approachCurrentExceedThresholdsDelta: Check if any of the currents exceed the difference between the start current values (at torqueCheckStartTime) and the current ones. If they do, then will return torque error. Do the check after torqueCheckStartTime. (Default: None)
@@ -709,7 +708,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             deleteDynamicObjectsAfterFinish: If True, will delete all dynamic objects after finishing cycle (for cleaning up) (Default: False)
             deleteTargetWhenPlacedInDest: If True, then delete the target as soon as it is placed in the destination. This simulates machines or drop off locations which take the part as soon as the robot releases them. (Default: 'KeepInAll')
             deleteTargetFromSourceContainer: 0: do not delete target after it is picked up until the next vision detection update changes the targets. 1: delete the target after it is picked up. Setting this to 1 allows the robot to pick up previously overlapped parts without waiting for a vision update, but it is also more dangerous since there can be parts below the picked up target that were previously getting occluded, and removing the picked up target might wrongly tell the robot that the below region is free space. If 2, then only consider the delete targets during grabbing the part, but still consider them during approach. (Default: 0)
-            deletetargetonocclusion: If True and robot is initially occluding the container, then delete all the targets and wait for vision to repopulate (Default: True)
             destikparamnames: Names of the intermediate destination IK parameters to which the robot will go and release the part. Should be in the format instobjectname/ikparamname (Default: None)
             intermediateCycles: List of information specifying conditions for when to do an intermediate cycle for target re-grabbing. Conditions for intermediate cycle can very, which is why there is a list of them. (Default: None)
             deleteTargetsOnPieceLost: If True, when the piece is lost and robot has to recover, will remove the all detected targets from the scene and wait for new ones to come. (Default: None)
@@ -839,8 +837,8 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             dropOffDestCoordType: Coordinate system type of the destination used for drop off. (Default: None)
             dropOffSpeedMult: [0,1], Speed multiplier when robot is dropping a part off. (Default: 0.5)
             dropOffsetFromCollision: For destinations with isDropInSource set to True, try to lower the drop point so that it is [dropOffsetFromCollision] away from the top of the parts in the pick container. (Default: 0.05)
-            dropTargetInSourceContainerBoxMult: Multiplier for the target AABB to determine if safely dropped in source container. the higher the value, the more safety there is in accidentally thinking that the part was dropped inside the container. If robot is getting FinishedDropTargetFailure while object is still in container, then reduce this value. (Default: 0.7)
-            dropTargetInDestContainerBoxMult: Multiplier for the target AABB to determine if safely dropped in dest container. the higher the value, the more safety there is in accidentally thinking that the part was dropped inside the container. (Default: 0.7)
+            dropTargetInSourceContainerBoxMult: Multiplier for the target AABB to determine if safely dropped in source container. the higher the value, the more safety there is in accidentally thinking that the part was dropped inside the container. If robot is getting FinishedDropTargetFailure while object is still in container, then reduce this value. (Default: 0.98)
+            dropTargetInDestContainerBoxMult: Multiplier for the target AABB to determine if safely dropped in dest container. the higher the value, the more safety there is in accidentally thinking that the part was dropped inside the container. (Default: 1.0)
             dropTargetInDestContainerZSafetyMult: If target is inside the XY dest constraints, this controls what is the max height of the target (in terms of its multiples) where it is ok to drop the target because of torque limits/piece lost errors. in other words, the amount of z extents that could be outside of the dest and still success will be declared. The lower the value, the more conservative it is. (Default: 0.5)
             dropTargetMaxDistanceThresold: Maximum distance from the grasp trajectory start point to determine if the part safely dropped inside of the source container. If 'isStopOnPieceLost' is False, then recover regardless this parameter; if 'isStopOnPieceLost' is True and the part safely dropped then try to recover from PieceLost error. Assumes the part is lost if this is negative. (Default: 0.0)
             dropTargetMaxDistanceXYThreshold: Maximum XY distance from the grasp trajectory start point to determine if the part safely dropped inside of the source container. If 'isStopOnPieceLost' is False, then recover regardless this parameter; if 'isStopOnPieceLost' is True and the part safely dropped then try to recover from PieceLost error. (Default: 0.0)
@@ -860,9 +858,9 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             executionEnvClearanceApproachConcatenate: The environment clearance used for approach trajectory concatenation with merging. Set to 0.0 to speed up concatenation, but can be more dangerous. (Default: None)
             executionMaxConcatenateSearchTime: The maximum search time in common.ConcatenateTrajectoriesWithMerging. (Default: None)
             executionConcatenateSearchDeltaTime: The deltatime in common.ConcatenateTrajectoriesWithMerging. If 0 - the concatenation is disabled. (Default: None)
-            executionFilterFactor: the parameter is used to make robot trajectory while grabbing not grabbing  a target smooth. Default is 1.0, a smaller value makes the trajectory smoother, but the trajectory is rejected more often and can possibly collide with obstacles. (Default: 0.4)
-            executionFilterFactorWhenGrabbing: the parameter is used to make robot trajectory while grabbing a target smooth. Default is 0.4, a smaller value makes the trajectory smoother, but the trajectory is rejected more often and can possibly collide with obstacles. (Default: 0.4)
-            executethread: (Default: True)
+            executionFilterFactor: the parameter is used to make robot trajectory while grabbing not grabbing  a target smooth. Default is 1.0, a smaller value makes the trajectory smoother, but the trajectory is rejected more often and can possibly collide with obstacles. (Default: 1.0)
+            executionFilterFactorWhenGrabbing: the parameter is used to make robot trajectory while grabbing a target smooth. Default is 0.4, a smaller value makes the trajectory smoother, but the trajectory is rejected more often and can possibly collide with obstacles. (Default: 1.0)
+            executethread: (Default: False)
             executeITLOnCompleteLayerInfo: Execute ITL program after packing one layer of objects. (Default: None)
             executionVerificationInfo: Parameters for enabling and setting up execution verification that allows the robot to quickly stop when it is about to hit a part that is moved. This function is *highly recommend* to be used. (Default: None)
             needContainerResetMode: Enum that allows to reset needContainer signals in planning earlier while processing the last part. This will allow moveOut faster for that container if the condition is satisfied:
@@ -939,13 +937,13 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             graspDepartCurrentExceedThresholdsDelta: Check if difference between the start joint motor current values (at torqueCheckStartTime) and the current values exceed these thresholds. If they do, then will return torque error. (Default: None)
             graspApproachCollisionWallOffsetParameters: Parameters to move away from neighboring walls on departing. When these parameters are used to approaching, a movement is computed that starts at the given distance and moves closer to the walls. (Default: None)
             graspDepartAccelDecelScaleMultOnTargetMass: This array is used to compute a scaling multiplier that scales the grasp depart acceleration and deceleration from target mass. The computed scaling multiplier will be limited to a maximum of 1.0. This is useful when mass validation is enabled and computing accurate inertial force compensation is difficult. (Default: None)
-            graspDepartReverseRecoveryDistance: mm, max distance to reverse the trajectory from the detected collision/error position when got torque error during grasp depart. (Default: 50.0)
+            graspDepartReverseRecoveryDistance: mm, max distance to reverse the trajectory from the detected collision/error position when got torque error during grasp depart. -1 means that the default reverseRecoveryDistance from robot bridges should be used instead. (Default: -1)
             graspDepartForceTorqueExceedThresholds: Absolute force and torque thresholds that should not be exceeded during grasp depart. Unit is N for force, Nm for torque. (Default: None)
             graspDepartForceTorqueExceedThresholdsDelta: Check if any of the force and torque exceed the difference between the values at start (at torqueCheckStartTime) and the current ones. If they do, then will return torque error. Unit is N for force, Nm for torque. (Default: None)
             graspDepartCollisionWallOffsetParameters: Parameters to move away from neighboring walls on departing. When these parameters are used to approaching, a movement is computed that starts at the given distance and moves closer to the walls. (Default: None)
             graspPenetrationOnTiltDist: mm. Distance to penetrate when robot is grasping a tilted part (Default: 0)
             graspsetname: Name of the grasp set to use for picking. (Default: None)
-            graspFilterByApproachOrientationThresh: degrees. This angle is used to filter grasps such that only approaches in the source container are allowed which are within a threshold of the container's up axis. If less than 0, then this setting is ignored. (Default: -1)
+            graspFilterByApproachOrientationThresh: degrees. This angle is used to filter grasps such that only approaches in the source container are allowed which are within a threshold of the container's up axis. If less than 0, then this setting is ignored. If absent, 90 is used instead. (Default: None)
             graspTimeLimit: Maximum time to spend on computing one grasp for one target. 0 means infinite. (Default: 0.0)
             graspGoalPairCostMultipliers: Multipliers for various grasp-goal pair costs. (Default: None)
             graspPriorityMultipliers: Multipliers for various grasp priority values. (Default: None)
@@ -999,13 +997,13 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             maxAllowedTargetSizeObjectName: Name of the object whose coordinate system will be used to compare the target size with `maxAllowedTargetSizeInDest`. If empty, then use world coordinate system.
 
             For example, in depalletizing applications, `maxAllowedTargetSize` may be based on conveyor coordinate system. (Default: None)
-            maxConsideredCameraIkSolutions: Out of this many camera IK params that have IK solutions, will pick the one that gives solutions closest to the corresponding approach/depart configs. (Default: 200)
+            maxConsideredCameraIkSolutions: Out of this many camera IK params that have IK solutions, will pick the one that gives solutions closest to the corresponding approach/depart configs. (Default: 20)
             maxDestIkSolutions: The maximum IK solutions to have per destination before system gives up and tries something else. If 0, then compute all solutions (Default: 20)
-            maxGraspIkSolutions: The maximum IK solutions to have per target before system gives up and tries something else. If 0, then compute all solutions (Default: 20)
+            maxGraspIkSolutions: The maximum IK solutions to have per target before system gives up and tries something else. If 0, then compute all solutions (Default: 5)
             maxGraspsToConsider: If > 0, the max grasps of each grasp set to consider. If parameter is set too low, robot could finish with NoValidGrasp due to not considering the grasps. (Default: 0)
-            maxFinalPlanIgnoreCount: Max number of times final plan can be ignored. (Default: 0)
-            maxFinalPlanIgnoreMinTargets: minimum number of targets to have before can start to ignore the final plan mode (Default: 6)
-            maxGraspIkSolutionsPerGrasp: max grasp solutions allowed per grasp. If 0, then infinite (Default: 10)
+            maxFinalPlanIgnoreCount: Max number of times final plan can be ignored. (Default: 1)
+            maxFinalPlanIgnoreMinTargets: minimum number of targets to have before can start to ignore the final plan mode (Default: 0)
+            maxGraspIkSolutionsPerGrasp: max grasp solutions allowed per grasp. If 0, then infinite (Default: 5)
             maxIncidenceAngleOfIgnoreDestLinksForDestApproach: deg. If > 0, destination candidates with linear approach segments in which robot links with the _ignoredest_ tag collide obstacles and which incidence angle is larger than this number are rejected. This might be useful to prevent a suction foam from scratching work pieces already placed at a destination. (Default: -1.0)
             maxIncidenceAngleOfIgnoreDestLinksForDestApproachIgnoreDistance: mm. If > 0, the constraint for maxIncidenceAngleOfIgnoreDestLinksForDestApproach is not applied when a target is within this range from its final position. (Default: 20.0)
             maxStartFailuresForTargetGrasp: sometimes the start trajectory planning can fail because of a bad pair of grasps and targets. this controls how many failures are tolerated before system fails. (Default: None)
@@ -1023,14 +1021,14 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             maxNumPlanningFailedIterations: max number of planning iterations to fail until the system gives up (Default: 5)
             maxPlanningCyclesToQueue: The max cycles to queue ahead for planning (Default: 2)
             maxTimeForDecrease: The amount of countdown time (in seconds.) until the target, which previously failed, is clear from a penalty. This parameter is used in conjunction with targetPriorityMultipliers/failureCountdownMult. (Default: 0)
-            maxTorqueMultForApproach: the percentage of current to limit from maximum when grasp approaching. if 1, then disable (Default: 0.4)
+            maxTorqueMultForApproach: the percentage of current to limit from maximum when grasp approaching. if 1, then disable (Default: 1.0)
             maxTorqueMultForDestApproach: the percentage of current to limit from max when dest approaching. if 1, then disable (Default: 1.0)
             mergeTrajectoryParametersForRecovery: Parameters for generating a connecting trajectory, which is a trajectory segment connecting the current robot values (which may be the result of the robot stopping due to io sensors) with the initial robot values of the next trajectory to be executed. (Default: None)
             midDestCoordType: coordinate system type of the mid-destination controlled by [midDestIkparamNames]. can be one of:
              - 'tool' specifying the current tool,
             - 'target' specifying the original target coordinate system. (Default: None)
             midDestIkparamNames: Names of the mid dest params to go to (Default: None)
-            midDestPassthroughVelocity: seconds, The speed to pass through the mid-dest. (Default: 0)
+            midDestPassthroughVelocity: The speed to pass through the mid-dest. (Default: None)
             midDestWaitTime: seconds, The time to wait at the middest (Default: 0)
             maxManipAccel: If non-zero, then the Trajectory Timer considers the acceleration limit (m/s^2) of the active manipulators of the selected robots in the configuration space. Gravity is always included in the acceleration computations. 0 means no acceleration limit. (Default: None)
             maxManipSpeed: If non-zero, then the Trajectory Timer considers the speed limit (m/s) of the active manipulators of the selected robots in the configuration space. 0 means no speed limit. (Default: None)
@@ -1055,7 +1053,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             The distance is calculated between the object poses. It does not consider the object's mesh or shape.
 
             This parameter should be chosen depending on the type of object, the gripper and the vision system. For large object size and detection noise, a larger value will be appropriate. A reasonable value may be 0.5-2x the object's extent (the maximum dimension).
-             (Default: 30)
+             (Default: 5)
             neighTargetThreshForTorqueError: A threshold to avoid picking targets close to another target whose pick-place execution resulted in a torque limit error. 
 
             See the neighTargetThresh parameter for a detailed explanation. This parameter works the same way, but it only applies when the pick-place execution caused a torque limit error.
@@ -1063,19 +1061,19 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             A reasonable value may be 1-3x the object's extent.
 
             This parameter has no effect if it is smaller than neighTargetThresh.
-             (Default: 100)
+             (Default: 5)
             neighTargetThreshY: A threshold to avoid picking targets close to another target in the Y direction.
 
             See the neighTargetThresh parameter for a detailed explanation. This parameter works the same way, but the distance is calculated solely with regard to the position of the object in the Y-axis.
 
-            This parameter should be chosen depending on the type of object, the gripper and the vision system. For large object sizes and significant detection noise, a larger value will be appropriate. A reasonable value may be 0.5-2x the object's Y-extent (the maximum dimension). (Default: 30)
+            This parameter should be chosen depending on the type of object, the gripper and the vision system. For large object sizes and significant detection noise, a larger value will be appropriate. A reasonable value may be 0.5-2x the object's Y-extent (the maximum dimension). (Default: None)
             notifyStateSlaveZMQUri: when a slave finishes the planning of the order cycle, will use this uri to notify another slave of the current state of the environment. Format is tcp://localhost:11000/?slaverequestid=XXX&username=YYY&otheroption&ZZZ (Default: None)
             numInitialDestinationResultsWorkers: Specifies the number of destination result worker threads that should be spawned. Initially, there should be as many worker threads as possible before hitting the IK limit. However, since the threads can be hard to cancel, the number should be limited. If 0, should be auto-set. (Default: 0)
             numInitialGraspWorkers: Specifies the number of grasp worker threads that should be spawned. Initially, there should be as many worker threads as possible. However, since the threads can be hard to cancel, the number should be limited. If 0, should be auto-set. (Default: 0)
             numInputPlacedPartInfoOnArrival: The number of parts to place in the destination. Items that were failed to be picked do not count. If 0, then will continue going until `cycledests` and `destikparamnames` have been all exhausted. Otherwise will only pick up these parts and stop the pick and place loop. (Default: 0)
             numLogGraspPriorities: specifies the number of grasps shown in log to display priorities. (Default: 0)
             numTargetsToPlace: The number of parts to place in the destination. picked up failures do not count. If 0, then will continue going until cycledests and destikparamnames have been all exhausted. Otherwise will only pick up these parts and stop the pick and place loop. (Default: 0)
-            numThreads: Number of threads to be used for planning (Default: 4)
+            numThreads: Number of threads to be used for planning (Default: None)
             numValidBodiesToTriggerWaitForCapturingBeforeGraspApproach: Forces the robot to wait outside the source container so that detection can be performed before performing another grasp.
 
             This parameter can be set if the picking motion is so fast that it interrupts image capture. In this case, it can increase performance if the robot waits outside of the source container for a short amount of time before picking the last valid candidate (by setting this parameter to 1). This allows detection to be performed while the robot is moving. Otherwise, the robot would have to wait for both the image capture and detection.
@@ -1129,11 +1127,11 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             saveOnPlanFailure: Save environment state when plan fails. Even if False, this flag will be enabled when the debug level is DEBUG or higher (Default: False)
             savetrajectorylog: True of False (Default: False)
             saveRobotFeedbackLog: Save logs from each trajectory the robot executes with data including the encoder values of the robot, the current/torque values, and specific IO signal values. When this feature is enabled, the system can slow down a little since it is storing data. Some UI functions that display data need this feature to be enabled so that the correct data can be displayed. (Default: False)
-            saveVerificationScene: If True, then the environment state showing the robot execution verification failure is saved. (Default: False)
+            saveVerificationScene: If True, then the environment state showing the robot execution verification failure is saved. (Default: True)
             saveWhenSlowPlanningDuration: Time duration in seconds, after which planning state will be saved, when planning is taking a long time. (Default: 5.0)
-            timeOutForFailedParts: ms. If the part failed within this time, do not consider it for the grasping stage. (Default: 10000)
+            timeOutForFailedParts: ms. If the part failed within this time, do not consider it for the grasping stage. (Default: 0)
             useKZFilter: Use KZ filter in FilterRobotTrajectory related functions. (Default: True)
-            singularityEpsilon: radians. If the joint is within this threshold, it is assumed to be in a singularity. Joint positions near singularities are avoided during planning. (Default: 0.05)
+            singularityEpsilon: radians. If the joint is within this threshold, it is assumed to be in a singularity. Joint positions near singularities are avoided during planning. (Default: 0.05235987755982988)
             skipCollidingDestsInfo: A dictionary specifying what kind of destinations can be skipped during destination validation process. (Default: None)
             skipLastImageCheckWhenNoMoreDestForDynamicGoals: If True, then after DynamicGoalGenerator returns with `NoMoreDest`, the last detection results from the source container are ignored - the last check is skipped.
 
@@ -1156,7 +1154,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             - 'type'
              (Default: None)
             targetdestikthresh: threshold between expected target position from destinations with the planned target position after robot grabbed and transferred it. If the planned position of the target is within this threshold then assume that the plan is successful. Smaller the value more accurate the placement is, but fail more frequently. Default is 0.01 (Default: 0.01)
-            targetenvclearance: mm, environment clearacence applied to grabbed target (Default: 20)
+            targetenvclearance: mm, environment clearacence applied to grabbed target (Default: None)
             targetGraspTimeLimit: sec, max time to spend on computing grasps for one target. 0 means infinite (Default: 0)
             targetIsRandomBox: If True, then using randomized box picking which means vision will send results with the box sizes in it (Default: None)
             targetMinBottomPaddingForInitialTransfer: The amount of padding that is added to the bottom of the target when moving the target out of the source container to the next position (dest, middest, or scan position). This is used to raise the part higher when moving out of the source container.
@@ -1195,11 +1193,11 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
              (Default: None)
             targetPriorityMultipliers: Multipliers and other related quantities for various target priority values. (Default: None)
             targetStackDestHeightPenaltyMult: (Default: None)
-            targetPrioritySuctionForceMult: Depending on how the gripper overlaps with the target object, it can exert different suction forces on it. This is a multiplier on the force (N) for a target's grasp priority. (Default: 0)
+            targetPrioritySuctionForceMult: Depending on how the gripper overlaps with the target object, it can exert different suction forces on it. This is a multiplier on the force (N) for a target's grasp priority. (Default: 0.01)
             targetPriorityTransferSpeedMult: This is a multiplier on the transferSpeedMult (TSM) for a target's grasp priority. (Default: 0)
-            targeturi: Optional URI to use for every target. if randomized box picking, then leave empty (Default: '')
+            targeturi: Optional URI to use for every target. if randomized box picking, then leave empty (Default: None)
             targetThicknessThreshForTrapping: mm, threshold for maximum target thickness which can be trapped by disabled suction cup for items with objectType not 'bag' and 'twosidedpackage' items. Items with objectType 'bag' and 'twosidedpackage' will ignore such a parameter and will be considered for trapping. (Default: 20.0)
-            toolMaxRotationBetweenPickAndPlace: deg, If > 0, constraints the tool from rotating too much between pick and place positions. (Default: -1.0)
+            toolMaxRotationBetweenPickAndPlace: deg, If > 0, constraints the tool from rotating too much between pick and place positions. (Default: 4.71238898038469)
             targetRotationConstraintParameters: Parameters for constraints to relative rotation between target at source and target at destination. Rotation here means rotation around world Z-axis. (Default: None)
             targetLabelAlignmentParameters: Parameters for constraints to align target label faces to a specific direction at a destination (Default: None)
             treatAsSquareTargetExtentsThreshold: mm, If > 0, when the difference of X and Y target edge lengths is smaller than this, the target is treated as square shaped and all placement directions are considered without trying to align a longer edge to X axis of a destination. (Default: -1.0)
@@ -1213,7 +1211,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             - ** 2 **: If set, then use fMaxManipSpeed/fMaxManipAccel for any other P2P movements.
 
             By default, this is disabled. (Default: 0)
-            torqueDistThresh: mm, when gravity compensation is enabled, how many mm offset the robot could get from its commanded position before declaring a torque limits error (Default: 15)
+            torqueDistThresh: mm, when gravity compensation is enabled, how many mm offset the robot could get from its commanded position before declaring a torque limits error (Default: 20)
             transferSpeedPostMult: Specifies the transfer speed mult ratio in [0,1] to reduce speed when grabbing an object. This is a global setting applied (Default: None)
             minAcceptedTransferSpeedMult: The minimum accepted combined transferSpeedMult. Reject everything else.
 
@@ -1313,7 +1311,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['allTargetsDifferentUri'] = allTargetsDifferentUri
         if absMaxPlanningTimeToWait != 0.0:
             taskparameters['absMaxPlanningTimeToWait'] = absMaxPlanningTimeToWait
-        if addGraspGoalPairWorker != False:
+        if addGraspGoalPairWorker != True:
             taskparameters['addGraspGoalPairWorker'] = addGraspGoalPairWorker
         if alwaysPlanOutOfOcclusion is not None:
             taskparameters['alwaysPlanOutOfOcclusion'] = alwaysPlanOutOfOcclusion
@@ -1399,8 +1397,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['deleteTargetWhenPlacedInDest'] = deleteTargetWhenPlacedInDest
         if deleteTargetFromSourceContainer != 0:
             taskparameters['deleteTargetFromSourceContainer'] = deleteTargetFromSourceContainer
-        if deletetargetonocclusion != True:
-            taskparameters['deletetargetonocclusion'] = deletetargetonocclusion
         if destikparamnames is not None:
             taskparameters['destikparamnames'] = destikparamnames
         if intermediateCycles is not None:
@@ -1513,9 +1509,9 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['dropOffSpeedMult'] = dropOffSpeedMult
         if dropOffsetFromCollision != 0.05:
             taskparameters['dropOffsetFromCollision'] = dropOffsetFromCollision
-        if dropTargetInSourceContainerBoxMult != 0.7:
+        if dropTargetInSourceContainerBoxMult != 0.98:
             taskparameters['dropTargetInSourceContainerBoxMult'] = dropTargetInSourceContainerBoxMult
-        if dropTargetInDestContainerBoxMult != 0.7:
+        if dropTargetInDestContainerBoxMult != 1.0:
             taskparameters['dropTargetInDestContainerBoxMult'] = dropTargetInDestContainerBoxMult
         if dropTargetInDestContainerZSafetyMult != 0.5:
             taskparameters['dropTargetInDestContainerZSafetyMult'] = dropTargetInDestContainerZSafetyMult
@@ -1543,11 +1539,11 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['executionMaxConcatenateSearchTime'] = executionMaxConcatenateSearchTime
         if executionConcatenateSearchDeltaTime is not None:
             taskparameters['executionConcatenateSearchDeltaTime'] = executionConcatenateSearchDeltaTime
-        if executionFilterFactor != 0.4:
+        if executionFilterFactor != 1.0:
             taskparameters['executionFilterFactor'] = executionFilterFactor
-        if executionFilterFactorWhenGrabbing != 0.4:
+        if executionFilterFactorWhenGrabbing != 1.0:
             taskparameters['executionFilterFactorWhenGrabbing'] = executionFilterFactorWhenGrabbing
-        if executethread != True:
+        if executethread != False:
             taskparameters['executethread'] = executethread
         if executeITLOnCompleteLayerInfo is not None:
             taskparameters['executeITLOnCompleteLayerInfo'] = executeITLOnCompleteLayerInfo
@@ -1611,7 +1607,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['graspApproachCollisionWallOffsetParameters'] = graspApproachCollisionWallOffsetParameters
         if graspDepartAccelDecelScaleMultOnTargetMass is not None:
             taskparameters['graspDepartAccelDecelScaleMultOnTargetMass'] = graspDepartAccelDecelScaleMultOnTargetMass
-        if graspDepartReverseRecoveryDistance != 50.0:
+        if graspDepartReverseRecoveryDistance != -1:
             taskparameters['graspDepartReverseRecoveryDistance'] = graspDepartReverseRecoveryDistance
         if graspDepartForceTorqueExceedThresholds is not None:
             taskparameters['graspDepartForceTorqueExceedThresholds'] = graspDepartForceTorqueExceedThresholds
@@ -1623,7 +1619,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['graspPenetrationOnTiltDist'] = graspPenetrationOnTiltDist
         if graspsetname is not None:
             taskparameters['graspsetname'] = graspsetname
-        if graspFilterByApproachOrientationThresh != -1:
+        if graspFilterByApproachOrientationThresh is not None:
             taskparameters['graspFilterByApproachOrientationThresh'] = graspFilterByApproachOrientationThresh
         if graspTimeLimit != 0.0:
             taskparameters['graspTimeLimit'] = graspTimeLimit
@@ -1719,19 +1715,19 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['maxAllowedTargetSize'] = maxAllowedTargetSize
         if maxAllowedTargetSizeObjectName is not None:
             taskparameters['maxAllowedTargetSizeObjectName'] = maxAllowedTargetSizeObjectName
-        if maxConsideredCameraIkSolutions != 200:
+        if maxConsideredCameraIkSolutions != 20:
             taskparameters['maxConsideredCameraIkSolutions'] = maxConsideredCameraIkSolutions
         if maxDestIkSolutions != 20:
             taskparameters['maxDestIkSolutions'] = maxDestIkSolutions
-        if maxGraspIkSolutions != 20:
+        if maxGraspIkSolutions != 5:
             taskparameters['maxGraspIkSolutions'] = maxGraspIkSolutions
         if maxGraspsToConsider != 0:
             taskparameters['maxGraspsToConsider'] = maxGraspsToConsider
-        if maxFinalPlanIgnoreCount != 0:
+        if maxFinalPlanIgnoreCount != 1:
             taskparameters['maxFinalPlanIgnoreCount'] = maxFinalPlanIgnoreCount
-        if maxFinalPlanIgnoreMinTargets != 6:
+        if maxFinalPlanIgnoreMinTargets != 0:
             taskparameters['maxFinalPlanIgnoreMinTargets'] = maxFinalPlanIgnoreMinTargets
-        if maxGraspIkSolutionsPerGrasp != 10:
+        if maxGraspIkSolutionsPerGrasp != 5:
             taskparameters['maxGraspIkSolutionsPerGrasp'] = maxGraspIkSolutionsPerGrasp
         if maxIncidenceAngleOfIgnoreDestLinksForDestApproach != -1.0:
             taskparameters['maxIncidenceAngleOfIgnoreDestLinksForDestApproach'] = maxIncidenceAngleOfIgnoreDestLinksForDestApproach
@@ -1767,7 +1763,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['maxPlanningCyclesToQueue'] = maxPlanningCyclesToQueue
         if maxTimeForDecrease != 0:
             taskparameters['maxTimeForDecrease'] = maxTimeForDecrease
-        if maxTorqueMultForApproach != 0.4:
+        if maxTorqueMultForApproach != 1.0:
             taskparameters['maxTorqueMultForApproach'] = maxTorqueMultForApproach
         if maxTorqueMultForDestApproach != 1.0:
             taskparameters['maxTorqueMultForDestApproach'] = maxTorqueMultForDestApproach
@@ -1777,7 +1773,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['midDestCoordType'] = midDestCoordType
         if midDestIkparamNames is not None:
             taskparameters['midDestIkparamNames'] = midDestIkparamNames
-        if midDestPassthroughVelocity != 0:
+        if midDestPassthroughVelocity is not None:
             taskparameters['midDestPassthroughVelocity'] = midDestPassthroughVelocity
         if midDestWaitTime != 0:
             taskparameters['midDestWaitTime'] = midDestWaitTime
@@ -1805,11 +1801,11 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['moveToMidDest'] = moveToMidDest
         if multiPickInfo is not None:
             taskparameters['multiPickInfo'] = multiPickInfo
-        if neighTargetThresh != 30:
+        if neighTargetThresh != 5:
             taskparameters['neighTargetThresh'] = neighTargetThresh
-        if neighTargetThreshForTorqueError != 100:
+        if neighTargetThreshForTorqueError != 5:
             taskparameters['neighTargetThreshForTorqueError'] = neighTargetThreshForTorqueError
-        if neighTargetThreshY != 30:
+        if neighTargetThreshY is not None:
             taskparameters['neighTargetThreshY'] = neighTargetThreshY
         if notifyStateSlaveZMQUri is not None:
             taskparameters['notifyStateSlaveZMQUri'] = notifyStateSlaveZMQUri
@@ -1823,7 +1819,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['numLogGraspPriorities'] = numLogGraspPriorities
         if numTargetsToPlace != 0:
             taskparameters['numTargetsToPlace'] = numTargetsToPlace
-        if numThreads != 4:
+        if numThreads is not None:
             taskparameters['numThreads'] = numThreads
         if numValidBodiesToTriggerWaitForCapturingBeforeGraspApproach is not None:
             taskparameters['numValidBodiesToTriggerWaitForCapturingBeforeGraspApproach'] = numValidBodiesToTriggerWaitForCapturingBeforeGraspApproach
@@ -1917,15 +1913,15 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['savetrajectorylog'] = savetrajectorylog
         if saveRobotFeedbackLog != False:
             taskparameters['saveRobotFeedbackLog'] = saveRobotFeedbackLog
-        if saveVerificationScene != False:
+        if saveVerificationScene != True:
             taskparameters['saveVerificationScene'] = saveVerificationScene
         if saveWhenSlowPlanningDuration != 5.0:
             taskparameters['saveWhenSlowPlanningDuration'] = saveWhenSlowPlanningDuration
-        if timeOutForFailedParts != 10000:
+        if timeOutForFailedParts != 0:
             taskparameters['timeOutForFailedParts'] = timeOutForFailedParts
         if useKZFilter != True:
             taskparameters['useKZFilter'] = useKZFilter
-        if singularityEpsilon != 0.05:
+        if singularityEpsilon != 0.05235987755982988:
             taskparameters['singularityEpsilon'] = singularityEpsilon
         if skipCollidingDestsInfo is not None:
             taskparameters['skipCollidingDestsInfo'] = skipCollidingDestsInfo
@@ -1949,7 +1945,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['strictPickOrdering'] = strictPickOrdering
         if targetdestikthresh != 0.01:
             taskparameters['targetdestikthresh'] = targetdestikthresh
-        if targetenvclearance != 20:
+        if targetenvclearance is not None:
             taskparameters['targetenvclearance'] = targetenvclearance
         if targetGraspTimeLimit != 0:
             taskparameters['targetGraspTimeLimit'] = targetGraspTimeLimit
@@ -1973,15 +1969,15 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['targetPriorityMultipliers'] = targetPriorityMultipliers
         if targetStackDestHeightPenaltyMult is not None:
             taskparameters['targetStackDestHeightPenaltyMult'] = targetStackDestHeightPenaltyMult
-        if targetPrioritySuctionForceMult != 0:
+        if targetPrioritySuctionForceMult != 0.01:
             taskparameters['targetPrioritySuctionForceMult'] = targetPrioritySuctionForceMult
         if targetPriorityTransferSpeedMult != 0:
             taskparameters['targetPriorityTransferSpeedMult'] = targetPriorityTransferSpeedMult
-        if targeturi != '':
+        if targeturi is not None:
             taskparameters['targeturi'] = targeturi
         if targetThicknessThreshForTrapping != 20.0:
             taskparameters['targetThicknessThreshForTrapping'] = targetThicknessThreshForTrapping
-        if toolMaxRotationBetweenPickAndPlace != -1.0:
+        if toolMaxRotationBetweenPickAndPlace != 4.71238898038469:
             taskparameters['toolMaxRotationBetweenPickAndPlace'] = toolMaxRotationBetweenPickAndPlace
         if targetRotationConstraintParameters is not None:
             taskparameters['targetRotationConstraintParameters'] = targetRotationConstraintParameters
@@ -1997,7 +1993,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['toolSpeedAccelInfo'] = toolSpeedAccelInfo
         if toolSpeedAccelOptions != 0:
             taskparameters['toolSpeedAccelOptions'] = toolSpeedAccelOptions
-        if torqueDistThresh != 15:
+        if torqueDistThresh != 20:
             taskparameters['torqueDistThresh'] = torqueDistThresh
         if transferSpeedPostMult is not None:
             taskparameters['transferSpeedPostMult'] = transferSpeedPostMult

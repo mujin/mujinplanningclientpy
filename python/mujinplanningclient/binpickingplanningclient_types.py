@@ -327,6 +327,9 @@ ExecutionVerificationInfo = TypedDict('ExecutionVerificationInfo', {
     'verifySourceMode': Literal['never', 'lastDetection', 'pointCloudOnChange', 'pointCloudAlways', 'pointCloudOnChangeFirstCycleOnly', 'pointCloudOnChangeAfterGrab'],
     'verifyTargetPositionThresh': float,
     'objectTypeMap': ExecutionVerificationInfoObjectTypeMap,
+    'verifyTargetWithSourcePointCloudSearchRegionMult': float,
+    'verifyTargetWithSourcePointCloudNewlyAppearedPointsAreaThresh': float,
+    'doTargetVerifyWithSourcePointCloud': bool,
 }, total=False)
 
 CollisionWallOffsetParameters = TypedDict('CollisionWallOffsetParameters', {
