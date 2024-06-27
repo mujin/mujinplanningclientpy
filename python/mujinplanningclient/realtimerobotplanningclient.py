@@ -197,7 +197,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             if envclearance is not None:
                 taskparameters['envclearance'] = envclearance
 
-        return super(RealtimeRobotPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, respawnopts=respawnopts, forcereload=forcereload)
+        return super(RealtimeRobotPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, respawnopts=respawnopts, forcereload=forcereload, blockwait=blockwait)
 
     #
     # Commands (generated from the spec)
