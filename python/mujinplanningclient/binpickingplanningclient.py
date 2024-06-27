@@ -2445,10 +2445,9 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         taskparameters = {
             'command': 'MoveToDropOff',
             'dropOffInfo': dropOffInfo,
+            'execute': execute,
             'unit': unit,
         }  # type: dict[str, Any]
-        if execute != 1:
-            taskparameters['execute'] = execute
         if startvalues is not None:
             taskparameters['startvalues'] = list(startvalues)
         if envclearance is not None:

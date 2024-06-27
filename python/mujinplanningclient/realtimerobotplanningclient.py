@@ -1688,12 +1688,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'MoveJointsToJointConfigurationStates',
             'goalJointConfigurationStates': jointConfigurationStates,
+            'execute': execute,
             'unit': unit,
         }  # type: dict[str, Any]
         if robotname is not None:
             taskparameters['robotname'] = robotname
-        if execute != 1:
-            taskparameters['execute'] = execute
         if startJointConfigurationStates is not None:
             taskparameters['startJointConfigurationStates'] = startJointConfigurationStates
         if envclearance is not None:
@@ -1917,6 +1916,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'MoveJoints',
+            'execute': execute,
             'unit': unit,
         }  # type: dict[str, Any]
         taskparameters['goaljoints'] = list(jointvalues)
@@ -1924,8 +1924,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotJointNames'] = robotJointNames
         if robotname is not None:
             taskparameters['robotname'] = robotname
-        if execute != 1:
-            taskparameters['execute'] = execute
         if startvalues is not None:
             taskparameters['startvalues'] = list(startvalues)
         if envclearance is not None:
@@ -2375,6 +2373,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'StartMoveThread',
+            'execute': execute,
             'unit': unit,
         }  # type: dict[str, Any]
         if positionConfigurationName is not None:
@@ -2387,8 +2386,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['robotspeed'] = robotspeed
         if robotaccelmult is not None:
             taskparameters['robotaccelmult'] = robotaccelmult
-        if execute != 1:
-            taskparameters['execute'] = execute
         if startvalues is not None:
             taskparameters['startvalues'] = startvalues
         if envclearance is not None:
