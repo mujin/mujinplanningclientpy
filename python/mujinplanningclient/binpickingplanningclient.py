@@ -2426,7 +2426,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             executionConnectingTrajReverseMult: Used for several code paths such as MoveToolLinear, MoveJointsNoDec, MoveToHandPosition. This is passed to robotbridge. If None, robotbridge uses default value internally. (Default: None)
             executionReverseRecoveryDistance: Specifies the reversing distance for trajectories to recover from collision/position error. This is passed to robotbridge. If None, robotbridge uses default internally (most likely 50 mm). (Default: None)
             jittererParameters: Parameters dealing with jittering the robot out of collisions. (Default: None)
-            gripperInfo: TODO(felixvd): Check if this really propagates. (Default: None)
+            gripperInfo: (Default: None)
             speed: **deprecated** Use robotspeed instead. (Default: None)
             ionames: A list of IO names to read/write (Default: None)
             positionConfigurationName: If specified, the name of position configuration to move to. If it does not exist, will raise an error. (Default: None)
