@@ -416,7 +416,6 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
         taskparameters = {
             'command': 'StartITLProgram',
             'programName': programName,
-            'unit': unit,
         }  # type: dict[str, Any]
         if robotspeed is not None:
             taskparameters['robotspeed'] = robotspeed
@@ -426,6 +425,8 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -551,12 +552,13 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
         taskparameters = {
             'command': 'GenerateExecutionGraph',
             'programName': programName,
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:

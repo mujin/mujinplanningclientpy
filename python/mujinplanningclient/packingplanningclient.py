@@ -244,7 +244,6 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         """
         taskparameters = {
             'command': 'StartPackFormationComputationThread',
-            'unit': unit,
         }  # type: dict[str, Any]
         if debuglevel != 4:
             taskparameters['debuglevel'] = debuglevel
@@ -338,6 +337,8 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['maxFreeManipAccel'] = maxFreeManipAccel
         if constraintToolInfo is not None:
             taskparameters['constraintToolInfo'] = constraintToolInfo
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if unitMass != 'kg':
             taskparameters['unitMass'] = unitMass
         if robotname is not None:
@@ -655,12 +656,13 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         taskparameters = {
             'command': 'ValidatePackFormationResultList',
             'packFormationResultList': packFormationResultList,
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if unitMass != 'kg':
             taskparameters['unitMass'] = unitMass
         if robotname is not None:

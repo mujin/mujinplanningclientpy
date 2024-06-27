@@ -2446,7 +2446,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             'command': 'MoveToDropOff',
             'dropOffInfo': dropOffInfo,
             'execute': execute,
-            'unit': unit,
         }  # type: dict[str, Any]
         if startvalues is not None:
             taskparameters['startvalues'] = list(startvalues)
@@ -2456,6 +2455,8 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if constraintToolDirection is not None:
             taskparameters['constraintToolDirection'] = constraintToolDirection
         if departOffsetDir is not None:
@@ -2993,7 +2994,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             'packFormationComputationResult': packFormationComputationResult,
             'inputPartIndex': inputPartIndex,
             'placeLocationNames': placeLocationNames,
-            'unit': unit,
         }  # type: dict[str, Any]
         if placedTargetPrefix:
             taskparameters['placedTargetPrefix'] = placedTargetPrefix
@@ -3007,6 +3007,8 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if sizeRoundUp is not None:
             taskparameters['sizeRoundUp'] = sizeRoundUp
         if sizePrecisionXYZ is not None:

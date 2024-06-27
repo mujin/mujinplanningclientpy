@@ -240,12 +240,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'GetJointValues',
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -335,7 +336,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'MoveToolLinear',
             'goaltype': goaltype,
             'goals': goals,
-            'unit': unit,
         }  # type: dict[str, Any]
         if workmaxdeviationangle is not None:
             taskparameters['workmaxdeviationangle'] = workmaxdeviationangle
@@ -359,6 +359,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if robotBridgeConnectionInfo is not None:
@@ -527,12 +529,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'goaltype': goaltype,
             'goals': goals,
             'closegripper': closegripper,
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if robotBridgeConnectionInfo is not None:
@@ -978,7 +981,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'SetLocationTracking',
-            'unit': unit,
         }  # type: dict[str, Any]
         if cycleIndex is not None:
             taskparameters['cycleIndex'] = cycleIndex
@@ -994,6 +996,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['targetUpdateBaseName'] = targetUpdateBaseName
         if ioSignalsInfo is not None:
             taskparameters['ioSignalsInfo'] = ioSignalsInfo
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
@@ -1084,10 +1088,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'containerName': containerName,
             'containerId': containerId,
             'containerType': containerType,
-            'unit': unit,
         }  # type: dict[str, Any]
         if trackingCycleIndex is not None:
             taskparameters['trackingCycleIndex'] = trackingCycleIndex
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
@@ -1282,7 +1287,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'UnchuckGripper',
             'grippername': grippername,
-            'unit': unit,
         }  # type: dict[str, Any]
         if robotname is not None:
             taskparameters['robotname'] = robotname
@@ -1298,6 +1302,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotBridgeConnectionInfo is not None:
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
         if locationCollisionInfos is not None:
@@ -1417,7 +1423,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'MoveGripper',
             'grippervalues': grippervalues,
             'grippername': grippername,
-            'unit': unit,
         }  # type: dict[str, Any]
         if robotname is not None:
             taskparameters['robotname'] = robotname
@@ -1427,6 +1432,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotBridgeConnectionInfo is not None:
             taskparameters['robotBridgeConnectionInfo'] = robotBridgeConnectionInfo
         if locationCollisionInfos is not None:
@@ -1464,7 +1471,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'ExecuteRobotProgram',
             'robotProgramName': robotProgramName,
-            'unit': unit,
         }  # type: dict[str, Any]
         if robotname is not None:
             taskparameters['robotname'] = robotname
@@ -1472,6 +1478,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if toolname is not None:
             taskparameters['toolname'] = toolname
         if robotBridgeConnectionInfo is not None:
@@ -1542,7 +1550,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'SaveGripper',
-            'unit': unit,
         }  # type: dict[str, Any]
         if robotname is not None:
             taskparameters['robotname'] = robotname
@@ -1554,6 +1561,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if toolname is not None:
             taskparameters['toolname'] = toolname
         if robotBridgeConnectionInfo is not None:
@@ -1689,7 +1698,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'MoveJointsToJointConfigurationStates',
             'goalJointConfigurationStates': jointConfigurationStates,
             'execute': execute,
-            'unit': unit,
         }  # type: dict[str, Any]
         if robotname is not None:
             taskparameters['robotname'] = robotname
@@ -1703,6 +1711,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if toolname is not None:
             taskparameters['toolname'] = toolname
         if robotBridgeConnectionInfo is not None:
@@ -1917,7 +1927,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'MoveJoints',
             'execute': execute,
-            'unit': unit,
         }  # type: dict[str, Any]
         taskparameters['goaljoints'] = list(jointvalues)
         if robotJointNames is not None:
@@ -1936,6 +1945,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if toolname is not None:
             taskparameters['toolname'] = toolname
         if robotBridgeConnectionInfo is not None:
@@ -2149,7 +2160,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'MoveJointsToPositionConfiguration',
             'execute': execute,
-            'unit': unit,
         }  # type: dict[str, Any]
         if positionConfigurationName:
             taskparameters['positionConfigurationName'] = positionConfigurationName
@@ -2165,6 +2175,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if toolname is not None:
             taskparameters['toolname'] = toolname
         if robotBridgeConnectionInfo is not None:
@@ -2374,7 +2386,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'StartMoveThread',
             'execute': execute,
-            'unit': unit,
         }  # type: dict[str, Any]
         if positionConfigurationName is not None:
             taskparameters['positionConfigurationName'] = positionConfigurationName
@@ -2394,6 +2405,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if constraintToolDirection is not None:
             taskparameters['constraintToolDirection'] = constraintToolDirection
         if departOffsetDir is not None:
@@ -2497,7 +2510,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'GetRobotBridgeIOVariables',
-            'unit': unit,
         }  # type: dict[str, Any]
         if ioname is not None and len(ioname) > 0:
             taskparameters['ioname'] = ioname
@@ -2509,6 +2521,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if toolname is not None:
             taskparameters['toolname'] = toolname
         if robotBridgeConnectionInfo is not None:
@@ -2538,7 +2552,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'SetRobotBridgeIOVariables',
-            'unit': unit,
         }  # type: dict[str, Any]
         taskparameters['iovalues'] = list(iovalues)
         if robotname is not None:
@@ -2547,6 +2560,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if toolname is not None:
             taskparameters['toolname'] = toolname
         if robotBridgeConnectionInfo is not None:
@@ -2576,7 +2591,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters = {
             'command': 'ComputeIkParamPosition',
             'name': name,
-            'unit': unit,
         }  # type: dict[str, Any]
         if robotname is not None:
             taskparameters['robotname'] = robotname
@@ -2586,6 +2600,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         if toolname is not None:
             taskparameters['toolname'] = toolname
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if jointvalues is not None:
             taskparameters['jointvalues'] = jointvalues
         taskparameters.update(kwargs)
@@ -2645,7 +2661,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'ComputeIKFromParameters',
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
@@ -2663,6 +2678,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['useSolutionIndices'] = useSolutionIndices
         if disabletarget is not None:
             taskparameters['disabletarget'] = disabletarget
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if randomBoxInfo is not None:
             taskparameters['randomBoxInfo'] = randomBoxInfo
         if freeincvalue is not None:
@@ -2701,12 +2718,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'ReloadModule',
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -2733,12 +2751,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'ShutdownRobotBridge',
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -2766,12 +2785,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'GetRobotBridgeState',
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -2800,12 +2820,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'ClearRobotBridgeError',
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -2832,12 +2853,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'SetRobotBridgePause',
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -2864,12 +2886,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'SetRobotBridgeResume',
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -3148,12 +3171,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'RunMotorControlTuningMaximulLengthSequence',
             'jointName': jointName,
             'amplitude': amplitude,
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -3198,12 +3222,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'jointName': jointName,
             'amplitude': amplitude,
             'freqMax': freqMax,
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -3246,12 +3271,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'RunMotorControlTuningGaussianImpulse',
             'jointName': jointName,
             'amplitude': amplitude,
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -3294,12 +3320,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'RunMotorControlTuningBangBangResponse',
             'jointName': jointName,
             'amplitude': amplitude,
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -3336,12 +3363,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'RunDynamicsIdentificationTest',
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -3381,7 +3409,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'GetTimeToRunDynamicsIdentificationTest',
-            'unit': unit,
         }  # type: dict[str, Any]
         if jointName is not None:
             taskparameters['jointName'] = jointName
@@ -3393,6 +3420,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -3431,10 +3460,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'CalculateTestRangeFromCollision',
-            'unit': unit,
         }  # type: dict[str, Any]
         if jointName is not None:
             taskparameters['jointName'] = jointName
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if envclearance is not None:
             taskparameters['envclearance'] = envclearance
         if dynamicEnvironmentState is not None:
@@ -3503,12 +3533,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'GetMotorControlParameter',
             'jointName': jointName,
             'parameterName': parameterName,
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -3573,12 +3604,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'jointName': jointName,
             'parameterName': parameterName,
             'parameterValue': parameterValue,
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -3676,7 +3708,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'ReplaceBodies',
-            'unit': unit,
         }  # type: dict[str, Any]
         taskparameters['replaceInfos'] = bodieslist
         taskparameters['bodieslist'] = bodieslist
@@ -3692,6 +3723,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['removeLocationNames'] = removeLocationNames
         if doRemoveOnlyDynamic is not None:
             taskparameters['doRemoveOnlyDynamic'] = doRemoveOnlyDynamic
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
@@ -3720,12 +3753,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'GetState',
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if robotname is not None:
             taskparameters['robotname'] = robotname
         if toolname is not None:
@@ -3831,12 +3865,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'SetInstantaneousJointValues',
             'objectName': objectName,
             'jointvalues': jointvalues,
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
@@ -3855,7 +3890,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'GetPackItemPoseInWorld',
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
@@ -3867,6 +3901,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['inputPartIndex'] = inputPartIndex
         if placeLocationNames is not None:
             taskparameters['placeLocationNames'] = placeLocationNames
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
@@ -3967,12 +4003,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'VisualizePackFormationResult',
-            'unit': unit,
         }  # type: dict[str, Any]
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
+        if unit != 'mm':
+            taskparameters['unit'] = unit
         if unitMass != 'kg':
             taskparameters['unitMass'] = unitMass
         if robotname is not None:
