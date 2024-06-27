@@ -291,9 +291,8 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
         taskparameters = {
             'command': 'ComputeRobotJointValuesForCommandVisualization',
             'program': program,
+            'commandindex': commandindex,
         }  # type: dict[str, Any]
-        if commandindex != 0:
-            taskparameters['commandindex'] = commandindex
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
