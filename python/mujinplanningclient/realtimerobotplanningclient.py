@@ -899,13 +899,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def GetInstObjectInfoFromURI(self, objecturi=None, unit='mm', timeout=10, instobjectpose=None, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
+    def GetInstObjectInfoFromURI(self, instobjecturi=None, unit='mm', timeout=10, instobjectpose=None, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (Optional[str], str, float, Optional[tuple[float, float, float, float, float, float, float]], Optional[types.GetInstObjectInfoFromURIParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.GetInstObjectInfoFromURIReturns]
         """
         Opens a URI and returns info about the internal/external and geometry info from it.
 
         Args:
-            objecturi: (Default: None)
+            instobjecturi: (Default: None)
             unit: The unit of the given values. (Default: 'mm')
             timeout: Time in seconds after which the command is assumed to have failed. (Default: 10)
             instobjectpose: If set, updates the inst object to have this pose (in global coordinates) and then computes the geometry data based on it. (Default: None)
@@ -916,8 +916,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'GetInstObjectInfoFromURI',
             'unit': unit,
         }  # type: dict[str, Any]
-        if objecturi is not None:
-            taskparameters['objecturi'] = objecturi
+        if instobjecturi is not None:
+            taskparameters['objecturi'] = instobjecturi
         if instobjectpose is not None:
             taskparameters['instobjectpose'] = instobjectpose
         if dynamicEnvironmentState is not None:
@@ -1565,7 +1565,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
     def MoveJointsToJointConfigurationStates(
         self,
-        goalJointConfigurationStates,  # type: list[types.MoveJointsToJointConfigurationStatesParametersGoalJointConfigurationStatesArrayElement]
+        jointConfigurationStates,  # type: list[types.MoveJointsToJointConfigurationStatesParametersGoalJointConfigurationStatesArrayElement]
         robotname=None,  # type: Optional[str]
         robotspeed=None,  # type: Optional[float]
         robotaccelmult=None,  # type: Optional[float]
@@ -1628,7 +1628,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         Moves the robot to desired joint angles specified in jointStates
 
         Args:
-            goalJointConfigurationStates: List of dicts for each joint entry.
+            jointConfigurationStates: List of dicts for each joint entry.
             robotname: Name of the robot (Default: None)
             robotspeed: Value in (0,1] defining the percentage of speed the robot should move at. (Default: None)
             robotaccelmult: Value in (0,1] defining the percentage of acceleration the robot should move at. (Default: None)
@@ -1687,7 +1687,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'MoveJointsToJointConfigurationStates',
-            'goalJointConfigurationStates': goalJointConfigurationStates,
+            'goalJointConfigurationStates': jointConfigurationStates,
             'unit': unit,
         }  # type: dict[str, Any]
         if robotname is not None:
@@ -2885,11 +2885,11 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def SetRobotBridgeServoOn(self, isservoon, robotname=None, timeout=3, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None):
+    def SetRobotBridgeServoOn(self, servoon, robotname=None, timeout=3, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None):
         # type: (bool, Optional[str], float, bool, Optional[types.SetRobotBridgeServoOnParametersDynamicEnvironmentState], Optional[int]) -> Optional[Any]
         """
         Args:
-            isservoon: If True, turns servo on.
+            servoon: If True, turns servo on.
             robotname: Name of the robot (Default: None)
             timeout: Time in seconds after which the command is assumed to have failed. (Default: 3)
             fireandforget: If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
@@ -2898,7 +2898,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'SetRobotBridgeServoOn',
-            'isservoon': isservoon,
+            'isservoon': servoon,
         }  # type: dict[str, Any]
         if robotname is not None:
             taskparameters['robotname'] = robotname

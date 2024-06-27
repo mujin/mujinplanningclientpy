@@ -2082,13 +2082,13 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, toolname=toolname, robotspeed=robotspeed, timeout=timeout)
 
-    def StopPickPlaceThread(self, resetExecutionState=_deprecated, resetStatusPickPlace=False, finishStatus=None, finishMessage=None, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, resetCachedRobotConfigurationState=None, useRobotBridge=None, **kwargs):
+    def StopPickPlaceThread(self, resetExecutionState=True, resetStatusPickPlace=False, finishStatus=None, finishMessage=None, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, resetCachedRobotConfigurationState=None, useRobotBridge=None, **kwargs):
         # type: (bool, bool, str, Optional[str], float, bool, Optional[types.StopPickPlaceThreadParametersDynamicEnvironmentState], Optional[int], Optional[bool], Optional[bool], Optional[Any]) -> Optional[Any]
         """
         stops the pick and place thread started with StartPickAndPlaceThread
 
         Args:
-            resetExecutionState: **deprecated** If True, then reset the order state variables. By default True. (Default: True)
+            resetExecutionState: If True, then reset the order state variables. By default True. (Default: True)
             resetStatusPickPlace: If True, then reset the statusPickPlace field of hte planning slave. (Default: False)
             finishStatus: Optional finish code to end the cycle with (if it doesn't end with something else beforehand). (Default: None)
             finishMessage: (Default: None)
@@ -2104,6 +2104,8 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             'resetStatusPickPlace': resetStatusPickPlace,
             'finishStatus': finishStatus,
         }  # type: dict[str, Any]
+        if resetExecutionState != True:
+            taskparameters['resetExecutionState'] = resetExecutionState
         if finishMessage is not None:
             taskparameters['finishMessage'] = finishMessage
         if dynamicEnvironmentState is not None:
@@ -2779,13 +2781,13 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
-    def PutPartsBack(self, trajectory, numparts, toolname=None, grippervalues=None, timeout=100, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
+    def PutPartsBack(self, trajectoryxml, numparts, toolname=None, grippervalues=None, timeout=100, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (str, int, str, Optional[list[Any]], float, Optional[types.PutPartsBackParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
         Runs saved planningresult trajectories.
 
         Args:
-            trajectory:
+            trajectoryxml:
             numparts:
             toolname: Name of the manipulator. Defaults to currently selected tool (Default: None)
             grippervalues: (Default: None)
@@ -2795,7 +2797,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         """
         taskparameters = {
             'command': 'PutPartsBack',
-            'trajectory': trajectory,
+            'trajectory': trajectoryxml,
             'numparts': numparts,
             'toolname': toolname,
         }  # type: dict[str, Any]
