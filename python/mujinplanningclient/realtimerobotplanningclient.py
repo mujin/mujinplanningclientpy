@@ -290,7 +290,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         currentlimitratios=None,  # type: Optional[list[float]]
         instobjectname=None,  # type: Optional[str]
         ikparamname=None,  # type: Optional[str]
-        execute=1,  # type: int
+        execute=None,  # type: Optional[int]
         moveStraightParams=None,  # type: Optional[types.MoveStraightParameters]
         **kwargs  # type: Optional[Any]
     ):
@@ -328,7 +328,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             currentlimitratios: The joints' current limit ratios. (Default: None)
             instobjectname: If goaltype is not set and both instobjectname and ikparamname are set, use ikparamname of instobjectname as target position. (Default: None)
             ikparamname: If goaltype is not set and both instobjectname and ikparamname are set, use ikparamname of instobjectname as target position. (Default: None)
-            execute: If 1, execute the motion. (Default: 1)
+            execute: If 1, execute the motion. (Default: None)
             moveStraightParams: A set of parameters defining how the robot behaves during linear motions. (Default: None)
         """
         taskparameters = {
@@ -377,7 +377,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['instobjectname'] = instobjectname
         if ikparamname is not None:
             taskparameters['ikparamname'] = ikparamname
-        if execute != 1:
+        if execute is not None:
             taskparameters['execute'] = execute
         if moveStraightParams is not None:
             taskparameters['moveStraightParams'] = moveStraightParams
@@ -2150,6 +2150,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         taskparameters = {
             'command': 'MoveJointsToPositionConfiguration',
+            'execute': execute,
             'unit': unit,
         }  # type: dict[str, Any]
         if positionConfigurationName:
@@ -2158,8 +2159,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['positionConfigurationCandidateNames'] = positionConfigurationCandidateNames
         if robotname is not None:
             taskparameters['robotname'] = robotname
-        if execute != 1:
-            taskparameters['execute'] = execute
         if startvalues is not None:
             taskparameters['startvalues'] = list(startvalues)
         if envclearance is not None:
