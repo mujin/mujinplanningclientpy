@@ -723,6 +723,39 @@ DistanceMeasurementInfo = TypedDict('DistanceMeasurementInfo', {
 
 StartPickAndPlaceThreadParametersDropInDestInfoPerContainer = dict[str, dict[str, Any]]
 
+MultiPickInfo = TypedDict('MultiPickInfo', {
+    'allowMultiPickForSurrounded': bool,
+    'axisAlignThresh': float,
+    'mode': Literal['None', 'Any', 'OnlyTwoPick', 'UpToTwoPick', 'OnlyThreePick', 'UpToThreePick', 'OnlyFourPick', 'UpToFourPick', 'OnlyFivePick', 'UpToFivePick', 'OnlySixPick', 'UpToSixPick', 'AllMultiPicks'],
+    'modeOnFail': Literal['None', 'Any', 'OnlyTwoPick', 'UpToTwoPick', 'OnlyThreePick', 'UpToThreePick', 'OnlyFourPick', 'UpToFourPick', 'OnlyFivePick', 'UpToFivePick', 'OnlySixPick', 'UpToSixPick', 'AllMultiPicks'],
+    'releaseMode': Literal['OneByOne', 'SimultaneousRelease', 'Any'],
+    'releaseModeOnFail': Literal['OneByOne', 'SimultaneousRelease', 'Any'],
+    'horzDiscretization': float,
+    'placeOffset': tuple[float, float, float],
+    'placeOffsetDifferentHeight': tuple[float, float, float],
+    'priorityForAxisAlignMult': float,
+    'priorityForPosAlignMult': float,
+    'priorityForSimultaneousRelease': float,
+    'priorityForTouching': float,
+    'priorityPenaltyMultForNewConnectedComponent': float,
+    'sameSizeThresholdForTextureless': float,
+    'simultaneousReleaseMaxAllowedAngle': float,
+    'simultaneousReleaseMaxAllowedBoundedWidth': float,
+    'simultaneousReleaseMaxAllowedDistance': float,
+    'simultaneousReleaseFrontAndBackTolerance': float,
+    'surfaceThresh': float,
+    'touchingDistThresh': float,
+    'transferSpeedDiff': float,
+    'travelDir': tuple[float, float, float],
+    'use': bool,
+}, total=False)
+
+StartPickAndPlaceThreadParametersDropOffParameters = TypedDict('StartPickAndPlaceThreadParametersDropOffParameters', {
+    'destCoordType': AllDestCoordType,
+    'multiPickInfo': MultiPickInfo,
+    'robotSpeedMult': float,
+}, total=False)
+
 StartPickAndPlaceThreadParametersExecuteITLOnCompleteLayerInfo = TypedDict('StartPickAndPlaceThreadParametersExecuteITLOnCompleteLayerInfo', {
     'cornerThresh': float,
     'heightThresh': float,
@@ -964,33 +997,6 @@ MoveStraightParameters = TypedDict('MoveStraightParameters', {
     'workignorefirstcollisionee': float,
     'workignorelastcollisionee': float,
     'workVerifyStepLength': float,
-}, total=False)
-
-MultiPickInfo = TypedDict('MultiPickInfo', {
-    'allowMultiPickForSurrounded': bool,
-    'axisAlignThresh': float,
-    'mode': Literal['None', 'Any', 'OnlyTwoPick', 'UpToTwoPick', 'OnlyThreePick', 'UpToThreePick', 'OnlyFourPick', 'UpToFourPick', 'OnlyFivePick', 'UpToFivePick', 'OnlySixPick', 'UpToSixPick', 'AllMultiPicks'],
-    'modeOnFail': Literal['None', 'Any', 'OnlyTwoPick', 'UpToTwoPick', 'OnlyThreePick', 'UpToThreePick', 'OnlyFourPick', 'UpToFourPick', 'OnlyFivePick', 'UpToFivePick', 'OnlySixPick', 'UpToSixPick', 'AllMultiPicks'],
-    'releaseMode': Literal['OneByOne', 'SimultaneousRelease', 'Any'],
-    'releaseModeOnFail': Literal['OneByOne', 'SimultaneousRelease', 'Any'],
-    'horzDiscretization': float,
-    'placeOffset': tuple[float, float, float],
-    'placeOffsetDifferentHeight': tuple[float, float, float],
-    'priorityForAxisAlignMult': float,
-    'priorityForPosAlignMult': float,
-    'priorityForSimultaneousRelease': float,
-    'priorityForTouching': float,
-    'priorityPenaltyMultForNewConnectedComponent': float,
-    'sameSizeThresholdForTextureless': float,
-    'simultaneousReleaseMaxAllowedAngle': float,
-    'simultaneousReleaseMaxAllowedBoundedWidth': float,
-    'simultaneousReleaseMaxAllowedDistance': float,
-    'simultaneousReleaseFrontAndBackTolerance': float,
-    'surfaceThresh': float,
-    'touchingDistThresh': float,
-    'transferSpeedDiff': float,
-    'travelDir': tuple[float, float, float],
-    'use': bool,
 }, total=False)
 
 ForceTorqueFilterParameters = TypedDict('ForceTorqueFilterParameters', {
