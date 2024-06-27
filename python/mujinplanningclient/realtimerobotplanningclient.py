@@ -2256,6 +2256,14 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
     def StartMoveThread(
         self,
+        positionConfigurationName=None,  # type: Optional[str]
+        positionConfigurationCandidateNames=None,  # type: Optional[list[str]]
+        robotname=None,  # type: Optional[str]
+        robotspeed=None,  # type: Optional[float]
+        robotaccelmult=None,  # type: Optional[float]
+        execute=1,  # type: int
+        startvalues=None,  # type: Optional[list[float]]
+        envclearance=None,  # type: Optional[float]
         timeout=10,  # type: float
         dynamicEnvironmentState=None,  # type: Optional[types.StartMoveThreadParametersDynamicEnvironmentState]
         debuglevel=None,  # type: Optional[int]
@@ -2268,9 +2276,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         disablebodies=None,  # type: Optional[bool]
         ignoreGrabbingTarget=None,  # type: Optional[bool]
         jointthresh=None,  # type: Optional[float]
-        envclearance=None,  # type: Optional[float]
         jitter=None,  # type: Optional[float]
-        execute=1,  # type: int
         executionFilterFactor=None,  # type: Optional[float]
         filtertraj=None,  # type: Optional[bool]
         locationCollisionInfos=None,  # type: Optional[list[types.StartMoveThreadParametersLocationCollisionInfosArrayElement]]
@@ -2295,18 +2301,12 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         executionReverseRecoveryDistance=None,  # type: Optional[float]
         jittererParameters=None,  # type: Optional[types.JittererParameters]
         gripperInfo=None,  # type: Optional[types.StartMoveThreadParametersGripperInfoVariantItemPrefix0]
-        robotspeed=None,  # type: Optional[float]
         speed=_deprecated,  # type: Optional[Any]
-        robotaccelmult=None,  # type: Optional[float]
         ionames=None,  # type: Optional[list[Any]]
-        positionConfigurationName=None,  # type: Optional[str]
-        positionConfigurationCandidateNames=None,  # type: Optional[list[str]]
-        robotname=None,  # type: Optional[str]
         toolname=None,  # type: Optional[str]
         robotspeedmult=None,  # type: Optional[float]
         robotJointNames=None,  # type: Optional[list[str]]
         jointindices=_deprecated,  # type: Optional[list[int]]
-        startvalues=None,  # type: Optional[list[float]]
         startJointConfigurationStates=None,  # type: Optional[list[types.StartMoveThreadParametersStartJointConfigurationStatesArrayElement]]
         goalJointConfigurationStates=None,  # type: Optional[list[types.StartMoveThreadParametersGoalJointConfigurationStatesArrayElement]]
         goaljoints=None,  # type: Optional[list[float]]
@@ -2317,6 +2317,14 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         Moves the robot to desired position configuration specified in positionConfigurationName.
 
         Args:
+            positionConfigurationName: If specified, the name of position configuration to move to. If it does not exist, will raise an error. (Default: None)
+            positionConfigurationCandidateNames: If specified, goes to the first position that is defined for the robot. If no positions exist, returns without moving the robot. (Default: None)
+            robotname: Name of the robot (Default: None)
+            robotspeed: Value in (0,1] defining the percentage of speed the robot should move at. (Default: None)
+            robotaccelmult: Value in (0,1] defining the percentage of acceleration the robot should move at. (Default: None)
+            execute: If 1, execute the motion. (Default: 1)
+            startvalues: The robot joint values to start the motion from. (Default: None)
+            envclearance: Environment clearance in millimeters. (Default: None)
             timeout: Time in seconds after which the command is assumed to have failed. (Default: 10)
             dynamicEnvironmentState: Dynamic environment state that allows the user to set/create objects in a particular state dynamically. (Default: None)
             debuglevel: Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE. (Default: None)
@@ -2329,9 +2337,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             disablebodies: (Default: None)
             ignoreGrabbingTarget: (Default: None)
             jointthresh: (Default: None)
-            envclearance: Environment clearance in millimeters. (Default: None)
             jitter: (Default: None)
-            execute: If 1, execute the motion. (Default: 1)
             executionFilterFactor: (Default: None)
             filtertraj: (Default: None)
             locationCollisionInfos: List of external collision IOs to be computed and sent in realtime. (Default: None)
@@ -2356,18 +2362,12 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             executionReverseRecoveryDistance: Specifies the reversing distance for trajectories to recover from collision/position error. This is passed to robotbridge. If None, robotbridge uses default internally (most likely 50 mm). (Default: None)
             jittererParameters: Parameters dealing with jittering the robot out of collisions. (Default: None)
             gripperInfo: (Default: None)
-            robotspeed: Value in (0,1] defining the percentage of speed the robot should move at. (Default: None)
             speed: **deprecated** Use robotspeed instead. (Default: None)
-            robotaccelmult: Value in (0,1] defining the percentage of acceleration the robot should move at. (Default: None)
             ionames: A list of IO names to read/write (Default: None)
-            positionConfigurationName: If specified, the name of position configuration to move to. If it does not exist, will raise an error. (Default: None)
-            positionConfigurationCandidateNames: If specified, goes to the first position that is defined for the robot. If no positions exist, returns without moving the robot. (Default: None)
-            robotname: Name of the robot (Default: None)
             toolname: Name of the manipulator. Defaults to currently selected tool (Default: None)
             robotspeedmult: Value in (0,1] defining the percentage of speed the robot should move at. (Default: None)
             robotJointNames: (Default: None)
             jointindices: **deprecated** List of corresponding joint indices, default is range(len(jointvalues)) (Default: None)
-            startvalues: The robot joint values to start the motion from. (Default: None)
             startJointConfigurationStates: List of dicts for each joint. (Default: None)
             goalJointConfigurationStates: List of dicts for each joint entry. (Default: None)
             goaljoints: List of joint values to move to. (Default: None)
@@ -2377,6 +2377,22 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             'command': 'StartMoveThread',
             'unit': unit,
         }  # type: dict[str, Any]
+        if positionConfigurationName is not None:
+            taskparameters['positionConfigurationName'] = positionConfigurationName
+        if positionConfigurationCandidateNames is not None:
+            taskparameters['positionConfigurationCandidateNames'] = positionConfigurationCandidateNames
+        if robotname is not None:
+            taskparameters['robotname'] = robotname
+        if robotspeed is not None:
+            taskparameters['robotspeed'] = robotspeed
+        if robotaccelmult is not None:
+            taskparameters['robotaccelmult'] = robotaccelmult
+        if execute != 1:
+            taskparameters['execute'] = execute
+        if startvalues is not None:
+            taskparameters['startvalues'] = startvalues
+        if envclearance is not None:
+            taskparameters['envclearance'] = envclearance
         if dynamicEnvironmentState is not None:
             taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
         if debuglevel is not None:
@@ -2397,12 +2413,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['ignoreGrabbingTarget'] = ignoreGrabbingTarget
         if jointthresh is not None:
             taskparameters['jointthresh'] = jointthresh
-        if envclearance is not None:
-            taskparameters['envclearance'] = envclearance
         if jitter is not None:
             taskparameters['jitter'] = jitter
-        if execute != 1:
-            taskparameters['execute'] = execute
         if executionFilterFactor is not None:
             taskparameters['executionFilterFactor'] = executionFilterFactor
         if filtertraj is not None:
@@ -2451,26 +2463,14 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['jittererParameters'] = jittererParameters
         if gripperInfo is not None:
             taskparameters['gripperInfo'] = gripperInfo
-        if robotspeed is not None:
-            taskparameters['robotspeed'] = robotspeed
-        if robotaccelmult is not None:
-            taskparameters['robotaccelmult'] = robotaccelmult
         if ionames is not None:
             taskparameters['ionames'] = ionames
-        if positionConfigurationName is not None:
-            taskparameters['positionConfigurationName'] = positionConfigurationName
-        if positionConfigurationCandidateNames is not None:
-            taskparameters['positionConfigurationCandidateNames'] = positionConfigurationCandidateNames
-        if robotname is not None:
-            taskparameters['robotname'] = robotname
         if toolname is not None:
             taskparameters['toolname'] = toolname
         if robotspeedmult is not None:
             taskparameters['robotspeedmult'] = robotspeedmult
         if robotJointNames is not None:
             taskparameters['robotJointNames'] = robotJointNames
-        if startvalues is not None:
-            taskparameters['startvalues'] = startvalues
         if startJointConfigurationStates is not None:
             taskparameters['startJointConfigurationStates'] = startJointConfigurationStates
         if goalJointConfigurationStates is not None:
@@ -3875,6 +3875,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
     def VisualizePackFormationResult(
         self,
+        timeout=10,  # type: float
+        fireandforget=False,  # type: bool
         dynamicEnvironmentState=None,  # type: Optional[types.VisualizePackFormationResultParametersDynamicEnvironmentState]
         debuglevel=None,  # type: Optional[int]
         unit='mm',  # type: str
@@ -3908,13 +3910,16 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         isEnabled=None,  # type: Optional[bool]
         isShowLastSolution=None,  # type: Optional[bool]
         isShowInnerContainerCoordinates=None,  # type: Optional[bool]
-        normalizePackToEmptyRegion=None  # type: Optional[bool]
+        normalizePackToEmptyRegion=None,  # type: Optional[bool]
+        **kwargs  # type: Optional[Any]
     ):
         # type: (...) -> Optional[types.VisualizePackFormationResultReturns]
         """
         Stops the packing computation thread thread started with StartPackFormationComputationThread
 
         Args:
+            timeout: Time in seconds after which the command is assumed to have failed. (Default: 10)
+            fireandforget: If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
             dynamicEnvironmentState: Dynamic environment state that allows the user to set/create objects in a particular state dynamically. (Default: None)
             debuglevel: Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE. (Default: None)
             unit: The unit of the given values. (Default: 'mm')
@@ -4031,14 +4036,17 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['isShowInnerContainerCoordinates'] = isShowInnerContainerCoordinates
         if normalizePackToEmptyRegion is not None:
             taskparameters['normalizePackToEmptyRegion'] = normalizePackToEmptyRegion
-        return self.ExecuteCommand(taskparameters, )
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
-    def ClearPackingStateVisualization(self, dynamicEnvironmentState=None, debuglevel=None, containername=None):
-        # type: (Optional[types.ClearPackingStateVisualizationParametersDynamicEnvironmentState], Optional[int], Optional[str]) -> Optional[Any]
+    def ClearPackingStateVisualization(self, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, containername=None, **kwargs):
+        # type: (float, bool, Optional[types.ClearPackingStateVisualizationParametersDynamicEnvironmentState], Optional[int], Optional[str], Optional[Any]) -> Optional[Any]
         """
         Clears packing visualization
 
         Args:
+            timeout: Time in seconds after which the command is assumed to have failed. (Default: 10)
+            fireandforget: If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
             dynamicEnvironmentState: Dynamic environment state that allows the user to set/create objects in a particular state dynamically. (Default: None)
             debuglevel: Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE. (Default: None)
             containername: (Default: None)
@@ -4052,5 +4060,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['debuglevel'] = debuglevel
         if containername is not None:
             taskparameters['containername'] = containername
-        return self.ExecuteCommand(taskparameters, )
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
