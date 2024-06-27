@@ -3849,8 +3849,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
     def SetInstantaneousJointValues(self, objectName, jointvalues, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, unit='mm', **kwargs):
         # type: (str, list[float], float, bool, Optional[types.SetInstantaneousJointValuesParametersDynamicEnvironmentState], Optional[int], str, Optional[Any]) -> Optional[Any]
         """
+        Updates an object's DOF values to the values provided. Primarily used for testing.
+
         Args:
-            objectName:
+            objectName: The object whose joint values will be set. Must be a robot in the scene.
             jointvalues:
             timeout: Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget: If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
