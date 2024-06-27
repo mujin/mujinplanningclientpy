@@ -931,7 +931,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         return self.ExecuteCommand(taskparameters, timeout=timeout)
 
     def GetAABB(self, targetname, unit='mm', timeout=10, linkname=None, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
-        # type: (str, str, float, Optional[str], Optional[types.GetAABBParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.GetAABBReturns]
+        # type: (str, str, float, Optional[str], Optional[types.GetAABBParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.AABB]
         """
         Gets the axis-aligned bounding box (AABB) of an object.
 
@@ -942,9 +942,6 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             linkname: Name of link to use for the AABB. If not specified, uses entire target. (Default: None)
             dynamicEnvironmentState: Dynamic environment state that allows the user to set/create objects in a particular state dynamically. (Default: None)
             debuglevel: Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE. (Default: None)
-
-        Returns:
-            AABB of the object.
         """
         taskparameters = {
             'command': 'GetAABB',

@@ -1288,9 +1288,9 @@ GetInstObjectInfoFromURIReturns = TypedDict('GetInstObjectInfoFromURIReturns', {
     'ikparams': list[IkParameterization],
 }, total=False)
 
-GetAABBReturns = TypedDict('GetAABBReturns', {
-    'pos': list[Any],
-    'extents': list[Any],
+AABB = TypedDict('AABB', {
+    'pos': tuple[float, float, float],
+    'extents': tuple[float, float, float],
 }, total=False)
 
 GetLocationTrackingInfosReturns = dict[str, Any]
