@@ -142,10 +142,10 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         distanceMeasurementInfo=None,  # type: Optional[types.DistanceMeasurementInfo]
         savePackingState=None,  # type: Optional[bool]
         checkObstacleNames=None,  # type: Optional[list[str]]
-        targetMinBottomPaddingForInitialTransfer=40,  # type: float
+        targetMinBottomPaddingForInitialTransfer=None,  # type: Optional[float]
         targetMinSafetyHeightForInitialTransfer=None,  # type: Optional[float]
-        saveDynamicGoalGeneratorState=False,  # type: bool
-        saveDynamicGoalGeneratorStateFailed=True,  # type: bool
+        saveDynamicGoalGeneratorState=None,  # type: Optional[bool]
+        saveDynamicGoalGeneratorStateFailed=None,  # type: Optional[bool]
         executionmode=None,  # type: Optional[str]
         csvHeader=_deprecated,  # type: Optional[list[str]]
         packContainerId=_deprecated,  # type: Optional[str]
@@ -226,7 +226,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
 
             Cannot be used together with targetMinSafetyHeightForInitialTransfer.
 
-            Only applied during the initial transfer out of the source container. Subsequent transfers ignore this setting. (Default: 40)
+            Only applied during the initial transfer out of the source container. Subsequent transfers ignore this setting. (Default: None)
             targetMinSafetyHeightForInitialTransfer: Extends the height of the target to this value when moving the target out of the source container to the next position (dest, middest, or scan position). This is used to raise the part higher when moving out of the source container.
 
             Increasing this parameter increases the clearance at the bottom of the part when it is moved out of the source container.
@@ -234,8 +234,8 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             Cannot be used together with targetMinBottomPaddingForInitialTransfer.
 
             Only applied during the initial transfer out of the source container. Subsequent transfers ignore this setting. (Default: None)
-            saveDynamicGoalGeneratorState: If True, will always save the dynamic goal generator state for later playerback. (Default: False)
-            saveDynamicGoalGeneratorStateFailed: If true and logging level is info or higher, saves state of the _dynamicGoalsGenerator to the disk. (Default: True)
+            saveDynamicGoalGeneratorState: If True, will always save the dynamic goal generator state for later playerback. (Default: None)
+            saveDynamicGoalGeneratorStateFailed: If true and logging level is info or higher, saves state of the _dynamicGoalsGenerator to the disk. (Default: None)
             executionmode: (Default: None)
             csvHeader: **deprecated** (Default: None)
             packContainerId: **deprecated** (Default: None)
@@ -362,13 +362,13 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['savePackingState'] = savePackingState
         if checkObstacleNames is not None:
             taskparameters['checkObstacleNames'] = checkObstacleNames
-        if targetMinBottomPaddingForInitialTransfer != 40:
+        if targetMinBottomPaddingForInitialTransfer is not None:
             taskparameters['targetMinBottomPaddingForInitialTransfer'] = targetMinBottomPaddingForInitialTransfer
         if targetMinSafetyHeightForInitialTransfer is not None:
             taskparameters['targetMinSafetyHeightForInitialTransfer'] = targetMinSafetyHeightForInitialTransfer
-        if saveDynamicGoalGeneratorState != False:
+        if saveDynamicGoalGeneratorState is not None:
             taskparameters['saveDynamicGoalGeneratorState'] = saveDynamicGoalGeneratorState
-        if saveDynamicGoalGeneratorStateFailed != True:
+        if saveDynamicGoalGeneratorStateFailed is not None:
             taskparameters['saveDynamicGoalGeneratorStateFailed'] = saveDynamicGoalGeneratorStateFailed
         if executionmode is not None:
             taskparameters['executionmode'] = executionmode
@@ -594,10 +594,10 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         distanceMeasurementInfo=None,  # type: Optional[types.DistanceMeasurementInfo]
         savePackingState=None,  # type: Optional[bool]
         checkObstacleNames=None,  # type: Optional[list[str]]
-        targetMinBottomPaddingForInitialTransfer=40,  # type: float
+        targetMinBottomPaddingForInitialTransfer=None,  # type: Optional[float]
         targetMinSafetyHeightForInitialTransfer=None,  # type: Optional[float]
-        saveDynamicGoalGeneratorState=False,  # type: bool
-        saveDynamicGoalGeneratorStateFailed=True,  # type: bool
+        saveDynamicGoalGeneratorState=None,  # type: Optional[bool]
+        saveDynamicGoalGeneratorStateFailed=None,  # type: Optional[bool]
         doPlacementValidation=None,  # type: Optional[bool]
         forceValidatePackContainerType=None,  # type: Optional[bool]
         packLocationName=_deprecated,  # type: Optional[str]
@@ -638,7 +638,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
 
             Cannot be used together with targetMinSafetyHeightForInitialTransfer.
 
-            Only applied during the initial transfer out of the source container. Subsequent transfers ignore this setting. (Default: 40)
+            Only applied during the initial transfer out of the source container. Subsequent transfers ignore this setting. (Default: None)
             targetMinSafetyHeightForInitialTransfer: Extends the height of the target to this value when moving the target out of the source container to the next position (dest, middest, or scan position). This is used to raise the part higher when moving out of the source container.
 
             Increasing this parameter increases the clearance at the bottom of the part when it is moved out of the source container.
@@ -646,8 +646,8 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             Cannot be used together with targetMinBottomPaddingForInitialTransfer.
 
             Only applied during the initial transfer out of the source container. Subsequent transfers ignore this setting. (Default: None)
-            saveDynamicGoalGeneratorState: If True, will always save the dynamic goal generator state for later playerback. (Default: False)
-            saveDynamicGoalGeneratorStateFailed: If true and logging level is info or higher, saves state of the _dynamicGoalsGenerator to the disk. (Default: True)
+            saveDynamicGoalGeneratorState: If True, will always save the dynamic goal generator state for later playerback. (Default: None)
+            saveDynamicGoalGeneratorStateFailed: If true and logging level is info or higher, saves state of the _dynamicGoalsGenerator to the disk. (Default: None)
             doPlacementValidation: If True will do placmeent validation by calling FindNextFreePlacementGoals for each placed item. (Default: None)
             forceValidatePackContainerType: (Default: None)
             packLocationName: **deprecated** (Default: None)
@@ -691,13 +691,13 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['savePackingState'] = savePackingState
         if checkObstacleNames is not None:
             taskparameters['checkObstacleNames'] = checkObstacleNames
-        if targetMinBottomPaddingForInitialTransfer != 40:
+        if targetMinBottomPaddingForInitialTransfer is not None:
             taskparameters['targetMinBottomPaddingForInitialTransfer'] = targetMinBottomPaddingForInitialTransfer
         if targetMinSafetyHeightForInitialTransfer is not None:
             taskparameters['targetMinSafetyHeightForInitialTransfer'] = targetMinSafetyHeightForInitialTransfer
-        if saveDynamicGoalGeneratorState != False:
+        if saveDynamicGoalGeneratorState is not None:
             taskparameters['saveDynamicGoalGeneratorState'] = saveDynamicGoalGeneratorState
-        if saveDynamicGoalGeneratorStateFailed != True:
+        if saveDynamicGoalGeneratorStateFailed is not None:
             taskparameters['saveDynamicGoalGeneratorStateFailed'] = saveDynamicGoalGeneratorStateFailed
         if doPlacementValidation is not None:
             taskparameters['doPlacementValidation'] = doPlacementValidation

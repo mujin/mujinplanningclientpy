@@ -583,7 +583,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         containername=None,  # type: Optional[str]
         controllerclientparameters=None,  # type: Optional[types.StartPickAndPlaceThreadParametersControllerclientparameters]
         cycleIndex=None,  # type: Optional[str]
-        cycleStartUseToolPose=False,  # type: bool
+        cycleStartUseToolPose=None,  # type: Optional[bool]
         destGoals=None,  # type: Optional[types.DestGoals]
         destcontainernames=None,  # type: Optional[list[str]]
         destSensorSelectionInfos=None,  # type: Optional[list[types.StartPickAndPlaceThreadParametersDestSensorSelectionInfosArrayElement]]
@@ -595,7 +595,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         inputPartIndex=None,  # type: Optional[int]
         itlParameters=None,  # type: Optional[types.StartPickAndPlaceThreadParametersItlParameters]
         locationCollisionInfos=None,  # type: Optional[list[types.StartPickAndPlaceThreadParametersLocationCollisionInfosArrayElement]]
-        pickContainerHasOnlyOnePart=False,  # type: bool
+        pickContainerHasOnlyOnePart=None,  # type: Optional[bool]
         placedTargetPrefixes=None,  # type: Optional[list[str]]
         registrationInfo=None,  # type: Optional[types.StartPickAndPlaceThreadParametersRegistrationInfo]
         sourcecontainernames=None,  # type: Optional[list[str]]
@@ -1258,7 +1258,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             containername: (Default: None)
             controllerclientparameters: (Default: None)
             cycleIndex: (Default: None)
-            cycleStartUseToolPose: True if the robot should go to the tool position rather than joint values at the start of the cycle (Default: False)
+            cycleStartUseToolPose: True if the robot should go to the tool position rather than joint values at the start of the cycle (Default: None)
             destGoals: list of dictionaries where each dictionary contains the goal description. A goal contains: ikparamnames or jointvalues, validGraspSetName(optional), name(optional). (Default: None)
             destcontainernames: (Default: None)
             destSensorSelectionInfos: (Default: None)
@@ -1270,7 +1270,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             inputPartIndex: (Default: None)
             itlParameters: (Default: None)
             locationCollisionInfos: List of external collision IOs to be computed and sent in realtime. (Default: None)
-            pickContainerHasOnlyOnePart: If True, assumes there is only one part in source container regardless of orderNumInPickContainer in order request (Default: False)
+            pickContainerHasOnlyOnePart: If True, assumes there is only one part in source container regardless of orderNumInPickContainer in order request (Default: None)
             placedTargetPrefixes: (Default: None)
             registrationInfo: (Default: None)
             sourcecontainernames: (Default: None)
@@ -2043,7 +2043,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['controllerclientparameters'] = controllerclientparameters
         if cycleIndex is not None:
             taskparameters['cycleIndex'] = cycleIndex
-        if cycleStartUseToolPose != False:
+        if cycleStartUseToolPose is not None:
             taskparameters['cycleStartUseToolPose'] = cycleStartUseToolPose
         if destGoals is not None:
             taskparameters['destGoals'] = destGoals
@@ -2067,7 +2067,7 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             taskparameters['itlParameters'] = itlParameters
         if locationCollisionInfos is not None:
             taskparameters['locationCollisionInfos'] = locationCollisionInfos
-        if pickContainerHasOnlyOnePart != False:
+        if pickContainerHasOnlyOnePart is not None:
             taskparameters['pickContainerHasOnlyOnePart'] = pickContainerHasOnlyOnePart
         if placedTargetPrefixes is not None:
             taskparameters['placedTargetPrefixes'] = placedTargetPrefixes
@@ -2416,8 +2416,8 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             pathPlannerParameters: Parameters for robot path planning. (Default: None)
             moveStraightParams: A set of parameters defining how the robot behaves during linear motions. (Default: None)
             forceTorqueBasedEstimatorParameters: Parameters for state estimation features based on force torque sensor (Default: None)
-            savetrajectorylog: If True, will save the commanded (input) trajectories before they are executed (Default: None)
-            saveRobotFeedbackLog: If True, will tell robotbridge to save trajectory files (Default: None)
+            savetrajectorylog: True of False (Default: None)
+            saveRobotFeedbackLog: Save logs from each trajectory the robot executes with data including the encoder values of the robot, the current/torque values, and specific IO signal values. When this feature is enabled, the system can slow down a little since it is storing data. Some UI functions that display data need this feature to be enabled so that the correct data can be displayed. (Default: None)
             loadRobotFeedbackLog: If True, will tell robotbridge to load the robot feedback log after trajectory ends (Default: None)
             saveConcatenateTrajectoryLog: If True, will save trajectories used for inputs of concatenate trajectory functions (Default: None)
             saveFilterTrajectoryLog: If True, will save trajectories used for filtering, such as SmartFilter (Default: None)

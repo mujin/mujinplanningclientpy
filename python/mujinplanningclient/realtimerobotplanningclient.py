@@ -390,7 +390,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         goals,  # type: Optional[list[float]]
         toolname=None,  # type: Optional[str]
         envclearance=None,  # type: Optional[float]
-        closegripper=1,  # type: int
+        closegripper=0,  # type: int
         robotspeed=None,  # type: Optional[float]
         robotaccelmult=None,  # type: Optional[float]
         timeout=10,  # type: float
@@ -461,7 +461,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             goals: Flat list of goals, e.g. two 5D ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]
             toolname: Name of the manipulator. Defaults to currently selected tool (Default: None)
             envclearance: Environment clearance in millimeters. (Default: None)
-            closegripper: Whether to close gripper once the goal is reached. Boolean value represented by 0 or 1. (Default: 1)
+            closegripper: Whether to close gripper once the goal is reached. Boolean value represented by 0 or 1. (Default: 0)
             robotspeed: Value in (0,1] defining the percentage of speed the robot should move at. (Default: None)
             robotaccelmult: Value in (0,1] defining the percentage of acceleration the robot should move at. (Default: None)
             timeout: Time in seconds after which the command is assumed to have failed. (Default: 10)
@@ -497,8 +497,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             pathPlannerParameters: Parameters for robot path planning. (Default: None)
             moveStraightParams: A set of parameters defining how the robot behaves during linear motions. (Default: None)
             forceTorqueBasedEstimatorParameters: Parameters for state estimation features based on force torque sensor (Default: None)
-            savetrajectorylog: If True, will save the commanded (input) trajectories before they are executed (Default: None)
-            saveRobotFeedbackLog: If True, will tell robotbridge to save trajectory files (Default: None)
+            savetrajectorylog: True of False (Default: None)
+            saveRobotFeedbackLog: Save logs from each trajectory the robot executes with data including the encoder values of the robot, the current/torque values, and specific IO signal values. When this feature is enabled, the system can slow down a little since it is storing data. Some UI functions that display data need this feature to be enabled so that the correct data can be displayed. (Default: None)
             loadRobotFeedbackLog: If True, will tell robotbridge to load the robot feedback log after trajectory ends (Default: None)
             saveConcatenateTrajectoryLog: If True, will save trajectories used for inputs of concatenate trajectory functions (Default: None)
             saveFilterTrajectoryLog: If True, will save trajectories used for filtering, such as SmartFilter (Default: None)
@@ -1669,8 +1669,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             pathPlannerParameters: Parameters for robot path planning. (Default: None)
             moveStraightParams: A set of parameters defining how the robot behaves during linear motions. (Default: None)
             forceTorqueBasedEstimatorParameters: Parameters for state estimation features based on force torque sensor (Default: None)
-            savetrajectorylog: If True, will save the commanded (input) trajectories before they are executed (Default: None)
-            saveRobotFeedbackLog: If True, will tell robotbridge to save trajectory files (Default: None)
+            savetrajectorylog: True of False (Default: None)
+            saveRobotFeedbackLog: Save logs from each trajectory the robot executes with data including the encoder values of the robot, the current/torque values, and specific IO signal values. When this feature is enabled, the system can slow down a little since it is storing data. Some UI functions that display data need this feature to be enabled so that the correct data can be displayed. (Default: None)
             loadRobotFeedbackLog: If True, will tell robotbridge to load the robot feedback log after trajectory ends (Default: None)
             saveConcatenateTrajectoryLog: If True, will save trajectories used for inputs of concatenate trajectory functions (Default: None)
             saveFilterTrajectoryLog: If True, will save trajectories used for filtering, such as SmartFilter (Default: None)
@@ -1900,8 +1900,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             pathPlannerParameters: Parameters for robot path planning. (Default: None)
             moveStraightParams: A set of parameters defining how the robot behaves during linear motions. (Default: None)
             forceTorqueBasedEstimatorParameters: Parameters for state estimation features based on force torque sensor (Default: None)
-            savetrajectorylog: If True, will save the commanded (input) trajectories before they are executed (Default: None)
-            saveRobotFeedbackLog: If True, will tell robotbridge to save trajectory files (Default: None)
+            savetrajectorylog: True of False (Default: None)
+            saveRobotFeedbackLog: Save logs from each trajectory the robot executes with data including the encoder values of the robot, the current/torque values, and specific IO signal values. When this feature is enabled, the system can slow down a little since it is storing data. Some UI functions that display data need this feature to be enabled so that the correct data can be displayed. (Default: None)
             loadRobotFeedbackLog: If True, will tell robotbridge to load the robot feedback log after trajectory ends (Default: None)
             saveConcatenateTrajectoryLog: If True, will save trajectories used for inputs of concatenate trajectory functions (Default: None)
             saveFilterTrajectoryLog: If True, will save trajectories used for filtering, such as SmartFilter (Default: None)
@@ -2128,8 +2128,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             pathPlannerParameters: Parameters for robot path planning. (Default: None)
             moveStraightParams: A set of parameters defining how the robot behaves during linear motions. (Default: None)
             forceTorqueBasedEstimatorParameters: Parameters for state estimation features based on force torque sensor (Default: None)
-            savetrajectorylog: If True, will save the commanded (input) trajectories before they are executed (Default: None)
-            saveRobotFeedbackLog: If True, will tell robotbridge to save trajectory files (Default: None)
+            savetrajectorylog: True of False (Default: None)
+            saveRobotFeedbackLog: Save logs from each trajectory the robot executes with data including the encoder values of the robot, the current/torque values, and specific IO signal values. When this feature is enabled, the system can slow down a little since it is storing data. Some UI functions that display data need this feature to be enabled so that the correct data can be displayed. (Default: None)
             loadRobotFeedbackLog: If True, will tell robotbridge to load the robot feedback log after trajectory ends (Default: None)
             saveConcatenateTrajectoryLog: If True, will save trajectories used for inputs of concatenate trajectory functions (Default: None)
             saveFilterTrajectoryLog: If True, will save trajectories used for filtering, such as SmartFilter (Default: None)
@@ -2348,8 +2348,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             pathPlannerParameters: Parameters for robot path planning. (Default: None)
             moveStraightParams: A set of parameters defining how the robot behaves during linear motions. (Default: None)
             forceTorqueBasedEstimatorParameters: Parameters for state estimation features based on force torque sensor (Default: None)
-            savetrajectorylog: If True, will save the commanded (input) trajectories before they are executed (Default: None)
-            saveRobotFeedbackLog: If True, will tell robotbridge to save trajectory files (Default: None)
+            savetrajectorylog: True of False (Default: None)
+            saveRobotFeedbackLog: Save logs from each trajectory the robot executes with data including the encoder values of the robot, the current/torque values, and specific IO signal values. When this feature is enabled, the system can slow down a little since it is storing data. Some UI functions that display data need this feature to be enabled so that the correct data can be displayed. (Default: None)
             loadRobotFeedbackLog: If True, will tell robotbridge to load the robot feedback log after trajectory ends (Default: None)
             saveConcatenateTrajectoryLog: If True, will save trajectories used for inputs of concatenate trajectory functions (Default: None)
             saveFilterTrajectoryLog: If True, will save trajectories used for filtering, such as SmartFilter (Default: None)
@@ -3894,10 +3894,10 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         distanceMeasurementInfo=None,  # type: Optional[types.DistanceMeasurementInfo]
         savePackingState=None,  # type: Optional[bool]
         checkObstacleNames=None,  # type: Optional[list[str]]
-        targetMinBottomPaddingForInitialTransfer=40,  # type: float
+        targetMinBottomPaddingForInitialTransfer=None,  # type: Optional[float]
         targetMinSafetyHeightForInitialTransfer=None,  # type: Optional[float]
-        saveDynamicGoalGeneratorState=False,  # type: bool
-        saveDynamicGoalGeneratorStateFailed=True,  # type: bool
+        saveDynamicGoalGeneratorState=None,  # type: Optional[bool]
+        saveDynamicGoalGeneratorStateFailed=None,  # type: Optional[bool]
         initializeCameraPosition=None,  # type: Optional[bool]
         packFormationResult=None,  # type: Optional[types.PackFormation]
         indicesToShow=None,  # type: Optional[list[int]]
@@ -3941,7 +3941,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
 
             Cannot be used together with targetMinSafetyHeightForInitialTransfer.
 
-            Only applied during the initial transfer out of the source container. Subsequent transfers ignore this setting. (Default: 40)
+            Only applied during the initial transfer out of the source container. Subsequent transfers ignore this setting. (Default: None)
             targetMinSafetyHeightForInitialTransfer: Extends the height of the target to this value when moving the target out of the source container to the next position (dest, middest, or scan position). This is used to raise the part higher when moving out of the source container.
 
             Increasing this parameter increases the clearance at the bottom of the part when it is moved out of the source container.
@@ -3949,8 +3949,8 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             Cannot be used together with targetMinBottomPaddingForInitialTransfer.
 
             Only applied during the initial transfer out of the source container. Subsequent transfers ignore this setting. (Default: None)
-            saveDynamicGoalGeneratorState: If True, will always save the dynamic goal generator state for later playerback. (Default: False)
-            saveDynamicGoalGeneratorStateFailed: If true and logging level is info or higher, saves state of the _dynamicGoalsGenerator to the disk. (Default: True)
+            saveDynamicGoalGeneratorState: If True, will always save the dynamic goal generator state for later playerback. (Default: None)
+            saveDynamicGoalGeneratorStateFailed: If true and logging level is info or higher, saves state of the _dynamicGoalsGenerator to the disk. (Default: None)
             initializeCameraPosition: Reset camera position (Default: None)
             packFormationResult: A pack formation computed by Mujin. (Default: None)
             indicesToShow: (Default: None)
@@ -4002,13 +4002,13 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             taskparameters['savePackingState'] = savePackingState
         if checkObstacleNames is not None:
             taskparameters['checkObstacleNames'] = checkObstacleNames
-        if targetMinBottomPaddingForInitialTransfer != 40:
+        if targetMinBottomPaddingForInitialTransfer is not None:
             taskparameters['targetMinBottomPaddingForInitialTransfer'] = targetMinBottomPaddingForInitialTransfer
         if targetMinSafetyHeightForInitialTransfer is not None:
             taskparameters['targetMinSafetyHeightForInitialTransfer'] = targetMinSafetyHeightForInitialTransfer
-        if saveDynamicGoalGeneratorState != False:
+        if saveDynamicGoalGeneratorState is not None:
             taskparameters['saveDynamicGoalGeneratorState'] = saveDynamicGoalGeneratorState
-        if saveDynamicGoalGeneratorStateFailed != True:
+        if saveDynamicGoalGeneratorStateFailed is not None:
             taskparameters['saveDynamicGoalGeneratorStateFailed'] = saveDynamicGoalGeneratorStateFailed
         if initializeCameraPosition is not None:
             taskparameters['initializeCameraPosition'] = initializeCameraPosition

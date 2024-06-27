@@ -347,9 +347,9 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
         maxiter=None,  # type: Optional[int]
         postprocessingnmaxiterations=None,  # type: Optional[int]
         postprocessingplanner=None,  # type: Optional[str]
-        planningSmallestObjectSizeForCollision=8.0,  # type: float
-        saveRobotFeedbackLog=False,  # type: bool
-        savetrajectorylog=False,  # type: bool
+        planningSmallestObjectSizeForCollision=None,  # type: Optional[float]
+        saveRobotFeedbackLog=None,  # type: Optional[bool]
+        savetrajectorylog=None,  # type: Optional[bool]
         separateplanningfallback=None,  # type: Optional[bool]
         smootherParameters=None,  # type: Optional[types.SmoothingParameters]
         saveExecutedITL=None,  # type: Optional[bool]
@@ -395,9 +395,9 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             maxiter: (Default: None)
             postprocessingnmaxiterations: (Default: None)
             postprocessingplanner: (Default: None)
-            planningSmallestObjectSizeForCollision: The smallest object size for collision detection while planning. (Default: 8.0)
-            saveRobotFeedbackLog: Save logs from each trajectory the robot executes with data including the encoder values of the robot, the current/torque values, and specific IO signal values. When this feature is enabled, the system can slow down a little since it is storing data. Some UI functions that display data need this feature to be enabled so that the correct data can be displayed. (Default: False)
-            savetrajectorylog: True of False (Default: False)
+            planningSmallestObjectSizeForCollision: The smallest object size for collision detection while planning. (Default: None)
+            saveRobotFeedbackLog: Save logs from each trajectory the robot executes with data including the encoder values of the robot, the current/torque values, and specific IO signal values. When this feature is enabled, the system can slow down a little since it is storing data. Some UI functions that display data need this feature to be enabled so that the correct data can be displayed. (Default: None)
+            savetrajectorylog: True of False (Default: None)
             separateplanningfallback: (Default: None)
             smootherParameters: Parameters dealing with getting smoother paths for the robot planning. (Default: None)
             saveExecutedITL: (Default: None)
@@ -461,11 +461,11 @@ class RealtimeITL3PlanningClient(realtimerobotplanningclient.RealtimeRobotPlanni
             taskparameters['postprocessingnmaxiterations'] = postprocessingnmaxiterations
         if postprocessingplanner is not None:
             taskparameters['postprocessingplanner'] = postprocessingplanner
-        if planningSmallestObjectSizeForCollision != 8.0:
+        if planningSmallestObjectSizeForCollision is not None:
             taskparameters['planningSmallestObjectSizeForCollision'] = planningSmallestObjectSizeForCollision
-        if saveRobotFeedbackLog != False:
+        if saveRobotFeedbackLog is not None:
             taskparameters['saveRobotFeedbackLog'] = saveRobotFeedbackLog
-        if savetrajectorylog != False:
+        if savetrajectorylog is not None:
             taskparameters['savetrajectorylog'] = savetrajectorylog
         if separateplanningfallback is not None:
             taskparameters['separateplanningfallback'] = separateplanningfallback
