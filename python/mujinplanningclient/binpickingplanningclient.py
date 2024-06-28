@@ -199,13 +199,14 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, toolname=toolname, timeout=timeout)
 
-    def StopPickPlaceThread(self, resetExecutionState=True, resetStatusPickPlace=False, finishCode=None, finishMessage=None, timeout=10, fireandforget=False, **kwargs):
+    def StopPickPlaceThread(self, resetExecutionState=True, resetStatusPickPlace=False, finishStatus=None, finishMessage=None, timeout=10, fireandforget=False, **kwargs):
         """stops the pick and place thread started with StartPickAndPlaceThread
 
         Args:
             resetExecutionState (bool, optional): if True, then reset the order state variables. By default True (Default: True)
             resetStatusPickPlace (bool, optional): if True, then reset the statusPickPlace field of hte planning slave. (Default: False)
-            finishCode (str, optional): optional finish code to end the cycle with (if it doesn't end with something else beforehand)
+            finishStatus (str, optional): optional finish code to end the cycle with (if it doesn't end with something else beforehand)
+            finishMessage (str, optional): finish message to end the cycle with.
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget (bool, optional): If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
         """
@@ -213,9 +214,11 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             'command': 'StopPickPlaceThread',
             'resetExecutionState': resetExecutionState,
             'resetStatusPickPlace': resetStatusPickPlace,
-            'finishCode': finishCode,
-            'finishMessage': finishMessage,
         }
+        if finishStatus:
+            taskparameters['finishStatus'] = finishStatus
+        if finishMessage:
+            taskparameters['finishMessage'] = finishMessage
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
@@ -486,22 +489,24 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
     
-    def SetStopPickPlaceAfterExecutionCycle(self, timeout=10, **kwargs):
+    def SetStopPickPlaceAfterExecutionCycle(self, finishStatus=None, timeout=10, **kwargs):
         """Sets the cycle for stopping after the current pick cycle finishes.
 
         If robot has not grabbed a part yet, then will stop the robot immediately.
         On proper finish of the pick cycle, robot should go back to the finish position.
 
         Args:
+            finishStatus (str, optional): optional finish code to end the cycle with (if it doesn't end with something else beforehand)
             timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 10)
-            finishCode: The finish code to end with. If not specified, will be 'FinishedCycleStopped'
         """
         taskparameters = {
             'command': 'SetStopPickPlaceAfterExecutionCycle',
         }
+        if finishStatus:
+            taskparameters['finishStatus'] = finishStatus
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout)
-
+    
     def PutPartsBack(self, trajectoryxml, numparts, toolname=None, grippervalues=None, timeout=100, **kwargs):
         """Runs saved planningresult trajectories.
 

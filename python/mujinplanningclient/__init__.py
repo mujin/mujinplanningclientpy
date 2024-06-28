@@ -42,11 +42,5 @@ except ImportError:
 _ = ugettext
 
 
-class TimeoutError(ClientExceptionBase):
-    pass
-
-class UserInterrupt(ClientExceptionBase):
-    pass
-
 class PlanningClientError(ClientExceptionBase):
     pass
