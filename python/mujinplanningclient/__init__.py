@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (C) 2014-2015 MUJIN Inc.
 
 from .version import __version__ # noqa: F401
@@ -40,7 +39,6 @@ except ImportError:
         return singular if n == 1 else plural
 
 _ = ugettext
-
 
 class PlanningClientError(ClientExceptionBase):
     pass

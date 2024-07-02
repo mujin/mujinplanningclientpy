@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (C) 2012-2016 MUJIN Inc
 """
 Client to connect to Mujin Controller's planning server.
@@ -8,15 +7,14 @@ Client to connect to Mujin Controller's planning server.
 import os
 import time
 
-import zmq
-
 # Mujin imports
 from mujinwebstackclient import APIServerError
 from mujinwebstackclient import urlparse
 from mujinwebstackclient.webstackclient import GetURIFromPrimaryKey, GetFilenameFromURI
 
-from mujinzmqclient import zmqclient, zmqsubscriber
-
+from mujinzmqclient import zmqclient
+from mujinzmqclient import zmqsubscriber
+from . import zmq
 from . import json
 from . import PlanningClientError
 from . import _
@@ -92,6 +90,8 @@ class PlanningClient(object):
     _subscriber = None # an instance of ZmqSubscriber
     _callerid = None # caller identification string to be sent with every command
 
+    _validationQueue = None
+
     def __init__(
         self,
         taskzmqport=11000,
@@ -162,11 +162,31 @@ class PlanningClient(object):
 
         self._callerid = callerid
 
+        # Validation queue for API spec validation.
+        if os.environ.get('MUJIN_VALIDATE_APIS', 'false').lower() == 'true':
+            from mujinapispecvalidation.apiSpecServicesValidation import ValidationQueue
+            import importlib
+            expectedSpecModule, expectedSpecAttribute = 'mujinplanningapi.spec_' + tasktype, tasktype + 'Spec'
+            try:
+                clientSpecModule = importlib.import_module(expectedSpecModule)
+                apiSpec = getattr(expectedSpecModule, expectedSpecAttribute)
+            except ImportError:
+                # When client is used in ITL - it may not be possible to import spec as python library. This is due to dependency on controllercommon (for dictutils), translation library and possible schema dependencies that are not installed for ITL.
+                import json
+                installDir = os.environ.get('MUJIN_INSTALL_DIR', 'opt')
+                specExportPath = os.path.join(installDir, 'share', 'apispec', 'en_US.UTF-8', expectedSpecModule + '.' + expectedSpecAttribute + '.json')
+                log.warning('Could not import API spec directly. Trying to read it from a file: %s', specExportPath)
+                packingSpec = json.load(open(specExportPath))
+
+            self._validationQueue = ValidationQueue(apiSpec=apiSpec, clientName=tasktype.upper() + 'PlanningClient')
+
     def __del__(self):
         self.Destroy()
 
     def Destroy(self):
         self.SetDestroy()
+        if self._validationQueue:
+            self._validationQueue.Destroy()
         if self._subscriber is not None:
             self._subscriber.Destroy()
             self._subscriber = None
@@ -240,6 +260,13 @@ class PlanningClient(object):
     # Tasks related
     #
 
+    def _Validate(self, commandPayload, returnValue):
+        if not self._validationQueue:
+            return
+
+        self._validationQueue.Add(commandPayload['taskparams']['taskparameters']['command'], commandPayload, returnValue)
+
+
     def ExecuteCommand(self, taskparameters, slaverequestid=None, timeout=None, fireandforget=None, respawnopts=None, checkpreempt=True, forcereload=False, blockwait=True):
         """Executes command with taskparameters via ZMQ.
 
@@ -306,9 +333,11 @@ class PlanningClient(object):
             log.warn('GetAPIServerErrorFromZMQ returned error for %r', response)
             raise error
         if response is None:
+            self._Validate(command, None)
             log.warn(u'got no response from command %r', command)
             return None
 
+        self._Validate(command, response['output'])
         return response['output']
 
     #
