@@ -84,6 +84,8 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         timeout=10,  # type: float
         debuglevel=4,  # type: int
         toolname=None,  # type: Optional[str]
+        fireandforget=False,  # type: bool
+        blockwait=True,  # type: bool
         dynamicEnvironmentState=None,  # type: Optional[types.StartPackFormationComputationThreadParametersDynamicEnvironmentState]
         minDetectionImageTimeMS=None,  # type: Optional[int]
         detectionInfos=None,  # type: Optional[list[types.StartPackFormationComputationThreadParametersDetectionInfosArrayElement]]
@@ -161,6 +163,8 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             timeout: Time in seconds after which the command is assumed to have failed. (Default: 10)
             debuglevel: Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE. (Default: 4)
             toolname: Name of the manipulator. Defaults to currently selected tool (Default: None)
+            fireandforget: If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
+            blockwait: Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
             dynamicEnvironmentState: Dynamic environment state that allows the user to set/create objects in a particular state dynamically. (Default: None)
             minDetectionImageTimeMS: (Default: None)
             detectionInfos: (Default: None)
@@ -374,7 +378,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         if executionmode is not None:
             taskparameters['executionmode'] = executionmode
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, toolname=toolname)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, toolname=toolname, fireandforget=fireandforget, blockwait=blockwait)
 
     def StartSingleSKUPackFormationComputation(self, partType=None, userPackFormationParameters=None, toolname=None, patternName=None, packLocationInfo=None, timeout=10, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (Optional[Any], Optional[Any], Optional[Any], Optional[Any], Optional[Any], float, Optional[types.StartSingleSKUPackFormationComputationParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
@@ -461,14 +465,15 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
 
-    def VisualizePackingState(self, timeout=10, fireandforget=False, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
-        # type: (float, bool, Optional[types.VisualizePackingStateParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
+    def VisualizePackingState(self, timeout=10, fireandforget=False, blockwait=True, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
+        # type: (float, bool, bool, Optional[types.VisualizePackingStateParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
         """
         Stops the packing computation thread thread started with StartPackFormationComputationThread
 
         Args:
             timeout: Time in seconds after which the command is assumed to have failed. (Default: 10)
             fireandforget: If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
+            blockwait: Same as fireandforget, except will be able to receive return later with WaitForCommandResponse. (Default: True)
             dynamicEnvironmentState: Dynamic environment state that allows the user to set/create objects in a particular state dynamically. (Default: None)
             debuglevel: Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE. (Default: None)
         """
@@ -480,7 +485,7 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         if debuglevel is not None:
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
 
     def GetPackFormationSolution(self, timeout=10, fireandforget=False, blockwait=True, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, bool, bool, Optional[types.GetPackFormationSolutionParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]
@@ -571,142 +576,6 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
             taskparameters['debuglevel'] = debuglevel
         taskparameters.update(kwargs)
         self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
-
-    def ValidatePackFormationResultList(
-        self,
-        packFormationResultList,  # type: list[types.PackFormation]
-        timeout=10,  # type: float
-        fireandforget=False,  # type: bool
-        dynamicEnvironmentState=None,  # type: Optional[types.ValidatePackFormationResultListParametersDynamicEnvironmentState]
-        debuglevel=None,  # type: Optional[int]
-        unit='mm',  # type: str
-        unitMass='kg',  # type: str
-        robotname=None,  # type: Optional[str]
-        toolname=None,  # type: Optional[str]
-        destcontainernames=None,  # type: Optional[list[str]]
-        packLocationInfo=None,  # type: Optional[types.ValidatePackFormationResultListParametersPackLocationInfo]
-        locationName=None,  # type: Optional[str]
-        containername=None,  # type: Optional[str]
-        packContainerType=None,  # type: Optional[str]
-        packInputPartInfos=None,  # type: Optional[list[types.ValidatePackFormationResultListParametersPackInputPartInfosArrayElement]]
-        packFormationParameters=None,  # type: Optional[types.PackFormationParameters]
-        dynamicGoalsGeneratorParameters=None,  # type: Optional[types.ValidatePackFormationResultListParametersDynamicGoalsGeneratorParameters]
-        constraintToolInfo=None,  # type: Optional[types.ConstraintToolInfo]
-        distanceMeasurementInfo=None,  # type: Optional[types.DistanceMeasurementInfo]
-        savePackingState=None,  # type: Optional[bool]
-        checkObstacleNames=None,  # type: Optional[list[str]]
-        targetMinBottomPaddingForInitialTransfer=None,  # type: Optional[float]
-        targetMinSafetyHeightForInitialTransfer=None,  # type: Optional[float]
-        saveDynamicGoalGeneratorState=None,  # type: Optional[bool]
-        saveDynamicGoalGeneratorStateFailed=None,  # type: Optional[bool]
-        doPlacementValidation=None,  # type: Optional[bool]
-        forceValidatePackContainerType=None,  # type: Optional[bool]
-        packLocationName=_deprecated,  # type: Optional[str]
-        **kwargs  # type: Optional[Any]
-    ):
-        # type: (...) -> Optional[types.ValidatePackFormationResultListReturns]
-        """
-        Validates pack formation result list and compute info (fillRatio, packageDimensions, packedItemsInfo, etc) about it.
-        
-        kwargs are expected to be packing parameters.
-
-        Args:
-            packFormationResultList:
-            timeout: Time in seconds after which the command is assumed to have failed. (Default: 10)
-            fireandforget: If True, does not wait for the command to finish and returns immediately. The command remains queued on the server. (Default: False)
-            dynamicEnvironmentState: Dynamic environment state that allows the user to set/create objects in a particular state dynamically. (Default: None)
-            debuglevel: Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE. (Default: None)
-            unit: The unit of the given values. (Default: 'mm')
-            unitMass: (Default: 'kg')
-            robotname: Name of the robot (Default: None)
-            toolname: Name of the manipulator. Defaults to currently selected tool (Default: None)
-            destcontainernames: (Default: None)
-            packLocationInfo: (Default: None)
-            locationName: (Default: None)
-            containername: (Default: None)
-            packContainerType: (Default: None)
-            packInputPartInfos: (Default: None)
-            packFormationParameters: Parameters controlling the packing behaviors and algorithms for startPackFormationComputation command. (Default: None)
-            dynamicGoalsGeneratorParameters: If 'useDynamicGoals' is True, then will be dynamically generating goals based how to call on the packing algorithms. Internally, the packing algorithms parameters are managed by packFormation profiles.
-             (Default: None)
-            constraintToolInfo: Constrain a direction on the tool to be within a certain angle with respect to a global direction. (Default: None)
-            distanceMeasurementInfo: Parameters for measuring the height of a target object with a 1D distance sensor. Setting up these parameters will send timed IO values as the robot trajectory is executed. (Default: None)
-            savePackingState: (Default: None)
-            checkObstacleNames: (Default: None)
-            targetMinBottomPaddingForInitialTransfer: The amount of padding that is added to the bottom of the target when moving the target out of the source container to the next position (dest, middest, or scan position). This is used to raise the part higher when moving out of the source container.
-
-            Increasing this parameter increases the clearance at the bottom of the part when it is moved out of the source container.
-
-            Cannot be used together with targetMinSafetyHeightForInitialTransfer.
-
-            Only applied during the initial transfer out of the source container. Subsequent transfers ignore this setting. (Default: None)
-            targetMinSafetyHeightForInitialTransfer: Extends the height of the target to this value when moving the target out of the source container to the next position (dest, middest, or scan position). This is used to raise the part higher when moving out of the source container.
-
-            Increasing this parameter increases the clearance at the bottom of the part when it is moved out of the source container.
-
-            Cannot be used together with targetMinBottomPaddingForInitialTransfer.
-
-            Only applied during the initial transfer out of the source container. Subsequent transfers ignore this setting. (Default: None)
-            saveDynamicGoalGeneratorState: If True, will always save the dynamic goal generator state for later playerback. (Default: None)
-            saveDynamicGoalGeneratorStateFailed: If true and logging level is info or higher, saves state of the _dynamicGoalsGenerator to the disk. (Default: None)
-            doPlacementValidation: If True will do placmeent validation by calling FindNextFreePlacementGoals for each placed item. (Default: None)
-            forceValidatePackContainerType: (Default: None)
-            packLocationName: **deprecated** (Default: None)
-        """
-        taskparameters = {
-            'command': 'ValidatePackFormationResultList',
-            'packFormationResultList': packFormationResultList,
-        }  # type: dict[str, Any]
-        if dynamicEnvironmentState is not None:
-            taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
-        if debuglevel is not None:
-            taskparameters['debuglevel'] = debuglevel
-        if unit != 'mm':
-            taskparameters['unit'] = unit
-        if unitMass != 'kg':
-            taskparameters['unitMass'] = unitMass
-        if robotname is not None:
-            taskparameters['robotname'] = robotname
-        if toolname is not None:
-            taskparameters['toolname'] = toolname
-        if destcontainernames is not None:
-            taskparameters['destcontainernames'] = destcontainernames
-        if packLocationInfo is not None:
-            taskparameters['packLocationInfo'] = packLocationInfo
-        if locationName is not None:
-            taskparameters['locationName'] = locationName
-        if containername is not None:
-            taskparameters['containername'] = containername
-        if packContainerType is not None:
-            taskparameters['packContainerType'] = packContainerType
-        if packInputPartInfos is not None:
-            taskparameters['packInputPartInfos'] = packInputPartInfos
-        if packFormationParameters is not None:
-            taskparameters['packFormationParameters'] = packFormationParameters
-        if dynamicGoalsGeneratorParameters is not None:
-            taskparameters['dynamicGoalsGeneratorParameters'] = dynamicGoalsGeneratorParameters
-        if constraintToolInfo is not None:
-            taskparameters['constraintToolInfo'] = constraintToolInfo
-        if distanceMeasurementInfo is not None:
-            taskparameters['distanceMeasurementInfo'] = distanceMeasurementInfo
-        if savePackingState is not None:
-            taskparameters['savePackingState'] = savePackingState
-        if checkObstacleNames is not None:
-            taskparameters['checkObstacleNames'] = checkObstacleNames
-        if targetMinBottomPaddingForInitialTransfer is not None:
-            taskparameters['targetMinBottomPaddingForInitialTransfer'] = targetMinBottomPaddingForInitialTransfer
-        if targetMinSafetyHeightForInitialTransfer is not None:
-            taskparameters['targetMinSafetyHeightForInitialTransfer'] = targetMinSafetyHeightForInitialTransfer
-        if saveDynamicGoalGeneratorState is not None:
-            taskparameters['saveDynamicGoalGeneratorState'] = saveDynamicGoalGeneratorState
-        if saveDynamicGoalGeneratorStateFailed is not None:
-            taskparameters['saveDynamicGoalGeneratorStateFailed'] = saveDynamicGoalGeneratorStateFailed
-        if doPlacementValidation is not None:
-            taskparameters['doPlacementValidation'] = doPlacementValidation
-        if forceValidatePackContainerType is not None:
-            taskparameters['forceValidatePackContainerType'] = forceValidatePackContainerType
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget)
 
     def ComputeSamePartPackResultBySimulation(self, timeout=100, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
         # type: (float, Optional[types.ComputeSamePartPackResultBySimulationParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[Any]

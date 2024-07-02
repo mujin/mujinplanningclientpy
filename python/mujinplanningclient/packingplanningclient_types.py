@@ -929,67 +929,6 @@ StartValidatePackFormationParametersDynamicEnvironmentStateMapValue = TypedDict(
 
 StartValidatePackFormationParametersDynamicEnvironmentState = dict[str, dict[str, Any]]
 
-ValidatePackFormationResultListParametersDynamicEnvironmentStateMapValueJointConfigurationStatesArrayElement = TypedDict('ValidatePackFormationResultListParametersDynamicEnvironmentStateMapValueJointConfigurationStatesArrayElement', {
-    'jointName': str,
-    'connectedBodyName': str,
-    'jointValue': float,
-}, total=False)
-
-ValidatePackFormationResultListParametersDynamicEnvironmentStateMapValueLinkstatesMapValue = dict[str, Any]
-
-ValidatePackFormationResultListParametersDynamicEnvironmentStateMapValueLinkstates = dict[str, dict[str, Any]]
-
-ValidatePackFormationResultListParametersDynamicEnvironmentStateMapValueTemplateinfos = dict[str, Any]
-
-ValidatePackFormationResultListParametersDynamicEnvironmentStateMapValue = TypedDict('ValidatePackFormationResultListParametersDynamicEnvironmentStateMapValue', {
-    'animate': int,
-    'boxFullSize': list[float],
-    'cloneOriginalBodyName': str,
-    'collision': bool,
-    'dofvalues': list[float],
-    'exclusive': bool,
-    'grabbedby': tuple[str, str],
-    'iscreated': bool,
-    'jointConfigurationStates': list[ValidatePackFormationResultListParametersDynamicEnvironmentStateMapValueJointConfigurationStatesArrayElement],
-    'linkstates': ValidatePackFormationResultListParametersDynamicEnvironmentStateMapValueLinkstates,
-    'linkenable': str,
-    'linkvisible': str,
-    'pose': list[float],
-    'restore': bool,
-    'templateinfos': ValidatePackFormationResultListParametersDynamicEnvironmentStateMapValueTemplateinfos,
-    'uri': str,
-    'visible': bool,
-}, total=False)
-
-ValidatePackFormationResultListParametersDynamicEnvironmentState = dict[str, dict[str, Any]]
-
-ValidatePackFormationResultListParametersPackLocationInfo = TypedDict('ValidatePackFormationResultListParametersPackLocationInfo', {
-    'containerId': Optional[str],
-    'containerType': Optional[str],
-    'locationName': str,
-}, total=False)
-
-ValidatePackFormationResultListParametersPackInputPartInfosArrayElement = dict[str, Any]
-
-ValidatePackFormationResultListParametersDynamicGoalsGeneratorParametersUserPackFormationParameters = dict[str, Any]
-
-ValidatePackFormationResultListParametersDynamicGoalsGeneratorParameters = TypedDict('ValidatePackFormationResultListParametersDynamicGoalsGeneratorParameters', {
-    'allowFallbackToRandom': bool,
-    'autoComputePackFormation': bool,
-    'autoRotatePackFormation': bool,
-    'randomPackingParameters': RandomPackingParameters,
-    'skipPackFormationValidation': bool,
-    'saveDynamicGoalGeneratorState': bool,
-    'saveDynamicGoalGeneratorStateFailed': bool,
-    'saveDynamicGoalGeneratorStateOnRandomMode': bool,
-    'useComputePackFormationFromState': bool,
-    'userPackFormationParameters': ValidatePackFormationResultListParametersDynamicGoalsGeneratorParametersUserPackFormationParameters,
-}, total=False)
-
-ValidatePackFormationResultListReturns = TypedDict('ValidatePackFormationResultListReturns', {
-    'validatedPackFormationResultList': list[PackFormation],
-}, total=False)
-
 ComputeSamePartPackResultBySimulationParametersDynamicEnvironmentStateMapValueJointConfigurationStatesArrayElement = TypedDict('ComputeSamePartPackResultBySimulationParametersDynamicEnvironmentStateMapValueJointConfigurationStatesArrayElement', {
     'jointName': str,
     'connectedBodyName': str,
