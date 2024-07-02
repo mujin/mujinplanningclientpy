@@ -1111,6 +1111,40 @@ GetPackingStateReturns = TypedDict('GetPackingStateReturns', {
     'isDynamicEnvironmentStateEmpty': bool,
 }, total=False)
 
+ValidatePackFormationParametersDynamicEnvironmentStateMapValueJointConfigurationStatesArrayElement = TypedDict('ValidatePackFormationParametersDynamicEnvironmentStateMapValueJointConfigurationStatesArrayElement', {
+    'jointName': str,
+    'connectedBodyName': str,
+    'jointValue': float,
+}, total=False)
+
+ValidatePackFormationParametersDynamicEnvironmentStateMapValueLinkstatesMapValue = dict[str, Any]
+
+ValidatePackFormationParametersDynamicEnvironmentStateMapValueLinkstates = dict[str, dict[str, Any]]
+
+ValidatePackFormationParametersDynamicEnvironmentStateMapValueTemplateinfos = dict[str, Any]
+
+ValidatePackFormationParametersDynamicEnvironmentStateMapValue = TypedDict('ValidatePackFormationParametersDynamicEnvironmentStateMapValue', {
+    'animate': int,
+    'boxFullSize': list[float],
+    'cloneOriginalBodyName': str,
+    'collision': bool,
+    'dofvalues': list[float],
+    'exclusive': bool,
+    'grabbedby': tuple[str, str],
+    'iscreated': bool,
+    'jointConfigurationStates': list[ValidatePackFormationParametersDynamicEnvironmentStateMapValueJointConfigurationStatesArrayElement],
+    'linkstates': ValidatePackFormationParametersDynamicEnvironmentStateMapValueLinkstates,
+    'linkenable': str,
+    'linkvisible': str,
+    'pose': list[float],
+    'restore': bool,
+    'templateinfos': ValidatePackFormationParametersDynamicEnvironmentStateMapValueTemplateinfos,
+    'uri': str,
+    'visible': bool,
+}, total=False)
+
+ValidatePackFormationParametersDynamicEnvironmentState = dict[str, dict[str, Any]]
+
 PingReturns = TypedDict('PingReturns', {
     'timestamp': float,
     'slaverequestid': str,

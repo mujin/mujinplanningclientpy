@@ -821,3 +821,27 @@ class PackingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanningCli
         taskparameters.update(kwargs)
         return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, blockwait=blockwait)
 
+    def ValidatePackFormation(self, packFormationResultList, dynamicEnvironmentState=None, debuglevel=None, **kwargs):
+        # type: (Any, Optional[types.ValidatePackFormationParametersDynamicEnvironmentState], Optional[int], Optional[Any]) -> Optional[types.PackFormation]
+        """
+        Validates pack formation result list and computes info (fillRatio, packageDimensions, packedItemsInfo, etc) about it.
+
+        Args:
+            packFormationResultList:
+            dynamicEnvironmentState: Dynamic environment state that allows the user to set/create objects in a particular state dynamically. (Default: None)
+            debuglevel: Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE. (Default: None)
+
+        Returns:
+            A pack formation computed by Mujin.
+        """
+        taskparameters = {
+            'command': 'ValidatePackFormation',
+            'packFormationResultList': packFormationResultList,
+        }  # type: dict[str, Any]
+        if dynamicEnvironmentState is not None:
+            taskparameters['dynamicEnvironmentState'] = dynamicEnvironmentState
+        if debuglevel is not None:
+            taskparameters['debuglevel'] = debuglevel
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters, )
+
