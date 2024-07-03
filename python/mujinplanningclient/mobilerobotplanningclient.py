@@ -27,7 +27,7 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
         taskzmqport=11000,
         taskheartbeatport=11001,
         taskheartbeattimeout=7.0,
-        tasktype='mobilerobot',
+        tasktype='mobilerobotplanning',
         ctx=None,
         slaverequestid=None,
         controllerip='',
@@ -45,7 +45,7 @@ class MobileRobotPlanningClient(planningclient.PlanningClient):
             taskzmqport (int, optional): Port of the task's ZMQ server, e.g. 7110. (Default: 11000)
             taskheartbeatport (int, optional): Port of the task's ZMQ server's heartbeat publisher, e.g. 7111. (Default: 11001)
             taskheartbeattimeout (float, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
-            tasktype (str, optional): Type of the task, e.g. 'binpicking', 'handeyecalibration', 'itlrealtimeplanning3'. Default: mobilerobot
+            tasktype (str, optional): Type of the task, e.g. 'binpicking', 'handeyecalibration', 'itlrealtimeplanning3'. Default: mobilerobotplanning
             ctx (zmq.Context, optional): Seconds until reinitializing task's ZMQ server if no heartbeat is received, e.g. 7
             slaverequestid:
             controllerip (str): IP or hostname of the mujin controller, e.g. 172.17.0.2 or controller123
