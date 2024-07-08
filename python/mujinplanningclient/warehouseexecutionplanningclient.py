@@ -14,3 +14,24 @@ class WarehouseExecutionPlanningClient(planningclient.PlanningClient):
     def __init__(self, **kwargs):
         kwargs['tasktype'] = self.tasktype # override task type
         super(WarehouseExecutionPlanningClient, self).__init__(**kwargs)
+
+    def StartWarehouseExecutionPlanningThread(self, timeout=None, fireandforget=None, checkpreempt=True, blockwait=True, **kwargs):
+        """
+        This function will start the warehouse execution planning thread.
+        """
+        taskparameters = {
+            'command': 'StartWarehouseExecutionPlanningThread',
+        }
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt, blockwait=blockwait)
+
+    def StopWarehouseExecutionPlanningThread(self, timeout=None, fireandforget=None, checkpreempt=True, blockwait=True, **kwargs):
+        """
+        This function will stop the warehouse execution planning thread.
+
+        """
+        taskparameters = {
+            'command': 'StopWarehouseExecutionPlanningThread',
+        }
+        taskparameters.update(kwargs)
+        return self.ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, checkpreempt=checkpreempt, blockwait=blockwait)
