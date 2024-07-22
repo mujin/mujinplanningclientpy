@@ -974,6 +974,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             calibrategripper (bool, optional):
             departAccel (float, optional):
             maxManipAccel (float, optional):
+            maxJitter (float, optional): rad or m. When jittering out of obstacles, the max deviation of any joint.
             maxJitterLinkDist (float, optional): mm.
             pathPlannerParameters:
             moveStraightParams (dict, optional): A set of parameters defining how the robot behaves during linear motions.
@@ -1057,6 +1058,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             calibrategripper (bool, optional):
             departAccel (float, optional):
             maxManipAccel (float, optional):
+            maxJitter (float, optional): rad or m. When jittering out of obstacles, the max deviation of any joint.
             maxJitterLinkDist (float, optional): mm.
             pathPlannerParameters:
             moveStraightParams (dict, optional): A set of parameters defining how the robot behaves during linear motions.
@@ -1138,6 +1140,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             calibrategripper (bool, optional):
             departAccel (float, optional):
             maxManipAccel (float, optional):
+            maxJitter (float, optional): rad or m. When jittering out of obstacles, the max deviation of any joint.
             maxJitterLinkDist (float, optional): mm.
             pathPlannerParameters:
             moveStraightParams (dict, optional): A set of parameters defining how the robot behaves during linear motions.
@@ -1225,6 +1228,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             calibrategripper (bool, optional):
             departAccel (float, optional):
             maxManipAccel (float, optional):
+            maxJitter (float, optional): rad or m. When jittering out of obstacles, the max deviation of any joint.
             maxJitterLinkDist (float, optional): mm.
             pathPlannerParameters:
             moveStraightParams (dict, optional): A set of parameters defining how the robot behaves during linear motions.
