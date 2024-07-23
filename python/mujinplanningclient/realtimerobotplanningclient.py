@@ -976,6 +976,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             maxManipAccel (float, optional):
             maxJitter (float, optional): rad or m. When jittering out of obstacles, the max deviation of any joint.
             maxJitterLinkDist (float, optional): mm.
+            useWorkspaceJitterer (bool, optional): If True, will switch to using WorkspaceConfigurationJitterer, which computes jittered robot configurations by perturbing the tool position instead of joint values.
             pathPlannerParameters:
             moveStraightParams (dict, optional): A set of parameters defining how the robot behaves during linear motions.
             forceTorqueBasedEstimatorParameters (dict, optional): A set of parameters for force-torque based estimation.
@@ -1060,6 +1061,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             maxManipAccel (float, optional):
             maxJitter (float, optional): rad or m. When jittering out of obstacles, the max deviation of any joint.
             maxJitterLinkDist (float, optional): mm.
+            useWorkspaceJitterer (bool, optional): If True, will switch to using WorkspaceConfigurationJitterer, which computes jittered robot configurations by perturbing the tool position instead of joint values.
             pathPlannerParameters:
             moveStraightParams (dict, optional): A set of parameters defining how the robot behaves during linear motions.
             forceTorqueBasedEstimatorParameters (dict, optional): A set of parameters for force-torque based estimation.
@@ -1142,6 +1144,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             maxManipAccel (float, optional):
             maxJitter (float, optional): rad or m. When jittering out of obstacles, the max deviation of any joint.
             maxJitterLinkDist (float, optional): mm.
+            useWorkspaceJitterer (bool, optional): If True, will switch to using WorkspaceConfigurationJitterer, which computes jittered robot configurations by perturbing the tool position instead of joint values.
             pathPlannerParameters:
             moveStraightParams (dict, optional): A set of parameters defining how the robot behaves during linear motions.
             forceTorqueBasedEstimatorParameters (dict, optional): A set of parameters for force-torque based estimation.
@@ -1230,6 +1233,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             maxManipAccel (float, optional):
             maxJitter (float, optional): rad or m. When jittering out of obstacles, the max deviation of any joint.
             maxJitterLinkDist (float, optional): mm.
+            useWorkspaceJitterer (bool, optional): If True, will switch to using WorkspaceConfigurationJitterer, which computes jittered robot configurations by perturbing the tool position instead of joint values.
             pathPlannerParameters:
             moveStraightParams (dict, optional): A set of parameters defining how the robot behaves during linear motions.
             forceTorqueBasedEstimatorParameters (dict, optional): A set of parameters for force-torque based estimation.
