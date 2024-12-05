@@ -56,6 +56,19 @@
 
 - Add support for async command call.
 
+## 0.2.1 (2024-02-01)
+
+### Features
+
+- Add SetThreadInterval
+
+## 0.2.0 (2024-01-01)
+
+### Changes
+
+- Create Packing planning client.
+- Add master functions TerminateSlaves, CancelSlaves, Quit
+
 ## 0.1.6 (2023-06-09)
 
 ### Changes
