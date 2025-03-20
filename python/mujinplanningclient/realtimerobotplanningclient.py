@@ -87,7 +87,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
         """
         self._robotaccelmult = robotaccelmult
 
-    def ExecuteCommand(self, taskparameters, robotname=None, toolname=None, robotspeed=None, robotaccelmult=None, envclearance=None, timeout=10, fireandforget=False, respawnopts=None, forcereload=False, blockwait=True):
+    def ExecuteCommand(self, taskparameters, robotname=None, toolname=None, robotspeed=None, robotaccelmult=None, envclearance=None, timeout=10, fireandforget=False, respawnopts=None, forcereload=False, blockwait=True, slaverequestid=None):
         """Wrapper to ExecuteCommand with robot info specified in taskparameters.
 
         Executes a command in the task.
@@ -148,7 +148,7 @@ class RealtimeRobotPlanningClient(planningclient.PlanningClient):
             if envclearance is not None:
                 taskparameters['envclearance'] = envclearance
 
-        return super(RealtimeRobotPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, respawnopts=respawnopts, forcereload=forcereload, blockwait=blockwait)
+        return super(RealtimeRobotPlanningClient, self).ExecuteCommand(taskparameters, timeout=timeout, fireandforget=fireandforget, respawnopts=respawnopts, forcereload=forcereload, blockwait=blockwait, slaverequestid=slaverequestid)
 
     #
     # Commands
