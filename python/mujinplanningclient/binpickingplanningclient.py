@@ -53,85 +53,10 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
     # Commands
     #
 
-
-    def PickAndPlace(
-        self,
-        goaltype=_deprecated,
-        goals=_deprecated,
-        targetnamepattern=None,
-        approachoffset=30,
-        departoffsetdir=[0, 0, 50],
-        destdepartoffsetdir=[0, 0, 30],
-        deletetarget=0,
-        debuglevel=4,
-        movetodestination=1,
-        freeinc=[0.08],
-        worksteplength=None,
-        densowavearmgroup=5,
-        regionname=None,
-        cameranames=None,
-        envclearance=None,
-        toolname=None,
-        robotspeed=None,
-        timeout=1000,
-        **kwargs
-    ):
-        """Picks up an object with the targetnamepattern and places it down at one of the goals. First computes the entire plan from robot moving to a grasp and then moving to its destination, then runs it on the real robot. Task finishes once the real robot is at the destination.
-
-        Args:
-            goaltype (str, optional): **deprecated** Type of the goal, e.g. translationdirection5d or transform6d
-            goals (str, optional): **deprecated** Flat list of goals, e.g. two 5d ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]
-            targetnamepattern (str, optional): regular expression describing the name of the object. No default will be provided, caller must set this. See https://docs.python.org/2/library/re.html
-            approachoffset (float, optional): Distance in millimeters to move straight to the grasp point, e.g. 30 mm (Default: 30)
-            departoffsetdir (list[float], optional): The direction and distance in mm to move the part in global frame (usually along negative gravity) after it is grasped, e.g. [0,0,50] (Default: [0, 0, 50])
-            destdepartoffsetdir (list[float], optional): The direction and distance in mm to move away from the object after it is placed, e.g. [0,0,30]. Depending on leaveoffsetintool parameter, this can in the global coordinate system or tool coordinate system. (Default: [0, 0, 30])
-            deletetarget (int, optional): whether to delete target after pick and place is done (Default: 0)
-            debuglevel (int, optional): Sets the debug level for the planning logs. For development. 3=INFO, 4=DEBUG, 5=VERBOSE. (Default: 4)
-            movetodestination (int, optional): planning parameter (Default: 1)
-            freeinc (list[float], optional): planning parameter (Default: [0.08])
-            worksteplength (float, optional): planning parameter
-            densowavearmgroup (int, optional): planning parameter (Default: 5)
-            regionname (str, optional): name of the region of the objects
-            cameranames (list[str], optional): The names of the cameras to avoid occlusions with the robot
-            envclearance (float, optional): Environment clearance in millimeters.
-            toolname (str, optional): Name of the manipulator. Defaults to currently selected tool
-            robotspeed (float, optional): Value in (0,1] defining the percentage of speed the robot should move at.
-            timeout (float, optional): Time in seconds after which the command is assumed to have failed. (Default: 1000)
-            leaveoffsetintool (int, optional): If 1, destdepartoffsetdir is in the tool coordinate system. If 0, destdepartoffsetdir is in the global coordinate system. By default this is 0.
-            desttargetname (str, optional): The destination target name where the destination goal ikparams come from
-            destikparamnames (list[list[str]], optional): A list of lists of ikparam names for the destinations of the target. Only destikparamnames[0] is looked at and tells the system to place the part in any of the ikparams in destikparamnames[0]
-            graspsetname (str, optional): the name of the grasp set belong to the target objects to use for the target. Grasp sets are a list of ikparams
-        """
-        if worksteplength is None:
-            worksteplength = 0.01
-        assert (targetnamepattern is not None)
-        if regionname is None:
-            regionname = self.regionname
-        taskparameters = {
-            'command': 'PickAndPlace',
-            'goaltype': goaltype,
-            'envclearance': envclearance,
-            'movetodestination': movetodestination,
-            'goals': goals,
-            'approachoffset': approachoffset,
-            'departoffsetdir': departoffsetdir,
-            'destdepartoffsetdir': destdepartoffsetdir,
-            'freeinc': freeinc,
-            'worksteplength': worksteplength,
-            'targetnamepattern': targetnamepattern,
-            'deletetarget': deletetarget,
-            'debuglevel': debuglevel,
-        }
-        if regionname is not None:
-            taskparameters['containername'] = regionname
-        taskparameters.update(kwargs)
-        return self.ExecuteCommand(taskparameters, robotspeed=robotspeed, toolname=toolname, timeout=timeout)
-
     def StartPickAndPlaceThread(
         self,
         goaltype=None,
         goals=None,
-        targetnamepattern=None,
         approachoffset=30,
         departoffsetdir=[0, 0, 50],
         destdepartoffsetdir=[0, 0, 30],
@@ -146,12 +71,11 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         timeout=10,
         **kwargs
     ):
-        """Start a background loop to continuously pick up objects with the targetnamepattern and place them down at the goals. The loop will check new objects arriving in and move the robot as soon as it finds a feasible grasp. The thread can be quit with StopPickPlaceThread.
+        """Start a background loop to continuously pick up objects and place them down at the goals. The loop will check new objects arriving in and move the robot as soon as it finds a feasible grasp. The thread can be quit with StopPickPlaceThread.
 
         Args:
             goaltype (str, optional): type of the goal, e.g. translationdirection5d
             goals (list, optional): flat list of goals, e.g. two 5d ik goals: [380,450,50,0,0,1, 380,450,50,0,0,-1]
-            targetnamepattern (str, optional): regular expression describing the name of the object, no default will be provided, caller must set this. See https://docs.python.org/2/library/re.html
             approachoffset (float, optional): distance in millimeters to move straight to the grasp point, e.g. 30 mm (Default: 30)
             departoffsetdir (list[float], optional): the direction and distance in mm to move the part in global frame (usually along negative gravity) after it is grasped, e.g. [0,0,50] (Default: [0, 0, 50])
             destdepartoffsetdir (list[float], optional): the direction and distance in mm to move away from the object after it is placed, e.g. [0,0,30]. Depending on leaveoffsetintool parameter, this can in the global coordinate system or tool coordinate system. (Default: [0, 0, 30])
@@ -177,7 +101,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
         """
         if worksteplength is None:
             worksteplength = 0.01
-        assert (targetnamepattern is not None)
         if regionname is None:
             regionname = self.regionname
         taskparameters = {
@@ -188,7 +111,6 @@ class BinpickingPlanningClient(realtimerobotplanningclient.RealtimeRobotPlanning
             'departoffsetdir': departoffsetdir,
             'destdepartoffsetdir': destdepartoffsetdir,
             'worksteplength': worksteplength,
-            'targetnamepattern': targetnamepattern,
             'containername': regionname,
             'deletetarget': deletetarget,
             'debuglevel': debuglevel,
