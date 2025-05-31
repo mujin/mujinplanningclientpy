@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1 (2025-05-31)
+
+- Remove targetnamepattern
+
 ## 0.5.0 (2024-06-19)
 
 - Add `mobilerobotplanningclient`.
